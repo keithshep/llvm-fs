@@ -1,0 +1,91 @@
+{
+module FSExternHelper.Lexer
+
+open FSExternHelper.Parser
+
+open System
+open Microsoft.FSharp.Text.Lexing
+
+//let lexeme (lb:LexBuffer<byte>) = System.Text.Encoding.ASCII.GetString(lb.Lexeme, 0, lb.Lexeme.Length)
+let lexeme (lb:LexBuffer<char>) = new String(lb.Lexeme)
+
+let nextLine (lb:LexBuffer<_>) = lb.EndPos <- lb.EndPos.NextLine
+let badToken (lb : LexBuffer<_>) =
+    failwith (sprintf "Unexpected token near line %i" lb.StartPos.Line)
+}
+
+// These are some regular expression definitions
+let digit = ['0'-'9']
+let alpha = ['a'-'z'] | ['A'-'Z']
+let varHead = alpha | '_'
+let varTail = varHead | digit
+let whitespace = [' ' '\t' ]
+let newline = '\n' | '\r' '\n'
+let anyWhite = whitespace | newline
+
+rule tokenize = parse
+// Eat whitespace
+| newline           { nextLine lexbuf; tokenize lexbuf }
+| whitespace	        { tokenize lexbuf }
+
+| "#ifdef" whitespace+ "__cplusplus"
+                    { tokenizeIfCPP 0 lexbuf }
+| "/*"              { multiLineComment lexbuf }
+| '#'               { tokenizeMacro lexbuf }
+
+// don't care about these
+| "LLVM_FOR_EACH_VALUE_SUBCLASS(LLVM_DECLARE_VALUE_CAST)" { tokenize lexbuf }
+
+| "typedef"         { TYPEDEF }
+| "enum"            { ENUM }
+| "struct"          { STRUCT }
+
+| ';'               { SEMICOL }
+| ','               { COMMA }
+| '*'               { ASTER }
+| '('               { LPAREN }
+| ')'               { RPAREN }
+| '{'               { LCURL }
+| '}'               { RCURL }
+| '='               { EQ }
+| "<<"              { SHIFTL }
+
+| "const"           { CONST }
+| "void"            { VOID }
+| "char"            { CHAR }
+| "int"             { INT }
+| "long"            { LONG }
+| "double"          { DOUBLE }
+| "float"           { FLOAT }
+| "unsigned"        { UNSIGNED }
+| "short"           { SHORT }
+| "uint8_t"         { UINT8 }
+
+| varHead varTail*  { NAME (lexeme lexbuf) }
+
+// Numeric constants
+| ['-']?digit+              { INTCONST (Int32.Parse(lexeme lexbuf)) }
+//| ['-']?digit+('.'digit+)?  { FLOAT (Double.Parse(lexeme lexbuf)) }
+
+// EOF
+| eof   { EOF }
+
+| _ { badToken lexbuf }
+
+and multiLineComment = parse
+| newline   { nextLine lexbuf; multiLineComment lexbuf }
+| "*/"      { tokenize lexbuf }
+| _         { multiLineComment lexbuf }
+
+and tokenizeMacro = parse
+| '\\' newline  { nextLine lexbuf; tokenizeMacro lexbuf }
+| newline       { nextLine lexbuf; tokenize lexbuf }
+| _             { tokenizeMacro lexbuf }
+
+and tokenizeIfCPP n = parse
+| "#endif"      { if n = 0 then tokenize lexbuf else tokenizeIfCPP (n - 1) lexbuf }
+| "#if"         { tokenizeIfCPP (n + 1) lexbuf }
+| newline       { nextLine lexbuf; tokenizeIfCPP n lexbuf }
+| _             { tokenizeIfCPP n lexbuf }
+
+

@@ -1,0 +1,89 @@
+%{
+open Microsoft.FSharp.Text.Parsing
+open FSExternHelper.HeaderSyntax
+
+// NOTE: fsyacc expects this function to be named parse_error_rich
+let parse_error_rich =
+    let parseError (errorContext : ParseErrorContext<_>) =
+        let fstResultRange = fst errorContext.ParseState.ResultRange
+        match fstResultRange :> obj with
+        | null -> eprintfn "Parse error near start of file"
+        | _    -> eprintfn "Parse error near line %i" fstResultRange.Line
+        
+        exit 1
+    
+    Some parseError
+%}
+
+// The start token becomes a parser function in the compiled code:
+%start start
+
+// These are the terminal tokens of the grammar along with the types of
+// the data carried by each token:
+%token <System.Int32> INTCONST
+%token <string> NAME
+%token SEMICOL COMMA ASTER LPAREN RPAREN EOF LCURL RCURL
+%token STRUCT ENUM TYPEDEF EQ SHIFTL
+%token CONST VOID CHAR INT LONG DOUBLE FLOAT UNSIGNED SHORT UINT8
+
+// This is the type of the data produced by a successful reduction of the 'start'
+// symbol:
+%type < CFuncDef list > start
+
+%%
+
+start: FuncDefs { $1 }
+
+FuncDefs:
+    | FuncDef FuncDefs      { $1 :: $2 }
+    | Typedef FuncDefs      { $2 }
+    | EOF                   { [] }
+
+Typedef:
+    | TYPEDEF STRUCT FullType NAME SEMICOL  { } // TODO not really the right way to go
+    | TYPEDEF FullType NAME SEMICOL         { }
+    | TYPEDEF ENUM LCURL EnumVals RCURL NAME SEMICOL
+                                        { }
+EnumVals:
+    | EnumVal COMMA EnumVals { }
+    | EnumVal                { }
+
+EnumVal:
+    | NAME { }
+    | NAME EQ IntVal { }
+
+IntVal:
+    | INTCONST SHIFTL INTCONST { $1 <<< $3 }
+    | INTCONST { $1 }
+
+FuncDef:
+    | FullType NAME LPAREN Params RPAREN SEMICOL { CFuncDef ($1, $2, $4) }
+
+FullType:
+    | CONST BaseType Pointers   { {baseType = $2; isConst = true; pointerDepth = $3} }
+    | BaseType Pointers         { {baseType = $1; isConst = false; pointerDepth = $2} }
+
+Pointers:
+    | ASTER Pointers { $2 + 1 }
+    |                { 0 }
+
+BaseType:
+    | NAME      { GeneralType $1 }
+    | INT       { IntType }
+    | VOID      { VoidType }
+    | CHAR      { CharType }
+    | UNSIGNED LONG LONG { UnsignedLongLongType }
+    | LONG LONG { LongLongType }
+    | UNSIGNED  { UnsignedIntType }
+    | UINT8     { UnsignedByteType }
+    | DOUBLE    { DoubleType }
+
+Params:
+    | Param COMMA Params    { $1 :: $3 }
+    | Param                 { [$1] }
+    |                       { [] }
+
+Param:
+    | FullType NAME     { ($1, Some $2) }
+    | FullType          { ($1, None) }
+
