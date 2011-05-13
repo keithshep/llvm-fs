@@ -28,36 +28,32 @@ let parse_error_rich =
 
 // This is the type of the data produced by a successful reduction of the 'start'
 // symbol:
-%type < CFuncDef list > start
+%type < CDef list > start
 
 %%
 
-start: FuncDefs { $1 }
+start: Defs { $1 }
 
-FuncDefs:
-    | FuncDef FuncDefs      { $1 :: $2 }
-    | Typedef FuncDefs      { $2 }
-    | EOF                   { [] }
+Defs:
+    | Def Defs  { $1 :: $2 }
+    | EOF       { [] }
 
-Typedef:
-    | TYPEDEF STRUCT FullType NAME SEMICOL  { } // TODO not really the right way to go
-    | TYPEDEF FullType NAME SEMICOL         { }
-    | TYPEDEF ENUM LCURL EnumVals RCURL NAME SEMICOL
-                                        { }
+Def:
+    | FullType NAME LPAREN Params RPAREN SEMICOL        { CFuncDef ($1, $2, $4) }
+    | TYPEDEF ENUM LCURL EnumVals RCURL NAME SEMICOL    { CEnumDef ($6, $4) }
+    | TYPEDEF FullType NAME SEMICOL                     { CTypeAlias ($2, $3) }
+
 EnumVals:
-    | EnumVal COMMA EnumVals { }
-    | EnumVal                { }
+    | EnumVal COMMA EnumVals { $1 :: $3 }
+    | EnumVal                { [$1] }
 
 EnumVal:
-    | NAME { }
-    | NAME EQ IntVal { }
+    | NAME { ($1, None) }
+    | NAME EQ IntVal { ($1, Some $3) }
 
 IntVal:
     | INTCONST SHIFTL INTCONST { $1 <<< $3 }
     | INTCONST { $1 }
-
-FuncDef:
-    | FullType NAME LPAREN Params RPAREN SEMICOL { CFuncDef ($1, $2, $4) }
 
 FullType:
     | CONST BaseType Pointers   { {baseType = $2; isConst = true; pointerDepth = $3} }
@@ -68,15 +64,16 @@ Pointers:
     |                { 0 }
 
 BaseType:
-    | NAME      { GeneralType $1 }
-    | INT       { IntType }
-    | VOID      { VoidType }
-    | CHAR      { CharType }
-    | UNSIGNED LONG LONG { UnsignedLongLongType }
-    | LONG LONG { LongLongType }
-    | UNSIGNED  { UnsignedIntType }
-    | UINT8     { UnsignedByteType }
-    | DOUBLE    { DoubleType }
+    | NAME                  { GeneralType $1 }
+    | STRUCT NAME           { StructType $2 }
+    | INT                   { IntType }
+    | VOID                  { VoidType }
+    | CHAR                  { CharType }
+    | UNSIGNED LONG LONG    { UnsignedLongLongType }
+    | LONG LONG             { LongLongType }
+    | UNSIGNED              { UnsignedIntType }
+    | UINT8                 { UnsignedByteType }
+    | DOUBLE                { DoubleType }
 
 Params:
     | Param COMMA Params    { $1 :: $3 }

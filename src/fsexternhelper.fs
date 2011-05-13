@@ -4,18 +4,19 @@ open FSExternHelper.HeaderSyntax
 open FSExternHelper.Lexer
 open FSExternHelper.Parser
 
-let rec allGenTypeNames (funcDefs : CFuncDef list) =
+let rec allGenTypeNames (defs : CDef list) =
     let addType (t : CFullType) (set : Set<string>) =
         match t.baseType with
         | GeneralType typeName -> set.Add typeName
         | _ -> set
 
-    match funcDefs with
+    match defs with
     | [] -> Set.empty
     | CFuncDef (retType, _, paramList) :: funcDefTail ->
         let set = addType retType Set.empty
         let set = List.fold (fun s (t, _) -> addType t s) set paramList
         Set.union set (allGenTypeNames funcDefTail)
+    | _ :: funcDefTail -> allGenTypeNames funcDefTail
 
 [<EntryPoint>]
 let main (args : string array) =

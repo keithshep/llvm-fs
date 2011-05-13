@@ -2,6 +2,7 @@ module FSExternHelper.HeaderSyntax
 
 type CBaseType =
     | GeneralType of string
+    | StructType of string
     | IntType
     | FloatType
     | VoidType
@@ -17,5 +18,8 @@ type CFullType = {
     isConst : bool
     pointerDepth: int}
 
-type CFuncDef = CFuncDef of CFullType * string * (CFullType * string option) list
+type CDef =
+    | CFuncDef of CFullType * string * (CFullType * string option) list
+    | CEnumDef of string * (string * int option) list
+    | CTypeAlias of CFullType * string
 
