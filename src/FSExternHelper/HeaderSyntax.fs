@@ -4,7 +4,6 @@ type CBaseType =
     | GeneralType of string
     | StructType of string
     | IntType
-    | FloatType
     | VoidType
     | CharType
     | UnsignedIntType

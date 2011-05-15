@@ -13,6 +13,11 @@ let parse_error_rich =
         exit 1
     
     Some parseError
+
+let normArgs = function
+    | [({CFullType.baseType = VoidType; CFullType.pointerDepth = 0}, _)] -> []
+    | args -> args
+
 %}
 
 // The start token becomes a parser function in the compiled code:
@@ -39,7 +44,7 @@ Defs:
     | EOF       { [] }
 
 Def:
-    | FullType NAME LPAREN Params RPAREN SEMICOL        { CFuncDef ($1, $2, $4) }
+    | FullType NAME LPAREN Params RPAREN SEMICOL        { CFuncDef ($1, $2, normArgs $4) }
     | TYPEDEF ENUM LCURL EnumVals RCURL NAME SEMICOL    { CEnumDef ($6, $4) }
     | TYPEDEF FullType NAME SEMICOL                     { CTypeAlias ($2, $3) }
 

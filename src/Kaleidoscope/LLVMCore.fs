@@ -3,7 +3,7 @@ module SEAF.LLVMCore
 open System.Runtime.InteropServices
 
 [<DllImport(@"LLVM-2.9.dll", EntryPoint="LLVMModuleCreateWithName")>]
-extern void* moduleCreateWithName(string moduleID);
+extern void* moduleCreateWithName(string moduleID)
 
 (*
 typedef int LLVMBool;
@@ -1043,6 +1043,6 @@ type Color =
 [<EntryPoint>]
 let main args =
     printfn "hi: %A" (moduleCreateWithName "keith")
-    printfn "Red: %A" (Color.Red.Value())
+    printfn "Red: %A" (Color.Red)
     0
 
