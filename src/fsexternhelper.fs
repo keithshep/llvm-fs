@@ -49,9 +49,9 @@ let toFSharpSource (moduleName : string) (out : System.IO.TextWriter) (defs : CD
                     | GeneralType "LLVMBool" -> defPtrAdj "bool"
                     | GeneralType typeName ->
                         if enums.Contains typeName then
-                            defPtrAdj "int"
+                            defPtrAdj (sprintf "int (* %s *)" (cType.ToString ()))
                         elif typeName.EndsWith "Ref" then
-                            "void*" // TODO
+                            sprintf "void* (* %s *)" (cType.ToString ()) // TODO
                         else
                             failwith (sprintf "don't know how to deal with: %s" typeName)
                     | StructType typeName -> failwith "this should never happen"
@@ -70,17 +70,22 @@ let toFSharpSource (moduleName : string) (out : System.IO.TextWriter) (defs : CD
                     | UnsignedByteType -> defPtrAdj "uint8"
                     | DoubleType -> defPtrAdj "double"
                 
-                let argsToStr args =
-                    let argToStr argIndex = function
+                fprintfn out "[<DllImport(\"%s\", EntryPoint=\"%s\")>]" llvmDLLName fName
+                fprintf out "extern %s %s(" (typeToStr retType) (toFSharpFunName fName)
+                let fArgs = Array.ofList fArgs
+                if fArgs.Length >= 1 then
+                    let argToStr = function
                         | (cType, Some name) ->
                             sprintf "%s %s" (typeToStr cType) name
                         | (cType, None) ->
-                            sprintf "%s arg%i" (typeToStr cType) argIndex
-                    let argStrs = List.mapi argToStr args
-                    String.Join (", ", Array.ofList argStrs)
-                
-                fprintfn out "[<DllImport(\"%s\", EntryPoint=\"%s\")>]" llvmDLLName fName
-                fprintfn out "extern %s %s(%s)" (typeToStr retType) (toFSharpFunName fName) (argsToStr fArgs)
+                            sprintf "%s" (typeToStr cType)
+                    
+                    out.WriteLine ()
+                    for i = 0 to fArgs.Length - 2 do
+                        ifprintfn 1 out "%s," (argToStr fArgs.[i])
+                    ifprintfn 1 out "%s)" (argToStr fArgs.[fArgs.Length - 1])
+                else
+                    out.WriteLine ')'
                 out.WriteLine ()
                 
                 go enums defTail
