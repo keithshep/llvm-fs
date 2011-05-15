@@ -22,16 +22,21 @@ let toFSharpDataName (cDataName : string) =
     else
         failwith ("unexpected data name: " + cDataName)
 
-// indented fprintfn
-let ifprintfn depth out fmt =
+// indented fprintf
+let inline ifprintf depth out fmt =
     for i = 0 to depth - 1 do
         fprintf out "    "
-    
+    fprintf out fmt
+
+// indented fprintfn
+let inline ifprintfn depth out fmt =
+    for i = 0 to depth - 1 do
+        fprintf out "    "
     fprintfn out fmt
 
 let toFSharpSource (moduleName : string) (out : System.IO.TextWriter) (defs : CDef list) =
 
-    let rec go (enums : Set<string>) (defs : CDef list) =
+    let rec go (structRefs : Set<string>) (enums : Set<string>) (defs : CDef list) =
         match defs with
         | [] -> ()
         | def :: defTail ->
@@ -69,26 +74,83 @@ let toFSharpSource (moduleName : string) (out : System.IO.TextWriter) (defs : CD
                     | LongLongType -> defPtrAdj "int64"
                     | UnsignedByteType -> defPtrAdj "uint8"
                     | DoubleType -> defPtrAdj "double"
-                
+
+                // the native function def
                 fprintfn out "[<DllImport(\"%s\", EntryPoint=\"%s\")>]" llvmDLLName fName
-                fprintf out "extern %s %s(" (typeToStr retType) (toFSharpFunName fName)
-                let fArgs = Array.ofList fArgs
+                fprintf out "extern %s private %sNative(" (typeToStr retType) (toFSharpFunName fName)
+                let fArgs =
+                    Array.ofList fArgs
+                    |> Array.mapi (fun i a -> (fst a, match snd a with Some x -> x | None -> sprintf "arg%i" i))
                 if fArgs.Length >= 1 then
-                    let argToStr = function
-                        | (cType, Some name) ->
-                            sprintf "%s %s" (typeToStr cType) name
-                        | (cType, None) ->
-                            sprintf "%s" (typeToStr cType)
-                    
                     out.WriteLine ()
                     for i = 0 to fArgs.Length - 2 do
-                        ifprintfn 1 out "%s," (argToStr fArgs.[i])
-                    ifprintfn 1 out "%s)" (argToStr fArgs.[fArgs.Length - 1])
+                        let cType, name = fArgs.[i]
+                        ifprintfn 1 out "%s %s," (typeToStr cType) name
+                    let cType, name = fArgs.[fArgs.Length - 1]
+                    ifprintfn 1 out "%s %s)" (typeToStr cType) name
                 else
                     out.WriteLine ')'
+
+                // the more F# friendly function def
+                if fArgs.Length >= 1 then
+                    fprintf out "let %s " (toFSharpFunName fName)
+                    for i = 0 to fArgs.Length - 2 do
+                        fprintf out "_%s " (snd fArgs.[i])
+                    fprintfn out "_%s =" (snd fArgs.[fArgs.Length - 1])
+                else
+                    fprintfn out "let %s () =" (toFSharpFunName fName)
+                let toNativeParam (arg : CFullType * string) =
+                    let cType, name = arg
+                    let name = "_" + name
+                    if cType.pointerDepth = 0 then
+                        match cType.baseType with
+                        | GeneralType "LLVMBool" -> name
+                        | GeneralType typeName ->
+                            if enums.Contains typeName then
+                                //sprintf "(enum<%s> %s)" (toFSharpDataName typeName) name
+                                sprintf "(int (%s : %s))" name (toFSharpDataName typeName)
+                            elif typeName.EndsWith "Ref" then
+                                sprintf "(match %s with %s ptr -> ptr)" name (toFSharpDataName typeName)
+                            else
+                                failwith (sprintf "don't know how to deal with: %s" typeName)
+                        | _ -> name
+                    else
+                        name
+                let nativeFunCall () =
+                    if fArgs.Length >= 1 then
+                        fprintf out "%sNative (" (toFSharpFunName fName)
+                        for i = 0 to fArgs.Length - 2 do
+                            fprintf out "%s, " (toNativeParam fArgs.[i])
+                        fprintf out "%s)" (toNativeParam fArgs.[fArgs.Length - 1])
+                    else
+                        fprintf out "%sNative ()" (toFSharpFunName fName)
+                if retType.pointerDepth = 0 then
+                    match retType.baseType with
+                    | GeneralType "LLVMBool" ->
+                        ifprintf 1 out ""
+                        nativeFunCall ()
+                    | GeneralType typeName ->
+                        if enums.Contains typeName then
+                            ifprintf 1 out "enum<%s> (" (toFSharpDataName typeName)
+                            nativeFunCall ()
+                            fprintf out ")"
+                        elif typeName.EndsWith "Ref" then
+                            ifprintf 1 out "%s (" (toFSharpDataName typeName)
+                            nativeFunCall ()
+                            fprintf out ")"
+                        else
+                            failwith (sprintf "don't know how to deal with: %s" typeName)
+                    | _ ->
+                        ifprintf 1 out ""
+                        nativeFunCall ()
+                else
+                    ifprintf 1 out ""
+                    nativeFunCall ()
+                
+                out.WriteLine ()
                 out.WriteLine ()
                 
-                go enums defTail
+                go structRefs enums defTail
             
             | CEnumDef (enumName, enumVals) ->
                 fprintfn out "type %s =" (toFSharpDataName enumName)
@@ -102,16 +164,23 @@ let toFSharpSource (moduleName : string) (out : System.IO.TextWriter) (defs : CD
                     nextEnumVal <- nextEnumVal + 1
                 out.WriteLine ()
                 
-                go (enums.Add enumName) defTail
+                go structRefs (enums.Add enumName) defTail
 
-            | _ -> go enums defTail
+            | CTypeAlias ({CFullType.baseType = StructType _; CFullType.pointerDepth = 1}, name) ->
+                let dataName = toFSharpDataName name
+                fprintfn out "type %s = %s of nativeint" dataName dataName
+                out.WriteLine ()
+                
+                go (structRefs.Add name) enums defTail
+
+            | _ -> go structRefs enums defTail
 
     fprintfn out "module %s" moduleName
     out.WriteLine ()
     fprintfn out "open System.Runtime.InteropServices"
     out.WriteLine ()
     
-    go Set.empty defs
+    go Set.empty Set.empty defs
 
 [<EntryPoint>]
 let main (args : string array) =
