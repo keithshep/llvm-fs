@@ -1,4 +1,5 @@
 open System
+open System.IO
 open Microsoft.FSharp.Text.Lexing
 
 open FSExternHelper.HeaderSyntax
@@ -34,9 +35,40 @@ let inline ifprintfn depth out fmt =
         fprintf out "    "
     fprintfn out fmt
 
-let toFSharpSource (moduleName : string) (out : System.IO.TextWriter) (defs : CDef list) =
+let getStructDefs (defs : CDef list) =
+    let rec go (structs : Set<string>)= function
+    | [] -> structs
+    | defHead :: defs ->
+        match defHead with
+        | CTypeAlias ({CFullType.baseType = StructType _; CFullType.pointerDepth = 1}, name) ->
+            go (structs.Add name) defs
+        | CTypeAlias ({CFullType.baseType = StructType _}, name) ->
+            failwith "only know how to deal with single-pointer structs"
+        | _ ->
+            go structs defs
 
-    let rec go (structRefs : Set<string>) (enums : Set<string>) (defs : CDef list) =
+    go Set.empty defs
+
+let getEnumDefs (defs : CDef list) =
+    let rec go (enums : Set<string>) = function
+    | [] -> enums
+    | defHead :: defs ->
+        match defHead with
+        | CEnumDef (enumName, _) ->
+            go (enums.Add enumName) defs
+        | _ ->
+            go enums defs
+
+    go Set.empty defs
+
+let toFSharpSource (moduleName : string) (out : System.IO.TextWriter) (deps : (string * CDef list) list) (defs : CDef list) =
+
+    let depDefs = List.map snd deps
+    let allDefs = defs @ List.concat depDefs
+    
+    let structRefs = getStructDefs allDefs
+    let enums = getEnumDefs allDefs
+    let rec go (defs : CDef list) =
         match defs with
         | [] -> ()
         | def :: defTail ->
@@ -59,7 +91,8 @@ let toFSharpSource (moduleName : string) (out : System.IO.TextWriter) (defs : CD
                             sprintf "void* (* %s *)" (cType.ToString ()) // TODO
                         else
                             failwith (sprintf "don't know how to deal with: %s" typeName)
-                    | StructType typeName -> failwith "this should never happen"
+                    | StructType typeName ->
+                        failwith "can't deal with naked struct type"
                     | IntType -> defPtrAdj "int"
                     | VoidType -> defPtrAdj "void"
                     | CharType ->
@@ -150,7 +183,7 @@ let toFSharpSource (moduleName : string) (out : System.IO.TextWriter) (defs : CD
                 out.WriteLine ()
                 out.WriteLine ()
                 
-                go structRefs enums defTail
+                go defTail
             
             | CEnumDef (enumName, enumVals) ->
                 fprintfn out "type %s =" (toFSharpDataName enumName)
@@ -164,29 +197,55 @@ let toFSharpSource (moduleName : string) (out : System.IO.TextWriter) (defs : CD
                     nextEnumVal <- nextEnumVal + 1
                 out.WriteLine ()
                 
-                go structRefs (enums.Add enumName) defTail
+                go defTail
 
             | CTypeAlias ({CFullType.baseType = StructType _; CFullType.pointerDepth = 1}, name) ->
                 let dataName = toFSharpDataName name
                 fprintfn out "type %s = %s of nativeint" dataName dataName
                 out.WriteLine ()
                 
-                go (structRefs.Add name) enums defTail
+                go defTail
 
-            | _ -> go structRefs enums defTail
+            | _ -> go defTail
 
     fprintfn out "module %s" moduleName
     out.WriteLine ()
     fprintfn out "open System.Runtime.InteropServices"
+    List.iter (fprintfn out "open %s") (List.map fst deps)
+    
     out.WriteLine ()
     
-    go Set.empty Set.empty defs
+    go defs
 
 [<EntryPoint>]
 let main (args : string array) =
-    let lexbuf = LexBuffer<_>.FromTextReader stdin
-    let parseResult = start tokenize lexbuf
-    toFSharpSource "LLVM.NativeInterface.Core" stdout parseResult
+    match args with
+    | [|llvmHome; outSrcDir|] ->
+        let cPrefix = Path.Combine [|llvmHome; "include"; "llvm-c"|]
+        let fsPrefix = Path.Combine [|outSrcDir; "LLVM"; "NativeInterface"|]
+        let modulePrefix = "LLVM.NativeInterface."
+        let parseMod m =
+            let reader = new StreamReader(Path.Combine (cPrefix, m + ".h"))
+            let lexbuf = LexBuffer<_>.FromTextReader reader
+            start tokenize lexbuf
+        let rec processModule = function
+            | [] -> ()
+            | (m, deps) :: mTail ->
+                let modName m = "LLVM.NativeInterface." + m
+                let depDefs = List.map (fun m -> (modName m, parseMod m)) deps
+                let writer = new StreamWriter(Path.Combine (fsPrefix, m + ".fs"))
+                toFSharpSource (modName m) writer depDefs (parseMod m)
+                writer.Close ()
+                
+                processModule mTail
+        
+        let modulesToProcess = [
+            ("Core", [])
+            ("BitReader", ["Core"])
+            ("BitWriter", ["Core"])]
+        processModule modulesToProcess
+    | _ ->
+        failwith "expected two arguments: llvmHome, outSrcDir"
     
     // Exit code
     0
