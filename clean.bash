@@ -12,5 +12,5 @@ rm -f \
     bindinggen/Parser.fs \
     bindinggen/Parser.fsi \
     bindinggen/Lexer.fs \
-    src/LLVM/NativeInterface/*.fs
+    src/LLVM/Generated/*.fs
 

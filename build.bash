@@ -5,18 +5,9 @@ set -o errexit
 set -o nounset
 set -x
 
-rm -f \
-    LLVMFSharp.dll \
-    bindinggen.exe \
-    simpletest.exe \
-    bindinggen/Parser.fs \
-    bindinggen/Parser.fsi \
-    bindinggen/Lexer.fs \
-    src/LLVM/NativeInterface/*.fs
-
+# build and run special purpose tool for generating LLVM C bindings
 fslex --unicode bindinggen/Lexer.fsl
 fsyacc --module FSExternHelper.Parser bindinggen/Parser.fsy
-
 fsc \
     bindinggen/Lexing.fs \
     bindinggen/Parsing.fs \
@@ -24,14 +15,16 @@ fsc \
     bindinggen/Parser.fs \
     bindinggen/Lexer.fs \
     bindinggen/bindinggen.fs
-
+mkdir -p src/LLVM/Generated
 mono bindinggen.exe ~/projects/third-party/llvm-2.7 src
 
+# build the LLVM C binding library
 fsc --target:library --out:LLVMFSharp.dll \
-    src/LLVM/NativeInterface/Core.fs \
+    src/LLVM/Generated/Core.fs \
     src/LLVM/Core.fs \
-    src/LLVM/NativeInterface/BitReader.fs \
-    src/LLVM/NativeInterface/BitWriter.fs
+    src/LLVM/Generated/BitReader.fs \
+    src/LLVM/Generated/BitWriter.fs
 
+# build the test
 fsc -r LLVMFSharp.dll test/simpletest.fs
 

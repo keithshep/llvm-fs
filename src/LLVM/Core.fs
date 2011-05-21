@@ -1,7 +1,7 @@
 module LLVM.Core
 
 open System.Runtime.InteropServices
-open LLVM.NativeInterface.Core
+open LLVM.Generated.Core
 
 let functionType (retTy : TypeRef) (paramTys : TypeRef []) =
     let paramTyPtrs = Array.map (fun x -> match x with TypeRef ptr -> ptr) paramTys

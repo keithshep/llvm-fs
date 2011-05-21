@@ -222,8 +222,8 @@ let main (args : string array) =
     match args with
     | [|llvmHome; outSrcDir|] ->
         let cPrefix = Path.Combine [|llvmHome; "include"; "llvm-c"|]
-        let fsPrefix = Path.Combine [|outSrcDir; "LLVM"; "NativeInterface"|]
-        let modulePrefix = "LLVM.NativeInterface."
+        let fsPrefix = Path.Combine [|outSrcDir; "LLVM"; "Generated"|]
+        let modulePrefix = "LLVM.Generated."
         let parseMod m =
             let reader = new StreamReader(Path.Combine (cPrefix, m + ".h"))
             let lexbuf = LexBuffer<_>.FromTextReader reader
@@ -231,7 +231,7 @@ let main (args : string array) =
         let rec processModule = function
             | [] -> ()
             | (m, deps) :: mTail ->
-                let modName m = "LLVM.NativeInterface." + m
+                let modName m = "LLVM.Generated." + m
                 let depDefs = List.map (fun m -> (modName m, parseMod m)) deps
                 let writer = new StreamWriter(Path.Combine (fsPrefix, m + ".fs"))
                 toFSharpSource (modName m) writer depDefs (parseMod m)
