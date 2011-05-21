@@ -6,7 +6,6 @@ open FSExternHelper.HeaderSyntax
 open FSExternHelper.Lexer
 open FSExternHelper.Parser
 
-let llvmDLLName = "LLVM-2.9.dll"
 let llvmCPrefix = "LLVM"
 
 let toFSharpFunName (cFunName : string) =
@@ -61,7 +60,12 @@ let getEnumDefs (defs : CDef list) =
 
     go Set.empty defs
 
-let toFSharpSource (moduleName : string) (out : System.IO.TextWriter) (deps : (string * CDef list) list) (defs : CDef list) =
+let toFSharpSource
+        (llvmDLLName : string)
+        (moduleName : string)
+        (out : System.IO.TextWriter)
+        (deps : (string * CDef list) list)
+        (defs : CDef list) =
 
     let depDefs = List.map snd deps
     let allDefs = defs @ List.concat depDefs
@@ -125,62 +129,78 @@ let toFSharpSource (moduleName : string) (out : System.IO.TextWriter) (deps : (s
                     out.WriteLine ')'
 
                 // the more F# friendly function def
-                if fArgs.Length >= 1 then
-                    fprintf out "let %s " (toFSharpFunName fName)
-                    for i = 0 to fArgs.Length - 2 do
-                        fprintf out "_%s " (snd fArgs.[i])
-                    fprintfn out "_%s =" (snd fArgs.[fArgs.Length - 1])
-                else
-                    fprintfn out "let %s () =" (toFSharpFunName fName)
-                let toNativeParam (arg : CFullType * string) =
-                    let cType, name = arg
-                    let name = "_" + name
-                    if cType.pointerDepth = 0 then
-                        match cType.baseType with
-                        | GeneralType "LLVMBool" -> name
+                let isFunFriendly =
+                    let isTypeFriendly t =
+                        match t.baseType with
+                        | GeneralType _ | StructType _ | IntType | VoidType
+                        | UnsignedIntType | UnsignedLongLongType | LongLongType
+                        | UnsignedByteType | DoubleType ->
+                            t.pointerDepth = 0
+                        | CharType ->
+                            t.pointerDepth <= 1
+                    let rec go = function
+                        | x :: xt -> isTypeFriendly x && go xt
+                        | [] -> true
+                    isTypeFriendly retType && go (List.ofArray (Array.map fst fArgs))
+                if isFunFriendly then
+                    if fArgs.Length >= 1 then
+                        fprintf out "let %s " (toFSharpFunName fName)
+                        for i = 0 to fArgs.Length - 2 do
+                            fprintf out "_%s " (snd fArgs.[i])
+                        fprintfn out "_%s =" (snd fArgs.[fArgs.Length - 1])
+                    else
+                        fprintfn out "let %s () =" (toFSharpFunName fName)
+                    let toNativeParam (arg : CFullType * string) =
+                        let cType, name = arg
+                        let name = "_" + name
+                        if cType.pointerDepth = 0 then
+                            match cType.baseType with
+                            | GeneralType "LLVMBool" -> name
+                            | GeneralType typeName ->
+                                if enums.Contains typeName then
+                                    //sprintf "(enum<%s> %s)" (toFSharpDataName typeName) name
+                                    sprintf "(int (%s : %s))" name (toFSharpDataName typeName)
+                                elif typeName.EndsWith "Ref" then
+                                    sprintf "(match %s with %s ptr -> ptr)" name (toFSharpDataName typeName)
+                                else
+                                    failwith (sprintf "don't know how to deal with: %s" typeName)
+                            | _ -> name
+                        else
+                            name
+                    let nativeFunCall () =
+                        if fArgs.Length >= 1 then
+                            fprintf out "%sNative (" (toFSharpFunName fName)
+                            for i = 0 to fArgs.Length - 2 do
+                                fprintf out "%s, " (toNativeParam fArgs.[i])
+                            fprintf out "%s)" (toNativeParam fArgs.[fArgs.Length - 1])
+                        else
+                            fprintf out "%sNative ()" (toFSharpFunName fName)
+                    if retType.pointerDepth = 0 then
+                        match retType.baseType with
+                        | GeneralType "LLVMBool" ->
+                            ifprintf 1 out ""
+                            nativeFunCall ()
                         | GeneralType typeName ->
                             if enums.Contains typeName then
-                                //sprintf "(enum<%s> %s)" (toFSharpDataName typeName) name
-                                sprintf "(int (%s : %s))" name (toFSharpDataName typeName)
+                                ifprintf 1 out "enum<%s> (" (toFSharpDataName typeName)
+                                nativeFunCall ()
+                                fprintf out ")"
                             elif typeName.EndsWith "Ref" then
-                                sprintf "(match %s with %s ptr -> ptr)" name (toFSharpDataName typeName)
+                                ifprintf 1 out "%s (" (toFSharpDataName typeName)
+                                nativeFunCall ()
+                                fprintf out ")"
                             else
                                 failwith (sprintf "don't know how to deal with: %s" typeName)
-                        | _ -> name
+                        | _ ->
+                            ifprintf 1 out ""
+                            nativeFunCall ()
                     else
-                        name
-                let nativeFunCall () =
-                    if fArgs.Length >= 1 then
-                        fprintf out "%sNative (" (toFSharpFunName fName)
-                        for i = 0 to fArgs.Length - 2 do
-                            fprintf out "%s, " (toNativeParam fArgs.[i])
-                        fprintf out "%s)" (toNativeParam fArgs.[fArgs.Length - 1])
-                    else
-                        fprintf out "%sNative ()" (toFSharpFunName fName)
-                if retType.pointerDepth = 0 then
-                    match retType.baseType with
-                    | GeneralType "LLVMBool" ->
                         ifprintf 1 out ""
                         nativeFunCall ()
-                    | GeneralType typeName ->
-                        if enums.Contains typeName then
-                            ifprintf 1 out "enum<%s> (" (toFSharpDataName typeName)
-                            nativeFunCall ()
-                            fprintf out ")"
-                        elif typeName.EndsWith "Ref" then
-                            ifprintf 1 out "%s (" (toFSharpDataName typeName)
-                            nativeFunCall ()
-                            fprintf out ")"
-                        else
-                            failwith (sprintf "don't know how to deal with: %s" typeName)
-                    | _ ->
-                        ifprintf 1 out ""
-                        nativeFunCall ()
+                    out.WriteLine ()
                 else
-                    ifprintf 1 out ""
-                    nativeFunCall ()
-                
-                out.WriteLine ()
+                    fprintfn out "// I don't know how to generate an \"F# friendly\" version of %s" fName
+
                 out.WriteLine ()
                 
                 go defTail
@@ -208,6 +228,7 @@ let toFSharpSource (moduleName : string) (out : System.IO.TextWriter) (deps : (s
 
             | _ -> go defTail
 
+    fprintfn out "// This file should not be edited. It is automatically generated from a C header file"
     fprintfn out "module %s" moduleName
     out.WriteLine ()
     fprintfn out "open System.Runtime.InteropServices"
@@ -220,7 +241,7 @@ let toFSharpSource (moduleName : string) (out : System.IO.TextWriter) (deps : (s
 [<EntryPoint>]
 let main (args : string array) =
     match args with
-    | [|llvmHome; outSrcDir|] ->
+    | [|llvmDLLName; llvmHome; outSrcDir|] ->
         let cPrefix = Path.Combine [|llvmHome; "include"; "llvm-c"|]
         let fsPrefix = Path.Combine [|outSrcDir; "LLVM"; "Generated"|]
         let modulePrefix = "LLVM.Generated."
@@ -234,7 +255,7 @@ let main (args : string array) =
                 let modName m = "LLVM.Generated." + m
                 let depDefs = List.map (fun m -> (modName m, parseMod m)) deps
                 let writer = new StreamWriter(Path.Combine (fsPrefix, m + ".fs"))
-                toFSharpSource (modName m) writer depDefs (parseMod m)
+                toFSharpSource llvmDLLName (modName m) writer depDefs (parseMod m)
                 writer.Close ()
                 
                 processModule mTail
@@ -245,7 +266,7 @@ let main (args : string array) =
             ("BitWriter", ["Core"])]
         processModule modulesToProcess
     | _ ->
-        failwith "expected two arguments: llvmHome, outSrcDir"
+        failwith "expected two arguments: llvmDLLName, llvmHome, outSrcDir"
     
     // Exit code
     0

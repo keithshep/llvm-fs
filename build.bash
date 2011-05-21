@@ -8,7 +8,7 @@ set -x
 # build and run special purpose tool for generating LLVM C bindings
 fslex --unicode bindinggen/Lexer.fsl
 fsyacc --module FSExternHelper.Parser bindinggen/Parser.fsy
-fsc \
+fsc --nologo \
     bindinggen/Lexing.fs \
     bindinggen/Parsing.fs \
     bindinggen/HeaderSyntax.fs \
@@ -16,15 +16,15 @@ fsc \
     bindinggen/Lexer.fs \
     bindinggen/bindinggen.fs
 mkdir -p src/LLVM/Generated
-mono bindinggen.exe ~/projects/third-party/llvm-2.7 src
+mono bindinggen.exe LLVM-2.9.dll ~/projects/third-party/llvm-2.7 src
 
 # build the LLVM C binding library
-fsc --target:library --out:LLVMFSharp.dll \
+fsc --nologo --target:library --out:LLVMFSharp.dll \
     src/LLVM/Generated/Core.fs \
     src/LLVM/Core.fs \
     src/LLVM/Generated/BitReader.fs \
     src/LLVM/Generated/BitWriter.fs
 
 # build the test
-fsc -r LLVMFSharp.dll test/simpletest.fs
+fsc --nologo -r LLVMFSharp.dll test/simpletest.fs
 

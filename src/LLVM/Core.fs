@@ -8,10 +8,12 @@ let functionType (retTy : TypeRef) (paramTys : TypeRef []) =
     
     let aloc = Marshal.AllocHGlobal (sizeof<nativeint> * paramTys.Length)
     Marshal.Copy (paramTyPtrs, 0, aloc, paramTyPtrs.Length)
-    let fType = functionType retTy aloc (uint32 paramTys.Length) false
+    let ptr = match retTy with TypeRef ptr -> ptr
+    let paramCount = uint32 paramTys.Length
+    let fTypePtr = functionTypeNative (ptr, aloc, paramCount, false)
     Marshal.FreeHGlobal aloc
     
-    fType
+    TypeRef fTypePtr
 
 let getBasicBlocks f =
     let bbCount = countBasicBlocks f
