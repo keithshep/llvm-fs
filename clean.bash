@@ -7,9 +7,10 @@ set -x
 
 rm -f \
     LLVMFSharp.dll \
-    fsexternhelper.exe \
-    src/FSExternHelper/Parser.fs \
-    src/FSExternHelper/Parser.fsi \
-    src/FSExternHelper/Lexer.fs \
+    bindinggen.exe \
+    simpletest.exe \
+    bindinggen/Parser.fs \
+    bindinggen/Parser.fsi \
+    bindinggen/Lexer.fs \
     src/LLVM/NativeInterface/*.fs
 

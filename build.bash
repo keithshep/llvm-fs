@@ -7,27 +7,31 @@ set -x
 
 rm -f \
     LLVMFSharp.dll \
-    fsexternhelper.exe \
-    src/FSExternHelper/Parser.fs \
-    src/FSExternHelper/Parser.fsi \
-    src/FSExternHelper/Lexer.fs \
+    bindinggen.exe \
+    simpletest.exe \
+    bindinggen/Parser.fs \
+    bindinggen/Parser.fsi \
+    bindinggen/Lexer.fs \
     src/LLVM/NativeInterface/*.fs
 
-fslex --unicode src/FSExternHelper/Lexer.fsl
-fsyacc --module FSExternHelper.Parser src/FSExternHelper/Parser.fsy
+fslex --unicode bindinggen/Lexer.fsl
+fsyacc --module FSExternHelper.Parser bindinggen/Parser.fsy
 
 fsc \
-    src/ParseUtil/Lexing.fs \
-    src/ParseUtil/Parsing.fs \
-    src/FSExternHelper/HeaderSyntax.fs \
-    src/FSExternHelper/Parser.fs \
-    src/FSExternHelper/Lexer.fs \
-    src/fsexternhelper.fs
+    bindinggen/Lexing.fs \
+    bindinggen/Parsing.fs \
+    bindinggen/HeaderSyntax.fs \
+    bindinggen/Parser.fs \
+    bindinggen/Lexer.fs \
+    bindinggen/bindinggen.fs
 
-mono fsexternhelper.exe ~/projects/third-party/llvm-2.7 src
+mono bindinggen.exe ~/projects/third-party/llvm-2.7 src
 
 fsc --target:library --out:LLVMFSharp.dll \
     src/LLVM/NativeInterface/Core.fs \
+    src/LLVM/Core.fs \
     src/LLVM/NativeInterface/BitReader.fs \
     src/LLVM/NativeInterface/BitWriter.fs
+
+fsc -r LLVMFSharp.dll test/simpletest.fs
 
