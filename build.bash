@@ -15,15 +15,20 @@ fsc --nologo \
     bindinggen/Parser.fs \
     bindinggen/Lexer.fs \
     bindinggen/bindinggen.fs
-mkdir -p src/LLVM/Generated
+mkdir -p src/LLVM/Generated/Transforms
 mono bindinggen.exe LLVM-2.9.dll ~/projects/third-party/llvm-2.7 src
 
 # build the LLVM C binding library
 fsc --nologo --target:library --out:LLVMFSharp.dll \
     src/LLVM/Generated/Core.fs \
-    src/LLVM/Core.fs \
     src/LLVM/Generated/BitReader.fs \
-    src/LLVM/Generated/BitWriter.fs
+    src/LLVM/Generated/BitWriter.fs \
+    src/LLVM/Generated/Target.fs \
+    src/LLVM/Generated/ExecutionEngine.fs \
+    src/LLVM/Generated/Analysis.fs \
+    src/LLVM/Generated/Transforms/Scalar.fs \
+    src/LLVM/Generated/Transforms/IPO.fs \
+    src/LLVM/Core.fs
 
 # build the test
 fsc --nologo -r LLVMFSharp.dll test/simpletest.fs

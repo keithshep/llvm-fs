@@ -245,25 +245,33 @@ let main (args : string array) =
         let cPrefix = Path.Combine [|llvmHome; "include"; "llvm-c"|]
         let fsPrefix = Path.Combine [|outSrcDir; "LLVM"; "Generated"|]
         let modulePrefix = "LLVM.Generated."
-        let parseMod m =
-            let reader = new StreamReader(Path.Combine (cPrefix, m + ".h"))
+        let parseMod (m : string) =
+            let hFile = Path.Combine (cPrefix, Path.Combine (m.Split '.') + ".h")
+            let reader = new StreamReader(hFile)
             let lexbuf = LexBuffer<_>.FromTextReader reader
             start tokenize lexbuf
         let rec processModule = function
             | [] -> ()
             | (m, deps) :: mTail ->
+                printfn "processing %s" m
                 let modName m = "LLVM.Generated." + m
                 let depDefs = List.map (fun m -> (modName m, parseMod m)) deps
-                let writer = new StreamWriter(Path.Combine (fsPrefix, m + ".fs"))
+                let fsFile = Path.Combine (fsPrefix, Path.Combine (m.Split '.') + ".fs")
+                let writer = new StreamWriter(fsFile)
                 toFSharpSource llvmDLLName (modName m) writer depDefs (parseMod m)
                 writer.Close ()
                 
                 processModule mTail
         
         let modulesToProcess = [
-            ("Core", [])
-            ("BitReader", ["Core"])
-            ("BitWriter", ["Core"])]
+            ("Core",                [])
+            ("BitReader",           ["Core"])
+            ("BitWriter",           ["Core"])
+            ("Target",              ["Core"])
+            ("ExecutionEngine",     ["Core"; "Target"])
+            ("Analysis",            ["Core"])
+            ("Transforms.Scalar",   ["Core"])
+            ("Transforms.IPO",      ["Core"])]
         processModule modulesToProcess
     | _ ->
         failwith "expected two arguments: llvmDLLName, llvmHome, outSrcDir"

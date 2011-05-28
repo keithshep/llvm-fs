@@ -28,9 +28,9 @@ rule tokenize = parse
 | newline           { nextLine lexbuf; tokenize lexbuf }
 | whitespace	        { tokenize lexbuf }
 
-| "#ifdef" whitespace+ "__cplusplus"
-                    { tokenizeIfCPP 0 lexbuf }
+| "#ifdef"          { tokenizeIfdef 0 lexbuf }
 | "/*"              { multiLineComment lexbuf }
+| "//"              { singleLineComment lexbuf }
 | '#'               { tokenizeMacro lexbuf }
 
 // don't care about these
@@ -39,6 +39,8 @@ rule tokenize = parse
 | "typedef"         { TYPEDEF }
 | "enum"            { ENUM }
 | "struct"          { STRUCT }
+| "static"          { STATIC }
+| "inline"          { INLINE }
 
 | ';'               { SEMICOL }
 | ','               { COMMA }
@@ -77,15 +79,18 @@ and multiLineComment = parse
 | "*/"      { tokenize lexbuf }
 | _         { multiLineComment lexbuf }
 
+and singleLineComment = parse
+| newline   { nextLine lexbuf; tokenize lexbuf }
+| _         { singleLineComment lexbuf }
+
 and tokenizeMacro = parse
 | '\\' newline  { nextLine lexbuf; tokenizeMacro lexbuf }
 | newline       { nextLine lexbuf; tokenize lexbuf }
 | _             { tokenizeMacro lexbuf }
 
-and tokenizeIfCPP n = parse
-| "#endif"      { if n = 0 then tokenize lexbuf else tokenizeIfCPP (n - 1) lexbuf }
-| "#if"         { tokenizeIfCPP (n + 1) lexbuf }
-| newline       { nextLine lexbuf; tokenizeIfCPP n lexbuf }
-| _             { tokenizeIfCPP n lexbuf }
-
+and tokenizeIfdef n = parse
+| "#endif"      { if n = 0 then tokenize lexbuf else tokenizeIfdef (n - 1) lexbuf }
+| "#if"         { tokenizeIfdef (n + 1) lexbuf }
+| newline       { nextLine lexbuf; tokenizeIfdef n lexbuf }
+| _             { tokenizeIfdef n lexbuf }
 

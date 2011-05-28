@@ -5,12 +5,12 @@ set -o errexit
 set -o nounset
 set -x
 
-rm -f \
+rm -rf \
     LLVMFSharp.dll \
     bindinggen.exe \
     simpletest.exe \
     bindinggen/Parser.fs \
     bindinggen/Parser.fsi \
     bindinggen/Lexer.fs \
-    src/LLVM/Generated/*.fs
+    src/LLVM/Generated/
 

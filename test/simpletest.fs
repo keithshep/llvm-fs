@@ -1,6 +1,5 @@
 open LLVM.Generated.Core
 open LLVM.Core
-open System.Runtime.InteropServices
 open LLVM.Generated.BitWriter
 
 // an F# example adapted from http://www.mdevan.org/llvm-py/examples.html

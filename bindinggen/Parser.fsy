@@ -29,7 +29,7 @@ let normArgs = function
 %token <string> NAME
 %token SEMICOL COMMA ASTER LPAREN RPAREN EOF LCURL RCURL
 %token STRUCT ENUM TYPEDEF EQ SHIFTL
-%token CONST VOID CHAR INT LONG DOUBLE FLOAT UNSIGNED SHORT UINT8
+%token CONST VOID CHAR INT LONG DOUBLE FLOAT UNSIGNED SHORT UINT8 STATIC INLINE
 
 // This is the type of the data produced by a successful reduction of the 'start'
 // symbol:
@@ -44,9 +44,16 @@ Defs:
     | EOF       { [] }
 
 Def:
-    | FullType NAME LPAREN Params RPAREN SEMICOL        { CFuncDef ($1, $2, normArgs $4) }
+    | FuncDef                                           { $1 }
     | TYPEDEF ENUM LCURL EnumVals RCURL NAME SEMICOL    { CEnumDef ($6, $4) }
-    | TYPEDEF FullType NAME SEMICOL                     { CTypeAlias ($2, $3) }
+    | ENUM NAME LCURL EnumVals RCURL SEMICOL            { CEnumDef ($2, $4) }
+    | TYPEDEF HackType NAME SEMICOL                     { CTypeAlias ($2, $3) }
+
+FuncDef:
+    | STATIC INLINE HackType NAME LPAREN Params RPAREN LCURL RCURL
+        { CFuncDef ($3, $4, normArgs $6) }
+    | HackType NAME LPAREN Params RPAREN SEMICOL
+        { CFuncDef ($1, $2, normArgs $4) }
 
 EnumVals:
     | EnumVal COMMA EnumVals { $1 :: $3 }
@@ -60,6 +67,12 @@ IntVal:
     | INTCONST SHIFTL INTCONST { $1 <<< $3 }
     | INTCONST { $1 }
 
+HackType:
+    | FullType { $1 }
+    // HACK!
+    | FullType CONST ASTER
+        { {$1 with pointerDepth = ($1).pointerDepth + 1} }
+
 FullType:
     | CONST BaseType Pointers   { {baseType = $2; isConst = true; pointerDepth = $3} }
     | BaseType Pointers         { {baseType = $1; isConst = false; pointerDepth = $2} }
@@ -70,6 +83,7 @@ Pointers:
 
 BaseType:
     | NAME                  { GeneralType $1 }
+    | ENUM NAME             { GeneralType $2 }
     | STRUCT NAME           { StructType $2 }
     | INT                   { IntType }
     | VOID                  { VoidType }
@@ -86,6 +100,6 @@ Params:
     |                       { [] }
 
 Param:
-    | FullType NAME     { ($1, Some $2) }
-    | FullType          { ($1, None) }
+    | HackType NAME     { ($1, Some $2) }
+    | HackType          { ($1, None) }
 
