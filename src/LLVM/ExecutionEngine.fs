@@ -20,20 +20,19 @@ let private createEngineForModuleFromNativeFunc
         (nativeFunc : (nativeint * nativeint * nativeint) -> bool)
         (ModuleRef modulePtr) =
     
-    let mutable outEnginePtr = (NativeInterop.NativePtr.stackalloc sizeof<nativeint> : nativeptr<nativeint>)
-    let mutable outErrPtr = (NativeInterop.NativePtr.stackalloc sizeof<nativeint> : nativeptr<nativeint>)
+    use outEnginePtr = new NativePtrs([|0n|])
+    use outErrPtr = new NativePtrs([|0n|])
     let createFailed =
             nativeFunc (
-                NativeInterop.NativePtr.toNativeInt outEnginePtr,
+                outEnginePtr.Ptrs,
                 modulePtr,
-                NativeInterop.NativePtr.toNativeInt outErrPtr)
+                outErrPtr.Ptrs)
     if createFailed then
-        // TODO don't know if it's better to go with failwith or Choice for errors
-        let errStr = Marshal.PtrToStringAuto (NativeInterop.NativePtr.toNativeInt outErrPtr)
-        Marshal.FreeHGlobal (NativeInterop.NativePtr.toNativeInt outErrPtr)
+        let errStr = Marshal.PtrToStringAuto (Marshal.ReadIntPtr outErrPtr.Ptrs)
+        Marshal.FreeHGlobal (Marshal.ReadIntPtr outErrPtr.Ptrs)
         failwith errStr
     else
-        ExecutionEngineRef (NativeInterop.NativePtr.toNativeInt outEnginePtr)
+        ExecutionEngineRef (Marshal.ReadIntPtr outEnginePtr.Ptrs)
 
 let createExecutionEngineForModule =
     createEngineForModuleFromNativeFunc createExecutionEngineForModuleNative

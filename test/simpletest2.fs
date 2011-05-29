@@ -10,7 +10,7 @@ open LLVM.Generated.Target
 [<EntryPoint>]
 let main _ =
 
-//    ignore <| initializeNativeTarget ()
+//    if initializeNativeTarget () then failwith "error initializing native target"
     
     let myModule = moduleCreateWithName "tut2"
 
@@ -66,7 +66,7 @@ let main _ =
 //    let _27 = createGenericValueOfInt tyInt 27UL false
 //    let _81 = createGenericValueOfInt tyInt 81UL false
 //    let result1 = runFunction myEng gcd [|_27; _81|]
-//
+//    
 //    printfn "gcd(27, 81) -> %i" (genericValueToInt result1 false)
 
     // exit code
