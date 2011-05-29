@@ -9,6 +9,7 @@ rm -rf \
     LLVMFSharp.dll \
     bindinggen.exe \
     simpletest.exe \
+    simpletest2.exe \
     bindinggen/Parser.fs \
     bindinggen/Parser.fsi \
     bindinggen/Lexer.fs \

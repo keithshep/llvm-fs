@@ -16,7 +16,7 @@ fsc --nologo \
     bindinggen/Lexer.fs \
     bindinggen/bindinggen.fs
 mkdir -p src/LLVM/Generated/Transforms
-mono bindinggen.exe LLVM-2.9.dll ~/projects/third-party/llvm-2.7 src
+mono bindinggen.exe LLVM-2.9.dll ~/temp/llvm-2.9 src
 
 # build the LLVM C binding library
 fsc --nologo --target:library --out:LLVMFSharp.dll \
@@ -28,8 +28,11 @@ fsc --nologo --target:library --out:LLVMFSharp.dll \
     src/LLVM/Generated/Analysis.fs \
     src/LLVM/Generated/Transforms/Scalar.fs \
     src/LLVM/Generated/Transforms/IPO.fs \
-    src/LLVM/Core.fs
+    src/LLVM/FFIUtil.fs \
+    src/LLVM/Core.fs \
+    src/LLVM/ExecutionEngine.fs
 
 # build the test
 fsc --nologo -r LLVMFSharp.dll test/simpletest.fs
+fsc --nologo -r LLVMFSharp.dll test/simpletest2.fs
 
