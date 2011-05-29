@@ -1,23 +1,13 @@
 module LLVM.Core
 
-open System.Runtime.InteropServices
-open System.Threading
 open LLVM.Generated.Core
+open LLVM.FFIUtil
 
-type NativePtrs(managedPtrs : nativeint array) =
-    let mutable disposed = 0
-    let ptrs = Marshal.AllocHGlobal (sizeof<nativeint> * managedPtrs.Length)
-    do Marshal.Copy (managedPtrs, 0, ptrs, managedPtrs.Length)
-    
-    member x.Ptrs = ptrs
-    
-    interface System.IDisposable with
-        member x.Dispose () =
-            if Interlocked.CompareExchange(&disposed, 1, 0) = 0 then
-                Marshal.FreeHGlobal ptrs
+let optValueRef = function
+    | ValueRef 0n -> None
+    | vr -> Some vr
 
-let functionType (retTy : TypeRef) (paramTys : TypeRef []) =
-    let (TypeRef retTyPtr) = retTy
+let functionType (TypeRef retTyPtr) (paramTys : TypeRef []) =
     use paramPtrs = new NativePtrs(Array.map (fun (TypeRef ptr) -> ptr) paramTys)
     let paramCount = uint32 paramTys.Length
     
@@ -36,16 +26,13 @@ let getBasicBlocks f =
     else
         []
 
-let buildCall (builder : BuilderRef) (func : ValueRef) (args : ValueRef array) (name : string) =
-    let (BuilderRef bldPtr) = builder
-    let (ValueRef funcPtr) = func
+let buildCall (BuilderRef bldPtr) (ValueRef funcPtr) (args : ValueRef array) (name : string) =
     use argPtrs = new NativePtrs(Array.map (fun (ValueRef ptr) -> ptr) args)
     let argCount = uint32 args.Length
     
     ValueRef (buildCallNative (bldPtr, funcPtr, argPtrs.Ptrs, argCount, name))
 
-let addIncoming (phi : ValueRef) (incoming : (ValueRef * BasicBlockRef) array) =
-    let (ValueRef phiPtr) = phi
+let addIncoming (ValueRef phiPtr) (incoming : (ValueRef * BasicBlockRef) array) =
     let (incVals, incBlocks) = Array.unzip incoming
     use incValPtrs = new NativePtrs(Array.map (fun (ValueRef ptr) -> ptr) incVals)
     use incBlockPtrs = new NativePtrs(Array.map (fun (BasicBlockRef ptr) -> ptr) incBlocks)
@@ -53,12 +40,8 @@ let addIncoming (phi : ValueRef) (incoming : (ValueRef * BasicBlockRef) array) =
 
     addIncomingNative (phiPtr, incValPtrs.Ptrs, incBlockPtrs.Ptrs, incCount)
 
-let getNamedFunction _M _Name =
-    ValueRef (getNamedFunctionNative ((match _M with ModuleRef ptr -> ptr), _Name))
-
-let optValueRef = function
-    | ValueRef 0n -> None
-    | vr -> Some vr
+let getNamedFunction (ModuleRef modPtr) (name : string) =
+    ValueRef (getNamedFunctionNative (modPtr, name))
 
 let tryGetNamedFunction (modRef : ModuleRef) (name : string) =
     optValueRef (getNamedFunction modRef name)
