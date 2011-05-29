@@ -49,6 +49,8 @@ rule tokenize = parse
 | ')'               { RPAREN }
 | '{'               { LCURL }
 | '}'               { RCURL }
+| '['               { LSQUARE }
+| ']'               { RSQUARE }
 | '='               { EQ }
 | "<<"              { SHIFTL }
 
@@ -62,6 +64,7 @@ rule tokenize = parse
 | "unsigned"        { UNSIGNED }
 | "short"           { SHORT }
 | "uint8_t"         { UINT8 }
+| "uint64_t"        { UINT64 }
 
 | varHead varTail*  { NAME (lexeme lexbuf) }
 

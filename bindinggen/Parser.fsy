@@ -27,9 +27,9 @@ let normArgs = function
 // the data carried by each token:
 %token <System.Int32> INTCONST
 %token <string> NAME
-%token SEMICOL COMMA ASTER LPAREN RPAREN EOF LCURL RCURL
+%token SEMICOL COMMA ASTER LPAREN RPAREN EOF LCURL RCURL LSQUARE RSQUARE
 %token STRUCT ENUM TYPEDEF EQ SHIFTL
-%token CONST VOID CHAR INT LONG DOUBLE FLOAT UNSIGNED SHORT UINT8 STATIC INLINE
+%token CONST VOID CHAR INT LONG DOUBLE FLOAT UNSIGNED SHORT UINT8 UINT64 STATIC INLINE
 
 // This is the type of the data produced by a successful reduction of the 'start'
 // symbol:
@@ -92,6 +92,7 @@ BaseType:
     | LONG LONG             { LongLongType }
     | UNSIGNED              { UnsignedIntType }
     | UINT8                 { UnsignedByteType }
+    | UINT64                { UnsignedLongLongType }
     | DOUBLE                { DoubleType }
 
 Params:
@@ -100,6 +101,11 @@ Params:
     |                       { [] }
 
 Param:
+    | ParamNoArray { $1 }
+    | ParamNoArray LSQUARE RSQUARE
+        { match $1 with (ty, name) -> ({ty with pointerDepth = ty.pointerDepth + 1}, name) }
+
+ParamNoArray:
     | HackType NAME     { ($1, Some $2) }
     | HackType          { ($1, None) }
 
