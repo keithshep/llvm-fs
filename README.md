@@ -36,3 +36,14 @@ motivated here are some ideas:
   but it seems worth looking into. It might be just as well to define a module
   with some higher level functions and classes instead.
 
+- More "F# friendly" LLVM functions. The binding generator will normally generate
+  two functions per function definition in the LLVM headers which are scanned.
+  First there is the "native" function which takes a tuple argument and
+  not-so-safe argument types. The other is an F# friendly definition with
+  curried arguments and stronger types. For some of the functions the generator
+  isn't smart enough to infer the F# friendly type and these need to be hand
+  coded. You can find all of them by running this grep:
+  `find src/LLVM/Generated -name '*.fs' | xargs grep "F# friendly"`. Which
+  will find a bunch of generated comments for the missing F# friendly
+  definitions.
+
