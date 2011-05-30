@@ -232,7 +232,7 @@ let toFSharpSource
     fprintfn out "module %s" moduleName
     out.WriteLine ()
     fprintfn out "open System.Runtime.InteropServices"
-    List.iter (fprintfn out "open %s") (List.map fst deps)
+    List.iter (fprintfn out "open %s" << fst) deps
     
     out.WriteLine ()
     
