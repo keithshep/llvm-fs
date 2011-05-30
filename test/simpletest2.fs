@@ -67,7 +67,7 @@ let main _ =
 
     let myEng = createExecutionEngineForModule myModule
     
-    let _36 = createGenericValueOfInt tyInt 27UL false
+    let _36 = createGenericValueOfInt tyInt 36UL false
     let _81 = createGenericValueOfInt tyInt 81UL false
     let result1 = runFunction myEng gcd [|_36; _81|]
     
