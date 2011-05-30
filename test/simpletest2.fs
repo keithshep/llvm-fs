@@ -7,10 +7,14 @@ open LLVM.Generated.Target
 
 // an F# example adapted from http://www.mdevan.org/llvm-py/examples.html
 
+open System.Runtime.InteropServices
+[<DllImport("LLVM-2.9.dll", EntryPoint="LLVMInitializeX86Target")>]
+extern void initializeX86Target()
+
 [<EntryPoint>]
 let main _ =
 
-//    if initializeNativeTarget () then failwith "error initializing native target"
+    initializeX86Target ()
     
     let myModule = moduleCreateWithName "tut2"
 
@@ -61,13 +65,13 @@ let main _ =
 
     ignore <| writeBitcodeToFile myModule "tut2.bc"
 
-//    let myEng = createExecutionEngineForModule myModule
-//    
-//    let _27 = createGenericValueOfInt tyInt 27UL false
-//    let _81 = createGenericValueOfInt tyInt 81UL false
-//    let result1 = runFunction myEng gcd [|_27; _81|]
-//    
-//    printfn "gcd(27, 81) -> %i" (genericValueToInt result1 false)
+    let myEng = createExecutionEngineForModule myModule
+    
+    let _36 = createGenericValueOfInt tyInt 27UL false
+    let _81 = createGenericValueOfInt tyInt 81UL false
+    let result1 = runFunction myEng gcd [|_36; _81|]
+    
+    printfn "gcd(36, 81) -> %i" (genericValueToInt result1 false)
 
     // exit code
     0
