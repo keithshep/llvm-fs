@@ -16,7 +16,7 @@ fsc --nologo \
     bindinggen/Lexer.fs \
     bindinggen/bindinggen.fs
 mkdir -p src/LLVM/Generated/Transforms
-mono bindinggen.exe LLVM-2.9.dll ~/temp/llvm-2.9 src
+mono bindinggen.exe LLVM-2.9.dll ~/share src
 
 # build the LLVM C binding library
 fsc --nologo --target:library --out:LLVMFSharp.dll \
