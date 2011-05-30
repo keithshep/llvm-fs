@@ -40,20 +40,20 @@ let normArgs = function
 start: Defs { $1 }
 
 Defs:
-    | Def Defs  { $1 :: $2 }
+    | Def Defs  { match $1 with Some x -> x :: $2 | None -> $2 }
     | EOF       { [] }
 
 Def:
     | FuncDef                                           { $1 }
-    | TYPEDEF ENUM LCURL EnumVals RCURL NAME SEMICOL    { CEnumDef ($6, $4) }
-    | ENUM NAME LCURL EnumVals RCURL SEMICOL            { CEnumDef ($2, $4) }
-    | TYPEDEF HackType NAME SEMICOL                     { CTypeAlias ($2, $3) }
+    | TYPEDEF ENUM LCURL EnumVals RCURL NAME SEMICOL    { Some (CEnumDef ($6, $4)) }
+    | ENUM NAME LCURL EnumVals RCURL SEMICOL            { Some (CEnumDef ($2, $4)) }
+    | TYPEDEF HackType NAME SEMICOL                     { Some (CTypeAlias ($2, $3)) }
 
 FuncDef:
     | STATIC INLINE HackType NAME LPAREN Params RPAREN LCURL RCURL
-        { CFuncDef ($3, $4, normArgs $6) }
+        { None }
     | HackType NAME LPAREN Params RPAREN SEMICOL
-        { CFuncDef ($1, $2, normArgs $4) }
+        { Some (CFuncDef ($1, $2, normArgs $4)) }
 
 EnumVals:
     | EnumVal COMMA EnumVals { $1 :: $3 }

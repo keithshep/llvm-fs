@@ -114,7 +114,7 @@ let toFSharpSource
 
                 // the native function def
                 fprintfn out "[<DllImport(\"%s\", EntryPoint=\"%s\")>]" llvmDLLName fName
-                fprintf out "extern %s private %sNative(" (typeToStr retType) (toFSharpFunName fName)
+                fprintf out "extern %s %sNative(" (typeToStr retType) (toFSharpFunName fName)
                 let fArgs =
                     Array.ofList fArgs
                     |> Array.mapi (fun i a -> (fst a, match snd a with Some x -> x | None -> sprintf "arg%i" i))
