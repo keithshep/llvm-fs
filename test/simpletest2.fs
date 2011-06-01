@@ -7,6 +7,10 @@ open LLVM.Generated.Target
 
 // an F# example adapted from http://www.mdevan.org/llvm-py/examples.html
 
+// Using LLVMInitializeX86Target in this way is kind of a hack. Ideally we would
+// be using LLVMInitializeNativeTarget but unfortunately the symbol for
+// LLVMInitializeNativeTarget never makes it into the LLVM shared library since
+// it is declared static.
 open System.Runtime.InteropServices
 [<DllImport("LLVM-2.9.dll", EntryPoint="LLVMInitializeX86Target")>]
 extern void initializeX86Target()

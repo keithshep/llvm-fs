@@ -6,8 +6,6 @@ open LLVM.Generated.Core
 open LLVM.Generated.ExecutionEngine
 open LLVM.FFIUtil
 
-#nowarn "9"
-
 let runFunction
         (ExecutionEngineRef eePtr)
         (ValueRef funcPtr)

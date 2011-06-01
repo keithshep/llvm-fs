@@ -6,6 +6,7 @@ set -o nounset
 set -x
 
 rm -rf \
+    LLVMFSharp.fsi \
     LLVMFSharp.dll \
     bindinggen.exe \
     simpletest.exe \

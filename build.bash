@@ -19,7 +19,7 @@ mkdir -p src/LLVM/Generated/Transforms
 mono bindinggen.exe LLVM-2.9.dll ~/share src
 
 # build the LLVM C binding library
-fsc --nologo --target:library --out:LLVMFSharp.dll \
+fsc --nologo --sig:LLVMFSharp.fsi --target:library --out:LLVMFSharp.dll \
     src/LLVM/Generated/Core.fs \
     src/LLVM/Generated/BitReader.fs \
     src/LLVM/Generated/BitWriter.fs \
