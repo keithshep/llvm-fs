@@ -48,26 +48,26 @@ let main _ =
     let bldr = createBuilder ()
     positionBuilderAtEnd bldr entry
     let xEqY = buildICmp bldr IntPredicate.IntEQ x y "tmp"
-    ignore <| buildCondBr bldr xEqY ret condFalse
+    buildCondBr bldr xEqY ret condFalse |> ignore
 
     positionBuilderAtEnd bldr ret
-    ignore <| buildRet bldr x
+    buildRet bldr x |> ignore
 
     positionBuilderAtEnd bldr condFalse
     let xLtY = buildICmp bldr IntPredicate.IntULT x y "tmp"
-    ignore <| buildCondBr bldr xLtY condTrue condFalse2
+    buildCondBr bldr xLtY condTrue condFalse2 |> ignore
 
     positionBuilderAtEnd bldr condTrue
     let ySubX = buildSub bldr y x "tmp"
     let recur1 = buildCall bldr gcd [|x; ySubX|] "tmp"
-    ignore <| buildRet bldr recur1
+    buildRet bldr recur1 |> ignore
 
     positionBuilderAtEnd bldr condFalse2
     let xSubY = buildSub bldr x y "x_sub_y"
     let recur2 = buildCall bldr gcd [|xSubY; y|] "tmp"
-    ignore <| buildRet bldr recur2
+    buildRet bldr recur2 |> ignore
 
-    ignore <| writeBitcodeToFile myModule "tut2.bc"
+    writeBitcodeToFile myModule "tut2.bc" |> ignore
 
     let myEng = createExecutionEngineForModule myModule
     
