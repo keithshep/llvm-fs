@@ -45,7 +45,7 @@ let main _ =
     let condFalse2 = appendBasicBlock gcd "cond_false_2"
 
     // create a builder
-    let bldr = createBuilder ()
+    use bldr = new Builder ()
     positionBuilderAtEnd bldr entry
     let xEqY = buildICmp bldr IntPredicate.IntEQ x y "tmp"
     buildCondBr bldr xEqY ret condFalse |> ignore

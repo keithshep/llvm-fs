@@ -67,6 +67,9 @@ let toFSharpSource
         (deps : (string * CDef list) list)
         (defs : CDef list) =
 
+    let friendlyFuncCount = ref 0
+    let nativeFuncCount = ref 0
+
     let depDefs = List.map snd deps
     let allDefs = defs @ List.concat depDefs
     
@@ -78,6 +81,7 @@ let toFSharpSource
         | def :: defTail ->
             match def with
             | CFuncDef (retType, fName, fArgs) ->
+                nativeFuncCount := !nativeFuncCount + 1
                 let typeToStr (cType : CFullType) =
                     let pointerAdjust ptrDepth typeStr =
                         match ptrDepth with
@@ -143,6 +147,7 @@ let toFSharpSource
                         | [] -> true
                     isTypeFriendly retType && go (List.ofArray (Array.map fst fArgs))
                 if isFunFriendly then
+                    friendlyFuncCount := !friendlyFuncCount + 1
                     if fArgs.Length >= 1 then
                         fprintf out "let %s " (toFSharpFunName fName)
                         for i = 0 to fArgs.Length - 2 do
@@ -161,7 +166,7 @@ let toFSharpSource
                                     //sprintf "(enum<%s> %s)" (toFSharpDataName typeName) name
                                     sprintf "(int (%s : %s))" name (toFSharpDataName typeName)
                                 elif typeName.EndsWith "Ref" then
-                                    sprintf "(match %s with %s ptr -> ptr)" name (toFSharpDataName typeName)
+                                    sprintf "(%s : %s).Ptr" name (toFSharpDataName typeName)
                                 else
                                     failwith (sprintf "don't know how to deal with: %s" typeName)
                             | _ -> name
@@ -186,7 +191,7 @@ let toFSharpSource
                                 nativeFunCall ()
                                 fprintf out ")"
                             elif typeName.EndsWith "Ref" then
-                                ifprintf 1 out "%s (" (toFSharpDataName typeName)
+                                ifprintf 1 out "new %s (" (toFSharpDataName typeName)
                                 nativeFunCall ()
                                 fprintf out ")"
                             else
@@ -221,7 +226,9 @@ let toFSharpSource
 
             | CTypeAlias ({CFullType.baseType = StructType _; CFullType.pointerDepth = 1}, name) ->
                 let dataName = toFSharpDataName name
-                fprintfn out "type %s = %s of nativeint" dataName dataName
+                fprintfn out "type %s (thePtr : nativeint) =" dataName
+                ifprintfn 1 out "interface ILLVMRef with member x.Ptr with get() = thePtr"
+                ifprintfn 1 out "member x.Ptr with get() = thePtr"
                 out.WriteLine ()
                 
                 go defTail
@@ -231,12 +238,16 @@ let toFSharpSource
     fprintfn out "// This file should not be edited. It is automatically generated from a C header file"
     fprintfn out "module %s" moduleName
     out.WriteLine ()
+    fprintfn out "open LLVM.FFIUtil"
     fprintfn out "open System.Runtime.InteropServices"
     List.iter (fprintfn out "open %s" << fst) deps
     
     out.WriteLine ()
     
     go defs
+
+    (!friendlyFuncCount, !nativeFuncCount)
+
 
 [<EntryPoint>]
 let main (args : string array) =
@@ -250,18 +261,27 @@ let main (args : string array) =
             let reader = new StreamReader(hFile)
             let lexbuf = LexBuffer<_>.FromTextReader reader
             start tokenize lexbuf
-        let rec processModule = function
-            | [] -> ()
-            | (m, deps) :: mTail ->
-                printfn "processing %s" m
+        let rec processModules friendlyCount nativeCount (mods : (string * string list) list) =
+            match mods with
+            | [] -> (friendlyCount, nativeCount)
+            | ((m : string), deps) :: mTail ->
                 let modName m = "LLVM.Generated." + m
                 let depDefs = List.map (fun m -> (modName m, parseMod m)) deps
                 let fsFile = Path.Combine (fsPrefix, Path.Combine (m.Split '.') + ".fs")
                 let writer = new StreamWriter(fsFile)
-                toFSharpSource llvmDLLName (modName m) writer depDefs (parseMod m)
+                let friendlyFuncCount, nativeFuncCount =
+                    toFSharpSource llvmDLLName (modName m) writer depDefs (parseMod m)
+                printfn
+                    "inferred friendly types for %i/%i functions in %s"
+                    friendlyFuncCount
+                    nativeFuncCount
+                    m
                 writer.Close ()
                 
-                processModule mTail
+                processModules
+                    (friendlyCount + friendlyFuncCount)
+                    (nativeCount + nativeFuncCount)
+                    mTail
         
         let modulesToProcess = [
             ("Core",                [])
@@ -272,7 +292,10 @@ let main (args : string array) =
             ("Analysis",            ["Core"])
             ("Transforms.Scalar",   ["Core"])
             ("Transforms.IPO",      ["Core"])]
-        processModule modulesToProcess
+        let friendlyFuncCount, nativeFuncCount =
+            processModules 0 0 modulesToProcess
+        printfn "inferred friendly types for %i/%i functions in total" friendlyFuncCount nativeFuncCount
+    
     | _ ->
         failwith "expected two arguments: llvmDLLName, llvmHome, outSrcDir"
     

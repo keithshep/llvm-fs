@@ -2,13 +2,16 @@ module LLVM.FFIUtil
 
 open System.Runtime.InteropServices
 open System.Threading
-open LLVM.Generated.Core
+
+type ILLVMRef = abstract Ptr : nativeint with get
 
 type NativePtrs(managedPtrs : nativeint array) =
     [<VolatileField>]
     let mutable disposed = 0
     let ptrs = Marshal.AllocHGlobal (sizeof<nativeint> * managedPtrs.Length)
     do Marshal.Copy (managedPtrs, 0, ptrs, managedPtrs.Length)
+
+    new(refs : seq<ILLVMRef>) = new NativePtrs([|for r in refs -> r.Ptr|])
     
     member x.Ptrs = ptrs
     

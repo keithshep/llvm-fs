@@ -7,23 +7,23 @@ open LLVM.Generated.ExecutionEngine
 open LLVM.FFIUtil
 
 let runFunction
-        (ExecutionEngineRef eePtr)
-        (ValueRef funcPtr)
+        (ee : ExecutionEngineRef)
+        (func : ValueRef)
         (args : GenericValueRef array) =
-    use argPtrs = new NativePtrs(Array.map (fun (GenericValueRef ptr) -> ptr) args)
-    let retValPtr = runFunctionNative (eePtr, funcPtr, uint32 args.Length, argPtrs.Ptrs)
+    use argPtrs = new NativePtrs(Array.map (fun (gv : GenericValueRef) -> gv.Ptr) args)
+    let retValPtr = runFunctionNative (ee.Ptr, func.Ptr, uint32 args.Length, argPtrs.Ptrs)
     GenericValueRef retValPtr
 
 let private createEngineForModuleFromNativeFunc
         (nativeFunc : (nativeint * nativeint * nativeint) -> bool)
-        (ModuleRef modulePtr) =
+        (moduleRef : ModuleRef) =
     
     use outEnginePtr = new NativePtrs([|0n|])
     use outErrPtr = new NativePtrs([|0n|])
     let createFailed =
             nativeFunc (
                 outEnginePtr.Ptrs,
-                modulePtr,
+                moduleRef.Ptr,
                 outErrPtr.Ptrs)
     if createFailed then
         let errStr = Marshal.PtrToStringAuto (Marshal.ReadIntPtr outErrPtr.Ptrs)
@@ -32,11 +32,11 @@ let private createEngineForModuleFromNativeFunc
     else
         ExecutionEngineRef (Marshal.ReadIntPtr outEnginePtr.Ptrs)
 
-let createExecutionEngineForModule =
-    createEngineForModuleFromNativeFunc createExecutionEngineForModuleNative
+let createExecutionEngineForModule (modRef : ModuleRef) =
+    createEngineForModuleFromNativeFunc createExecutionEngineForModuleNative modRef
 
-let createInterpreterForModule =
-    createEngineForModuleFromNativeFunc createInterpreterForModuleNative
+let createInterpreterForModule (modRef : ModuleRef) =
+    createEngineForModuleFromNativeFunc createInterpreterForModuleNative modRef
 
 let createJITCompilerForModule (modRef : ModuleRef) (optLvl : uint32) =
     let f (engPtr, modPtr, outErrPtr) =

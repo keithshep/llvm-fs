@@ -20,6 +20,7 @@ mono bindinggen.exe LLVM-2.9.dll ~/share src
 
 # build the LLVM C binding library
 fsc --nologo --sig:LLVMFSharp.fsi --target:library --out:LLVMFSharp.dll \
+    src/LLVM/FFIUtil.fs \
     src/LLVM/Generated/Core.fs \
     src/LLVM/Generated/BitReader.fs \
     src/LLVM/Generated/BitWriter.fs \
@@ -28,7 +29,6 @@ fsc --nologo --sig:LLVMFSharp.fsi --target:library --out:LLVMFSharp.dll \
     src/LLVM/Generated/Analysis.fs \
     src/LLVM/Generated/Transforms/Scalar.fs \
     src/LLVM/Generated/Transforms/IPO.fs \
-    src/LLVM/FFIUtil.fs \
     src/LLVM/Core.fs \
     src/LLVM/ExecutionEngine.fs
 

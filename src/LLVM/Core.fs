@@ -5,32 +5,32 @@ open System.Threading
 open LLVM.Generated.Core
 open LLVM.FFIUtil
 
+/// Extends BuilderRef. This version implements IDisposable and will call
+/// disposeBuilder on itself automatically
 type Builder(builderRef : BuilderRef) =
+    inherit BuilderRef(builderRef.Ptr)
+    
     [<VolatileField>]
     let mutable disposed = 0
+
+    new() = new Builder(createBuilder ())
 
     new(ctxt : ContextRef) = new Builder(createBuilderInContext ctxt)
     
     new(bb : BasicBlockRef) as x =
         new Builder(createBuilder ()) then
-        positionBuilderAtEnd x.Ref bb
-    
-    member x.Ref = builderRef
+        positionBuilderAtEnd x bb
     
     interface System.IDisposable with
         member x.Dispose () =
             if Interlocked.CompareExchange(&disposed, 1, 0) = 0 then
-                disposeBuilder x.Ref
+                disposeBuilder x
 
-let optValueRef = function
-    | ValueRef 0n -> None
-    | vr -> Some vr
-
-let functionType (TypeRef retTyPtr) (paramTys : TypeRef []) =
-    use paramPtrs = new NativePtrs(Array.map (fun (TypeRef ptr) -> ptr) paramTys)
+let functionType (retTy : TypeRef) (paramTys : TypeRef []) =
+    use paramPtrs = new NativePtrs(Array.map (fun (tr : TypeRef) -> tr.Ptr) paramTys)
     let paramCount = uint32 paramTys.Length
     
-    TypeRef (functionTypeNative (retTyPtr, paramPtrs.Ptrs, paramCount, false))
+    TypeRef (functionTypeNative (retTy.Ptr, paramPtrs.Ptrs, paramCount, false))
 
 let getBasicBlocks f =
     let bbCount = countBasicBlocks f
@@ -45,22 +45,27 @@ let getBasicBlocks f =
     else
         []
 
-let buildCall (BuilderRef bldPtr) (ValueRef funcPtr) (args : ValueRef array) (name : string) =
-    use argPtrs = new NativePtrs(Array.map (fun (ValueRef ptr) -> ptr) args)
+let buildCall (bld : BuilderRef) (func : ValueRef) (args : ValueRef array) (name : string) =
+    use argPtrs = new NativePtrs(Array.map (fun (vr : ValueRef) -> vr.Ptr) args)
     let argCount = uint32 args.Length
     
-    ValueRef (buildCallNative (bldPtr, funcPtr, argPtrs.Ptrs, argCount, name))
+    ValueRef (buildCallNative (bld.Ptr, func.Ptr, argPtrs.Ptrs, argCount, name))
 
-let addIncoming (ValueRef phiPtr) (incoming : (ValueRef * BasicBlockRef) array) =
+let addIncoming (phi : ValueRef) (incoming : (ValueRef * BasicBlockRef) array) =
     let (incVals, incBlocks) = Array.unzip incoming
-    use incValPtrs = new NativePtrs(Array.map (fun (ValueRef ptr) -> ptr) incVals)
-    use incBlockPtrs = new NativePtrs(Array.map (fun (BasicBlockRef ptr) -> ptr) incBlocks)
+    use incValPtrs = new NativePtrs(Array.map (fun (vr : ValueRef) -> vr.Ptr) incVals)
+    use incBlockPtrs = new NativePtrs(Array.map (fun (br : BasicBlockRef) -> br.Ptr) incBlocks)
     let incCount = uint32 incoming.Length
 
-    addIncomingNative (phiPtr, incValPtrs.Ptrs, incBlockPtrs.Ptrs, incCount)
+    addIncomingNative (phi.Ptr, incValPtrs.Ptrs, incBlockPtrs.Ptrs, incCount)
 
-let getNamedFunction (ModuleRef modPtr) (name : string) =
-    ValueRef (getNamedFunctionNative (modPtr, name))
+let getNamedFunction (modRef : ModuleRef) (name : string) =
+    ValueRef (getNamedFunctionNative (modRef.Ptr, name))
+
+let optValueRef (vr : ValueRef) =
+    match vr.Ptr with
+    | 0n -> None
+    | _ -> Some vr
 
 let tryGetNamedFunction (modRef : ModuleRef) (name : string) =
     optValueRef (getNamedFunction modRef name)
