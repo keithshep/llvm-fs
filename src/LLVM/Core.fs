@@ -1,7 +1,26 @@
 module LLVM.Core
 
+open System.Threading
+
 open LLVM.Generated.Core
 open LLVM.FFIUtil
+
+type Builder(builderRef : BuilderRef) =
+    [<VolatileField>]
+    let mutable disposed = 0
+
+    new(ctxt : ContextRef) = new Builder(createBuilderInContext ctxt)
+    
+    new(bb : BasicBlockRef) as x =
+        new Builder(createBuilder ()) then
+        positionBuilderAtEnd x.Ref bb
+    
+    member x.Ref = builderRef
+    
+    interface System.IDisposable with
+        member x.Dispose () =
+            if Interlocked.CompareExchange(&disposed, 1, 0) = 0 then
+                disposeBuilder x.Ref
 
 let optValueRef = function
     | ValueRef 0n -> None

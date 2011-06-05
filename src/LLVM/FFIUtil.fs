@@ -5,6 +5,7 @@ open System.Threading
 open LLVM.Generated.Core
 
 type NativePtrs(managedPtrs : nativeint array) =
+    [<VolatileField>]
     let mutable disposed = 0
     let ptrs = Marshal.AllocHGlobal (sizeof<nativeint> * managedPtrs.Length)
     do Marshal.Copy (managedPtrs, 0, ptrs, managedPtrs.Length)
