@@ -24,15 +24,19 @@ let toFSharpDataName (cDataName : string) =
 
 // indented fprintf
 let inline ifprintf depth out fmt =
-    for i = 0 to depth - 1 do
-        fprintf out "    "
-    fprintf out fmt
+    let printIndented s =
+        for i = 0 to depth - 1 do
+            fprintf out "    "
+        fprintf out "%s" s
+    Printf.ksprintf printIndented fmt
 
 // indented fprintfn
 let inline ifprintfn depth out fmt =
-    for i = 0 to depth - 1 do
-        fprintf out "    "
-    fprintfn out fmt
+    let printIndented s =
+        for i = 0 to depth - 1 do
+            fprintf out "    "
+        fprintfn out "%s" s
+    Printf.ksprintf printIndented fmt
 
 let getStructDefs (defs : CDef list) =
     let rec go (structs : Set<string>)= function
@@ -66,6 +70,10 @@ let toFSharpSource
         (out : System.IO.TextWriter)
         (deps : (string * CDef list) list)
         (defs : CDef list) =
+
+    let nsLen = moduleName.LastIndexOf '.'
+    let simpleModuleName = moduleName.Substring (nsLen + 1)
+    let nsName = moduleName.Substring (0, nsLen)
 
     let friendlyFuncCount = ref 0
     let nativeFuncCount = ref 0
@@ -117,8 +125,8 @@ let toFSharpSource
                     | DoubleType -> defPtrAdj "double"
 
                 // the native function def
-                fprintfn out "[<DllImport(\"%s\", EntryPoint=\"%s\")>]" llvmDLLName fName
-                fprintf out "extern %s %sNative(" (typeToStr retType) (toFSharpFunName fName)
+                ifprintfn 2 out "[<DllImport(\"%s\", EntryPoint=\"%s\")>]" llvmDLLName fName
+                ifprintf 2 out "extern %s %sNative(" (typeToStr retType) (toFSharpFunName fName)
                 let fArgs =
                     Array.ofList fArgs
                     |> Array.mapi (fun i a -> (fst a, match snd a with Some x -> x | None -> sprintf "arg%i" i))
@@ -126,9 +134,9 @@ let toFSharpSource
                     out.WriteLine ()
                     for i = 0 to fArgs.Length - 2 do
                         let cType, name = fArgs.[i]
-                        ifprintfn 1 out "%s %s," (typeToStr cType) name
+                        ifprintfn 3 out "%s %s," (typeToStr cType) name
                     let cType, name = fArgs.[fArgs.Length - 1]
-                    ifprintfn 1 out "%s %s)" (typeToStr cType) name
+                    ifprintfn 3 out "%s %s)" (typeToStr cType) name
                 else
                     out.WriteLine ')'
 
@@ -149,12 +157,12 @@ let toFSharpSource
                 if isFunFriendly then
                     friendlyFuncCount := !friendlyFuncCount + 1
                     if fArgs.Length >= 1 then
-                        fprintf out "let %s " (toFSharpFunName fName)
+                        ifprintf 2 out "let %s " (toFSharpFunName fName)
                         for i = 0 to fArgs.Length - 2 do
                             fprintf out "_%s " (snd fArgs.[i])
                         fprintfn out "_%s =" (snd fArgs.[fArgs.Length - 1])
                     else
-                        fprintfn out "let %s () =" (toFSharpFunName fName)
+                        ifprintfn 2 out "let %s () =" (toFSharpFunName fName)
                     let toNativeParam (arg : CFullType * string) =
                         let cType, name = arg
                         let name = "_" + name
@@ -163,7 +171,6 @@ let toFSharpSource
                             | GeneralType "LLVMBool" -> name
                             | GeneralType typeName ->
                                 if enums.Contains typeName then
-                                    //sprintf "(enum<%s> %s)" (toFSharpDataName typeName) name
                                     sprintf "(int (%s : %s))" name (toFSharpDataName typeName)
                                 elif typeName.EndsWith "Ref" then
                                     sprintf "(%s : %s).Ptr" name (toFSharpDataName typeName)
@@ -179,46 +186,46 @@ let toFSharpSource
                                 fprintf out "%s, " (toNativeParam fArgs.[i])
                             fprintf out "%s)" (toNativeParam fArgs.[fArgs.Length - 1])
                         else
-                            fprintf out "%sNative ()" (toFSharpFunName fName)
+                            ifprintf 2 out "%sNative ()" (toFSharpFunName fName)
                     if retType.pointerDepth = 0 then
                         match retType.baseType with
                         | GeneralType "LLVMBool" ->
-                            ifprintf 1 out ""
+                            ifprintf 3 out ""
                             nativeFunCall ()
                         | GeneralType typeName ->
                             if enums.Contains typeName then
-                                ifprintf 1 out "enum<%s> (" (toFSharpDataName typeName)
+                                ifprintf 3 out "enum<%s> (" (toFSharpDataName typeName)
                                 nativeFunCall ()
                                 fprintf out ")"
                             elif typeName.EndsWith "Ref" then
-                                ifprintf 1 out "new %s (" (toFSharpDataName typeName)
+                                ifprintf 3 out "new %s (" (toFSharpDataName typeName)
                                 nativeFunCall ()
                                 fprintf out ")"
                             else
                                 failwith (sprintf "don't know how to deal with: %s" typeName)
                         | _ ->
-                            ifprintf 1 out ""
+                            ifprintf 3 out ""
                             nativeFunCall ()
                     else
-                        ifprintf 1 out ""
+                        ifprintf 3 out ""
                         nativeFunCall ()
                     out.WriteLine ()
                 else
-                    fprintfn out "// I don't know how to generate an \"F# friendly\" version of %s" fName
+                    ifprintfn 2 out "// I don't know how to generate an \"F# friendly\" version of %s" fName
 
                 out.WriteLine ()
                 
                 go defTail
             
             | CEnumDef (enumName, enumVals) ->
-                fprintfn out "type %s =" (toFSharpDataName enumName)
+                ifprintfn 2 out "type %s =" (toFSharpDataName enumName)
                 let mutable nextEnumVal = 0
                 for eValName, maybeEnumVal in enumVals do
                     match maybeEnumVal with
                     | Some enumVal -> nextEnumVal <- enumVal
                     | None -> ()
                     
-                    ifprintfn 1 out "| %s = %i" (toFSharpDataName eValName) nextEnumVal
+                    ifprintfn 3 out "| %s = %i" (toFSharpDataName eValName) nextEnumVal
                     nextEnumVal <- nextEnumVal + 1
                 out.WriteLine ()
                 
@@ -226,9 +233,9 @@ let toFSharpSource
 
             | CTypeAlias ({CFullType.baseType = StructType _; CFullType.pointerDepth = 1}, name) ->
                 let dataName = toFSharpDataName name
-                fprintfn out "type %s (thePtr : nativeint) =" dataName
-                ifprintfn 1 out "interface ILLVMRef with member x.Ptr with get() = thePtr"
-                ifprintfn 1 out "member x.Ptr with get() = thePtr"
+                ifprintfn 2 out "type %s (thePtr : nativeint) =" dataName
+                ifprintfn 3 out "interface ILLVMRef with member x.Ptr with get() = thePtr"
+                ifprintfn 3 out "member x.Ptr with get() = thePtr"
                 out.WriteLine ()
                 
                 go defTail
@@ -236,12 +243,18 @@ let toFSharpSource
             | _ -> go defTail
 
     fprintfn out "// This file should not be edited. It is automatically generated from a C header file"
-    fprintfn out "module %s" moduleName
+    fprintfn out "namespace %s" nsName
+
     out.WriteLine ()
-    fprintfn out "open LLVM.FFIUtil"
-    fprintfn out "open System.Runtime.InteropServices"
-    List.iter (fprintfn out "open %s" << fst) deps
-    
+
+    ifprintfn 1 out "open LLVM.FFIUtil"
+    ifprintfn 1 out "open System.Runtime.InteropServices"
+    List.iter (ifprintfn 1 out "open %s" << fst) deps
+
+    out.WriteLine ()
+
+    ifprintfn 1 out "module %s =" simpleModuleName
+
     out.WriteLine ()
     
     go defs
@@ -252,23 +265,21 @@ let toFSharpSource
 [<EntryPoint>]
 let main (args : string array) =
     match args with
-    | [|llvmDLLName; llvmHome; outSrcDir|] ->
+    | [|llvmDLLName; llvmHome; outSrcFile|] ->
         let cPrefix = Path.Combine [|llvmHome; "include"; "llvm-c"|]
-        let fsPrefix = Path.Combine [|outSrcDir; "LLVM"; "Generated"|]
         let modulePrefix = "LLVM.Generated."
         let parseMod (m : string) =
             let hFile = Path.Combine (cPrefix, Path.Combine (m.Split '.') + ".h")
             let reader = new StreamReader(hFile)
             let lexbuf = LexBuffer<_>.FromTextReader reader
             start tokenize lexbuf
+        let writer = new StreamWriter(outSrcFile)
         let rec processModules friendlyCount nativeCount (mods : (string * string list) list) =
             match mods with
             | [] -> (friendlyCount, nativeCount)
             | ((m : string), deps) :: mTail ->
                 let modName m = "LLVM.Generated." + m
                 let depDefs = List.map (fun m -> (modName m, parseMod m)) deps
-                let fsFile = Path.Combine (fsPrefix, Path.Combine (m.Split '.') + ".fs")
-                let writer = new StreamWriter(fsFile)
                 let friendlyFuncCount, nativeFuncCount =
                     toFSharpSource llvmDLLName (modName m) writer depDefs (parseMod m)
                 printfn
@@ -276,7 +287,6 @@ let main (args : string array) =
                     friendlyFuncCount
                     nativeFuncCount
                     m
-                writer.Close ()
                 
                 processModules
                     (friendlyCount + friendlyFuncCount)
@@ -294,6 +304,7 @@ let main (args : string array) =
             ("Transforms.IPO",      ["Core"])]
         let friendlyFuncCount, nativeFuncCount =
             processModules 0 0 modulesToProcess
+        writer.Close ()
         printfn "inferred friendly types for %i/%i functions in total" friendlyFuncCount nativeFuncCount
     
     | _ ->
