@@ -186,7 +186,7 @@ let toFSharpSource
                                 fprintf out "%s, " (toNativeParam fArgs.[i])
                             fprintf out "%s)" (toNativeParam fArgs.[fArgs.Length - 1])
                         else
-                            ifprintf 2 out "%sNative ()" (toFSharpFunName fName)
+                            fprintf out "%sNative ()" (toFSharpFunName fName)
                     if retType.pointerDepth = 0 then
                         match retType.baseType with
                         | GeneralType "LLVMBool" ->
@@ -308,7 +308,7 @@ let main (args : string array) =
         printfn "inferred friendly types for %i/%i functions in total" friendlyFuncCount nativeFuncCount
     
     | _ ->
-        failwith "expected two arguments: llvmDLLName, llvmHome, outSrcDir"
+        failwith "usage: bindinggen llvmDLLName llvmHome outSrcFile"
     
     // Exit code
     0
