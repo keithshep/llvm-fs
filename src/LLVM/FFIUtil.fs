@@ -11,8 +11,6 @@ type NativePtrs(managedPtrs : nativeint array) =
     let ptrs = Marshal.AllocHGlobal (sizeof<nativeint> * managedPtrs.Length)
     do Marshal.Copy (managedPtrs, 0, ptrs, managedPtrs.Length)
 
-    new(refs : seq<ILLVMRef>) = new NativePtrs([|for r in refs -> r.Ptr|])
-    
     member x.Ptrs = ptrs
     
     interface System.IDisposable with

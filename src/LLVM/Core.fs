@@ -27,7 +27,7 @@ type Builder(builderRef : BuilderRef) =
                 disposeBuilder x
 
 let functionType (retTy : TypeRef) (paramTys : TypeRef []) =
-    use paramPtrs = new NativePtrs(Array.map (fun (tr : TypeRef) -> tr.Ptr) paramTys)
+    use paramPtrs = new NativePtrs([|for pt in paramTys -> pt.Ptr|])
     let paramCount = uint32 paramTys.Length
     
     TypeRef (functionTypeNative (retTy.Ptr, paramPtrs.Ptrs, paramCount, false))
@@ -46,15 +46,15 @@ let getBasicBlocks f =
         []
 
 let buildCall (bld : BuilderRef) (func : ValueRef) (args : ValueRef array) (name : string) =
-    use argPtrs = new NativePtrs(Array.map (fun (vr : ValueRef) -> vr.Ptr) args)
+    use argPtrs = new NativePtrs([|for vr in args -> vr.Ptr|])
     let argCount = uint32 args.Length
     
     ValueRef (buildCallNative (bld.Ptr, func.Ptr, argPtrs.Ptrs, argCount, name))
 
 let addIncoming (phi : ValueRef) (incoming : (ValueRef * BasicBlockRef) array) =
     let (incVals, incBlocks) = Array.unzip incoming
-    use incValPtrs = new NativePtrs(Array.map (fun (vr : ValueRef) -> vr.Ptr) incVals)
-    use incBlockPtrs = new NativePtrs(Array.map (fun (br : BasicBlockRef) -> br.Ptr) incBlocks)
+    use incValPtrs = new NativePtrs([|for vr in incVals -> vr.Ptr|])
+    use incBlockPtrs = new NativePtrs([|for br in incBlocks -> br.Ptr|])
     let incCount = uint32 incoming.Length
 
     addIncomingNative (phi.Ptr, incValPtrs.Ptrs, incBlockPtrs.Ptrs, incCount)
