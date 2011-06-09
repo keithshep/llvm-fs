@@ -197,7 +197,7 @@ let toFSharpSource
                         | {pointerDepth = 1; baseType = CharType} -> true
                         | _ -> false
                     if retTypeIsString then
-                        ifprintf 3 out "System.Runtime.InteropServices.Marshal.PtrToStringAuto ("
+                        ifprintf 3 out "Marshal.PtrToStringAuto ("
                         nativeFunCall ()
                         fprintf out ")"
                     elif retType.pointerDepth = 0 then
