@@ -26,7 +26,7 @@ type Builder(builderRef : BuilderRef) =
             if Interlocked.CompareExchange(&disposed, 1, 0) = 0 then
                 disposeBuilder x
 
-let functionType (retTy : TypeRef) (paramTys : TypeRef []) =
+let functionType (retTy : TypeRef) (paramTys : TypeRef array) =
     use paramPtrs = new NativePtrs([|for pt in paramTys -> pt.Ptr|])
     let paramCount = uint32 paramTys.Length
     

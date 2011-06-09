@@ -90,7 +90,7 @@ let toFSharpSource
             match def with
             | CFuncDef (retType, fName, fArgs) ->
                 nativeFuncCount := !nativeFuncCount + 1
-                let typeToStr (cType : CFullType) =
+                let typeToStr (isParam : bool) (cType : CFullType) =
                     let pointerAdjust ptrDepth typeStr =
                         match ptrDepth with
                         | 0 -> typeStr
@@ -115,9 +115,14 @@ let toFSharpSource
                         if cType.pointerDepth = 0 then
                             "char"
                         elif cType.pointerDepth = 1 then
-                            pointerAdjust (cType.pointerDepth - 1) "string"
-                        else
+                            if isParam then
+                                "string"
+                            else
+                                "void*"
+                        elif cType.pointerDepth = 2 then
                             "void*"
+                        else
+                            failwith (sprintf "don't know how to deal with %i pointer depth" cType.pointerDepth)
                     | UnsignedIntType -> defPtrAdj "uint32"
                     | UnsignedLongLongType -> defPtrAdj "uint64"
                     | LongLongType -> defPtrAdj "int64"
@@ -126,7 +131,7 @@ let toFSharpSource
 
                 // the native function def
                 ifprintfn 2 out "[<DllImport(\"%s\", EntryPoint=\"%s\")>]" llvmDLLName fName
-                ifprintf 2 out "extern %s %sNative(" (typeToStr retType) (toFSharpFunName fName)
+                ifprintf 2 out "extern %s %sNative(" (typeToStr false retType) (toFSharpFunName fName)
                 let fArgs =
                     Array.ofList fArgs
                     |> Array.mapi (fun i a -> (fst a, match snd a with Some x -> x | None -> sprintf "arg%i" i))
@@ -134,9 +139,9 @@ let toFSharpSource
                     out.WriteLine ()
                     for i = 0 to fArgs.Length - 2 do
                         let cType, name = fArgs.[i]
-                        ifprintfn 3 out "%s %s," (typeToStr cType) name
+                        ifprintfn 3 out "%s %s," (typeToStr true cType) name
                     let cType, name = fArgs.[fArgs.Length - 1]
-                    ifprintfn 3 out "%s %s)" (typeToStr cType) name
+                    ifprintfn 3 out "%s %s)" (typeToStr true cType) name
                 else
                     out.WriteLine ')'
 
@@ -187,7 +192,15 @@ let toFSharpSource
                             fprintf out "%s)" (toNativeParam fArgs.[fArgs.Length - 1])
                         else
                             fprintf out "%sNative ()" (toFSharpFunName fName)
-                    if retType.pointerDepth = 0 then
+                    let retTypeIsString =
+                        match retType with
+                        | {pointerDepth = 1; baseType = CharType} -> true
+                        | _ -> false
+                    if retTypeIsString then
+                        ifprintf 3 out "System.Runtime.InteropServices.Marshal.PtrToStringAuto ("
+                        nativeFunCall ()
+                        fprintf out ")"
+                    elif retType.pointerDepth = 0 then
                         match retType.baseType with
                         | GeneralType "LLVMBool" ->
                             ifprintf 3 out ""
