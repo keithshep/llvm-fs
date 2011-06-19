@@ -67,6 +67,7 @@ let main _ =
     let recur2 = buildCall bldr gcd [|xSubY; y|] "tmp"
     buildRet bldr recur2 |> ignore
 
+    dumpModule myModule
     writeBitcodeToFile myModule "tut2.bc" |> ignore
 
     let myEng = createExecutionEngineForModule myModule

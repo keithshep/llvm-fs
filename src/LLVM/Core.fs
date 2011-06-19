@@ -26,6 +26,12 @@ type Builder(builderRef : BuilderRef) =
             if Interlocked.CompareExchange(&disposed, 1, 0) = 0 then
                 disposeBuilder x
 
+let varArgFunctionType (retTy : TypeRef) (paramTys : TypeRef array) =
+    use paramPtrs = new NativePtrs([|for pt in paramTys -> pt.Ptr|])
+    let paramCount = uint32 paramTys.Length
+    
+    TypeRef (functionTypeNative (retTy.Ptr, paramPtrs.Ptrs, paramCount, true))
+
 let functionType (retTy : TypeRef) (paramTys : TypeRef array) =
     use paramPtrs = new NativePtrs([|for pt in paramTys -> pt.Ptr|])
     let paramCount = uint32 paramTys.Length
@@ -73,4 +79,14 @@ let tryGetNamedFunction (modRef : ModuleRef) (name : string) =
 let getParams (func : ValueRef) =
     let paramCount = int (countParams func)
     [|for i in 0 .. paramCount - 1 -> getParam func (uint32 i)|]
+
+let buildSwitchWithCases
+        (bldr : BuilderRef)
+        (testVal : ValueRef)
+        (cases : (ValueRef * BasicBlockRef) list)
+        (defaultCase : BasicBlockRef) =
+
+    let switchVal = buildSwitch bldr testVal defaultCase (uint32 cases.Length)
+    for caseVal, caseBlock in cases do
+        addCase switchVal caseVal caseBlock
 
