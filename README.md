@@ -14,8 +14,7 @@ but you can see all of the LLVM interface types (including generated types)
 2. Build the LLVM binding DLL. You can use the build.bash file as a starting
    point. It's likely that the only thing you will have to change are the
    parameters which are passed to bindinggen.exe:
-   `bindinggen.exe DLL_NAME LLVM_INSTALL_DIR BINDING_SRC_DIR`. There is probably
-   no reason to change the BINDING_SRC_DIR
+   `bindinggen.exe DLL_NAME LLVM_INSTALL_DIR OUT_SRC_FILE`.
 
 3. Build your application in the same way that the tests are built.
    Eg: `fsc -r LLVMFSharp.dll test/simpletest.fs`
@@ -28,4 +27,4 @@ but you can see all of the LLVM interface types (including generated types)
 
 - A cross-patform build to replace my `build.bash` and `clean.bash` files
 
-- etc...
+- ...
