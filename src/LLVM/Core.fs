@@ -92,9 +92,9 @@ let buildSwitchWithCases
 
 let structTypeInContext (ctxt : ContextRef) (elemTys : TypeRef array) (packed : bool) =
     use elemTyPtrs = new NativePtrs([|for t in elemTys -> t.Ptr|])
-    structTypeInContextNative (ctxt.Ptr, elemTyPtrs.Ptrs, uint32 elemTys.Length, packed)
+    TypeRef (structTypeInContextNative (ctxt.Ptr, elemTyPtrs.Ptrs, uint32 elemTys.Length, packed))
 
 let structType (elemTys : TypeRef array) (packed : bool) =
     use elemTyPtrs = new NativePtrs([|for t in elemTys -> t.Ptr|])
-    structTypeNative (elemTyPtrs.Ptrs, uint32 elemTys.Length, packed)
+    TypeRef (structTypeNative (elemTyPtrs.Ptrs, uint32 elemTys.Length, packed))
 
