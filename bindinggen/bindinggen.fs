@@ -253,8 +253,8 @@ let toFSharpSource
             | CTypeAlias ({CFullType.baseType = StructType _; CFullType.pointerDepth = 1}, name) ->
                 let dataName = toFSharpDataName name
                 ifprintfn 2 out "type %s (thePtr : nativeint) =" dataName
+                ifprintfn 3 out "member x.Ptr with get() = (x :> ILLVMRef).Ptr"
                 ifprintfn 3 out "interface ILLVMRef with member x.Ptr with get() = thePtr"
-                ifprintfn 3 out "member x.Ptr with get() = thePtr"
                 out.WriteLine ()
                 
                 go defTail
