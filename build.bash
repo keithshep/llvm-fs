@@ -24,7 +24,8 @@ fsc --nologo --sig:LLVMFSharp.fsi --target:library --out:LLVMFSharp.dll \
     src/LLVM/Core.fs \
     src/LLVM/ExecutionEngine.fs
 
-# build the test
+# build the tests
 fsc --nologo -r LLVMFSharp.dll test/simpletest.fs
 fsc --nologo -r LLVMFSharp.dll test/simpletest2.fs
+dmcs -out:CSSimpleTest2.exe -r:LLVMFSharp.dll test/CSSimpleTest2.cs
 

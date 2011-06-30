@@ -83,7 +83,7 @@ let getParams (func : ValueRef) =
 let buildSwitchWithCases
         (bldr : BuilderRef)
         (testVal : ValueRef)
-        (cases : (ValueRef * BasicBlockRef) list)
+        (cases : (ValueRef * BasicBlockRef) array)
         (defaultCase : BasicBlockRef) =
 
     let switchVal = buildSwitch bldr testVal defaultCase (uint32 cases.Length)
@@ -97,4 +97,8 @@ let structTypeInContext (ctxt : ContextRef) (elemTys : TypeRef array) (packed : 
 let structType (elemTys : TypeRef array) (packed : bool) =
     use elemTyPtrs = new NativePtrs([|for t in elemTys -> t.Ptr|])
     TypeRef (structTypeNative (elemTyPtrs.Ptrs, uint32 elemTys.Length, packed))
+
+let buildGEP (bldr : BuilderRef) (ptr : ValueRef) (indices : ValueRef array) (name : string) =
+    use indexPtrs = new NativePtrs([|for i in indices -> i.Ptr|])
+    ValueRef (buildGEPNative (bldr.Ptr, ptr.Ptr, indexPtrs.Ptrs, uint32 indices.Length, name))
 
