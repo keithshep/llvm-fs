@@ -5,19 +5,7 @@ set -o errexit
 set -o nounset
 set -x
 
-# build and run special purpose tool for generating LLVM C bindings
-fslex --unicode bindinggen/Lexer.fsl
-fsyacc --module FSExternHelper.Parser bindinggen/Parser.fsy
-fsc --nologo \
-    bindinggen/Lexing.fs \
-    bindinggen/Parsing.fs \
-    bindinggen/HeaderSyntax.fs \
-    bindinggen/Parser.fs \
-    bindinggen/Lexer.fs \
-    bindinggen/bindinggen.fs
-mono bindinggen.exe LLVM-2.9.dll ~/share src/LLVM/Generated.fs
-
-# build the LLVM C binding library
+# build the LLVM binding DLL
 fsc --nologo --sig:LLVMFSharp.fsi --target:library --out:LLVMFSharp.dll \
     src/LLVM/FFIUtil.fs \
     src/LLVM/Generated.fs \
@@ -27,5 +15,18 @@ fsc --nologo --sig:LLVMFSharp.fsi --target:library --out:LLVMFSharp.dll \
 # build the tests
 fsc --nologo -r LLVMFSharp.dll test/simpletest.fs
 fsc --nologo -r LLVMFSharp.dll test/simpletest2.fs
-dmcs -out:CSSimpleTest2.exe -r:LLVMFSharp.dll test/CSSimpleTest2.cs
+
+# determine if the C# compiler is dmcs (mono) or csc
+CSC=""
+if hash dmcs &> /dev/null; then
+    CSC=dmcs
+elif hash csc &> /dev/null; then
+    CSC=csc
+fi
+
+if [ ${CSC} != "" ]; then
+    ${CSC} -out:CSSimpleTest2.exe -r:LLVMFSharp.dll test/CSSimpleTest2.cs
+else
+    echo "cannot compile CSSimpleTest2.cs since no C# compiler was found"
+fi
 

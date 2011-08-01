@@ -16,6 +16,5 @@ rm -f \
     CSSimpleTest2.exe \
     bindinggen/Parser.fs \
     bindinggen/Parser.fsi \
-    bindinggen/Lexer.fs \
-    src/LLVM/Generated.fs
+    bindinggen/Lexer.fs
 
