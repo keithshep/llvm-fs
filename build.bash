@@ -12,21 +12,19 @@ fsc --nologo --sig:LLVMFSharp.fsi --target:library --out:LLVMFSharp.dll \
     src/LLVM/Core.fs \
     src/LLVM/ExecutionEngine.fs
 
-# build the tests
-fsc --nologo -r LLVMFSharp.dll test/simpletest.fs
-fsc --nologo -r LLVMFSharp.dll test/simpletest2.fs
+# uncomment the following to build and run the tests
 
-# determine if the C# compiler is dmcs (mono) or csc
-CSC=""
-if hash dmcs &> /dev/null; then
-    CSC=dmcs
-elif hash csc &> /dev/null; then
-    CSC=csc
-fi
+#fsc --nologo -r LLVMFSharp.dll test/simpletest.fs
+#mono simpletest.exe
 
-if [ ${CSC} != "" ]; then
-    ${CSC} -out:CSSimpleTest2.exe -r:LLVMFSharp.dll test/CSSimpleTest2.cs
-else
-    echo "cannot compile CSSimpleTest2.cs since no C# compiler was found"
-fi
+#fsc --nologo -r LLVMFSharp.dll test/simpletest2.fs
+#mono simpletest2.exe
+
+#fsc --nologo -r LLVMFSharp.dll test/add.fs
+#mono add.exe
+#llc -filetype=obj addModule.bc
+#gcc -o printadds addModule.o test/printadds.c
+
+#dmcs -out:CSSimpleTest2.exe -r:LLVMFSharp.dll test/CSSimpleTest2.cs
+#mono CSSimpleTest2.exe
 

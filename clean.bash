@@ -16,5 +16,11 @@ rm -f \
     CSSimpleTest2.exe \
     bindinggen/Parser.fs \
     bindinggen/Parser.fsi \
-    bindinggen/Lexer.fs
+    bindinggen/Lexer.fs \
+    addModule.bc \
+    addModule.o \
+    my-module.bc \
+    printadds \
+    tut2.bc
+
 
