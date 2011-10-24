@@ -12,6 +12,10 @@ type NativePtrs(managedPtrs : nativeint array) =
     do Marshal.Copy (managedPtrs, 0, ptrs, managedPtrs.Length)
 
     member x.Ptrs = ptrs
+
+    member x.PtrArr =
+        let len = managedPtrs.Length
+        [|for i in 0 .. len - 1 -> Marshal.ReadIntPtr (ptrs, i)|]
     
     interface System.IDisposable with
         member x.Dispose () =

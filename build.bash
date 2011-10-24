@@ -6,7 +6,7 @@ set -o nounset
 set -x
 
 # build the LLVM binding DLL
-fsc --nologo --sig:LLVMFSharp.fsi --target:library --out:LLVMFSharp.dll \
+fsc --nologo --debug --sig:LLVMFSharp.fsi --target:library --out:LLVMFSharp.dll \
     src/LLVM/FFIUtil.fs \
     src/LLVM/Generated.fs \
     src/LLVM/Core.fs \
@@ -25,7 +25,7 @@ fsc --nologo --sig:LLVMFSharp.fsi --target:library --out:LLVMFSharp.dll \
 #echo "compile C code against two add functions built from LLVM"
 #fsc --nologo -r LLVMFSharp.dll test/add.fs
 #mono add.exe
-#llc -filetype=obj addModule.bc
+#llc -march=x86-64 -filetype=obj addModule.bc
 #gcc -o printadds addModule.o test/printadds.c
 #./printadds
 #
