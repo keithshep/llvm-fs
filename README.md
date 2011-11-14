@@ -8,7 +8,7 @@ use the project google group: http://groups.google.com/group/llvm-fs
 
 ## Building LLVM for llvm-fs
 
-NOTE: this has been tested on both OS X 10.5, 10.6 and on Windows 7 (using MinGW
+NOTE: this has been tested on OS X 10.5, 10.6 and on Windows 7 (using MinGW
 bash/gcc/g++ with python 2.7 installed)
 
 Download a copy of the LLVM 2.9 source code. In order to use the LLVM native
