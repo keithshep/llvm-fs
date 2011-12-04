@@ -19,8 +19,8 @@ fsc --nologo \
 # see if mono exists in the path. if not assume we're on windows and can
 # run bindinggen.exe directly
 if hash mono &> /dev/null; then
-    mono bindinggen.exe LLVM-2.9.dll ~/share src/LLVM/Generated.fs
+    mono bindinggen.exe LLVM-3.0.dll ~/bin/llvm-3.0 src/LLVM/Generated.fs
 else
-    bindinggen.exe LLVM-2.9.dll C:\\Users\\keith\\Desktop\\projects\\llvm-2.9 src\\LLVM\\Generated.fs
+    bindinggen.exe LLVM-3.0.dll C:\\Users\\keith\\Desktop\\projects\\llvm-3.0 src\\LLVM\\Generated.fs
 fi
 

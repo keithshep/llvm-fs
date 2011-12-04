@@ -102,6 +102,10 @@ let buildGEP (bldr : BuilderRef) (ptr : ValueRef) (indices : ValueRef array) (na
     use indexPtrs = new NativePtrs([|for i in indices -> i.Ptr|])
     ValueRef (buildGEPNative (bldr.Ptr, ptr.Ptr, indexPtrs.Ptrs, uint32 indices.Length, name))
 
+let structSetBody (structTy : TypeRef) (elemTys : TypeRef array) (packed : bool) =
+    use elemPtrs = new NativePtrs([|for e in elemTys -> e.Ptr|])
+    structSetBodyNative(structTy.Ptr, elemPtrs.Ptrs, uint32 elemTys.Length, packed)
+
 let getStructElementTypes (structTy : TypeRef) =
     let elemCount = countStructElementTypes structTy
     use nativeElemTyPtrs = new NativePtrs([|for _ in 0u .. elemCount - 1u -> 0n|])
@@ -118,25 +122,24 @@ let rec private typeToStringBuilder (modRef : ModuleRef) (tyRef : TypeRef) =
         sb.Append (elemTySb : System.Text.StringBuilder) |> ignore
         sb.Append '>'
 
-    match getTypeName modRef tyRef with
-    | null | "" ->
-        match getTypeKind tyRef with
-        | TypeKind.VoidTypeKind      -> newStrBldr "void"
-        | TypeKind.FloatTypeKind     -> newStrBldr "float"
-        | TypeKind.DoubleTypeKind    -> newStrBldr "double"
-        | TypeKind.X86_FP80TypeKind  -> newStrBldr "X86 FP80"
-        | TypeKind.FP128TypeKind     -> newStrBldr "FP 128"
-        | TypeKind.PPC_FP128TypeKind -> newStrBldr "PPC FP 128"
-        | TypeKind.LabelTypeKind     -> newStrBldr "Label"
-        | TypeKind.IntegerTypeKind   -> newStrBldr "int"
-        | TypeKind.FunctionTypeKind  -> newStrBldr "function"
-        | TypeKind.OpaqueTypeKind    -> newStrBldr "Opaque"
-        | TypeKind.MetadataTypeKind  -> newStrBldr "Metadata"
-        | TypeKind.X86_MMXTypeKind   -> newStrBldr "X86 MMX"
-        | TypeKind.ArrayTypeKind     -> withElemTySB "Array"
-        | TypeKind.PointerTypeKind   -> withElemTySB "Pointer"
-        | TypeKind.VectorTypeKind    -> withElemTySB "Vector"
-        | TypeKind.StructTypeKind    ->
+    match getTypeKind tyRef with
+    | TypeKind.VoidTypeKind      -> newStrBldr "void"
+    | TypeKind.FloatTypeKind     -> newStrBldr "float"
+    | TypeKind.DoubleTypeKind    -> newStrBldr "double"
+    | TypeKind.X86_FP80TypeKind  -> newStrBldr "X86 FP80"
+    | TypeKind.FP128TypeKind     -> newStrBldr "FP 128"
+    | TypeKind.PPC_FP128TypeKind -> newStrBldr "PPC FP 128"
+    | TypeKind.LabelTypeKind     -> newStrBldr "Label"
+    | TypeKind.IntegerTypeKind   -> newStrBldr "int"
+    | TypeKind.FunctionTypeKind  -> newStrBldr "function"
+    | TypeKind.MetadataTypeKind  -> newStrBldr "Metadata"
+    | TypeKind.X86_MMXTypeKind   -> newStrBldr "X86 MMX"
+    | TypeKind.ArrayTypeKind     -> withElemTySB "Array"
+    | TypeKind.PointerTypeKind   -> withElemTySB "Pointer"
+    | TypeKind.VectorTypeKind    -> withElemTySB "Vector"
+    | TypeKind.StructTypeKind    ->
+        match getStructName tyRef with
+        | null | "" ->
             let sb = newStrBldr "struct {"
             let structElemTys = getStructElementTypes tyRef
             for i in 0 .. structElemTys.Length - 1 do
@@ -146,9 +149,9 @@ let rec private typeToStringBuilder (modRef : ModuleRef) (tyRef : TypeRef) =
                 if not isLastElem then
                     sb.Append ' ' |> ignore
             sb.Append '}'
-        | tk ->
-            failwithf "unhandled type kind: %A" tk
-    | name -> new System.Text.StringBuilder(name)
+        | name -> new System.Text.StringBuilder(name)
+    | tk ->
+        failwithf "unhandled type kind: %A" tk
 
 let typeToString (modRef : ModuleRef) (tyRef : TypeRef) =
     (typeToStringBuilder modRef tyRef).ToString ()

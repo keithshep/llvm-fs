@@ -12,7 +12,7 @@ open LLVM.Generated.Target
 // LLVMInitializeNativeTarget never makes it into the LLVM shared library since
 // it is declared static.
 open System.Runtime.InteropServices
-[<DllImport("LLVM-2.9.dll", EntryPoint="LLVMInitializeX86Target")>]
+[<DllImport("LLVM-3.0.dll", EntryPoint="LLVMInitializeX86Target")>]
 extern void initializeX86Target()
 
 [<EntryPoint>]

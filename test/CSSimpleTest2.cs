@@ -11,7 +11,7 @@ public class SimpleTest2
     // be using LLVMInitializeNativeTarget but unfortunately the symbol for
     // LLVMInitializeNativeTarget never makes it into the LLVM shared library since
     // it is declared static.
-    [DllImport("LLVM-2.9.dll", EntryPoint="LLVMInitializeX86Target")]
+    [DllImport("LLVM-3.0.dll", EntryPoint="LLVMInitializeX86Target")]
     static extern void initializeX86Target();
 
     public static int Main()
