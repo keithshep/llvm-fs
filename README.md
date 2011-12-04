@@ -11,7 +11,7 @@ use the project google group: http://groups.google.com/group/llvm-fs
 NOTE: this has been tested on both OS X 10.5 and on Windows 7 (using MinGW
 bash/gcc/g++ with python 2.7 installed)
 
-Download a copy of the LLVM 2.9 source code. In order to use the LLVM native
+Download a copy of the LLVM 3.0 source code. In order to use the LLVM native
 libraries with llvm-fs they must be built with `--enabled-shared`.
 Unfortunately the prebuilt LLVM binaries don't come with shared libraries so you
 will have to build LLVM yourself. You can do this by using a build command like:
