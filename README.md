@@ -8,14 +8,18 @@ use the project google group: http://groups.google.com/group/llvm-fs
 
 ## Building LLVM for llvm-fs
 
-NOTE: this has been tested on both OS X 10.5 and on Windows 7 (using MinGW
+NOTE: this has been tested on OS X 10.5, 10.6 and on Windows 7 (using MinGW
 bash/gcc/g++ with python 2.7 installed)
 
 Download a copy of the LLVM 3.0 source code. In order to use the LLVM native
 libraries with llvm-fs they must be built with `--enabled-shared`.
 Unfortunately the prebuilt LLVM binaries don't come with shared libraries so you
-will have to build LLVM yourself. You can do this by using a build command like:
-`./configure --enable-shared --enable-jit && make && make install`
+will have to build LLVM yourself. For windows and OS X 10.5 you can do this by
+using a build command like:
+`./configure --enable-shared --enable-jit && make && make install`.
+OS X 10.6 needs more convincing to build the 32-bit libraries as required to
+work with mono. The following LLVM configuration works on 10.6:
+`CXX='g++ -m32' CC='gcc -m32' CFLAGS=-m32 CXXFLAGS=-m32 LDFLAGS=-m32 ./configure --disable-bindings --build=i686-apple-darwin --host=i686-apple-darwin --target=i686-apple-darwin --enable-targets=x86,x86_64,cbe --enable-optimized --enable-shared --enable-jit`
 
 ## Building the llvm-fs Assembly
 
