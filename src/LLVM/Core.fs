@@ -1,5 +1,6 @@
 module LLVM.Core
 
+open System.Runtime.InteropServices
 open System.Threading
 
 open LLVM.Generated.Core
@@ -113,45 +114,17 @@ let getStructElementTypes (structTy : TypeRef) =
 
     [|for ptr in nativeElemTyPtrs.PtrArr -> new TypeRef (ptr)|]
 
-let rec private typeToStringBuilder (modRef : ModuleRef) (tyRef : TypeRef) =
-    let newStrBldr (s : string) = new System.Text.StringBuilder(s)
-    let withElemTySB (s : string) =
-        let sb = newStrBldr s
-        sb.Append '<' |> ignore
-        let elemTySb = typeToStringBuilder modRef (getElementType tyRef)
-        sb.Append (elemTySb : System.Text.StringBuilder) |> ignore
-        sb.Append '>'
-
-    match getTypeKind tyRef with
-    | TypeKind.VoidTypeKind      -> newStrBldr "void"
-    | TypeKind.FloatTypeKind     -> newStrBldr "float"
-    | TypeKind.DoubleTypeKind    -> newStrBldr "double"
-    | TypeKind.X86_FP80TypeKind  -> newStrBldr "X86 FP80"
-    | TypeKind.FP128TypeKind     -> newStrBldr "FP 128"
-    | TypeKind.PPC_FP128TypeKind -> newStrBldr "PPC FP 128"
-    | TypeKind.LabelTypeKind     -> newStrBldr "Label"
-    | TypeKind.IntegerTypeKind   -> newStrBldr "int"
-    | TypeKind.FunctionTypeKind  -> newStrBldr "function"
-    | TypeKind.MetadataTypeKind  -> newStrBldr "Metadata"
-    | TypeKind.X86_MMXTypeKind   -> newStrBldr "X86 MMX"
-    | TypeKind.ArrayTypeKind     -> withElemTySB "Array"
-    | TypeKind.PointerTypeKind   -> withElemTySB "Pointer"
-    | TypeKind.VectorTypeKind    -> withElemTySB "Vector"
-    | TypeKind.StructTypeKind    ->
-        match getStructName tyRef with
-        | null | "" ->
-            let sb = newStrBldr "struct {"
-            let structElemTys = getStructElementTypes tyRef
-            for i in 0 .. structElemTys.Length - 1 do
-                sb.Append (typeToStringBuilder modRef structElemTys.[i]) |> ignore
-                sb.Append ';' |> ignore
-                let isLastElem = i = structElemTys.Length - 1
-                if not isLastElem then
-                    sb.Append ' ' |> ignore
-            sb.Append '}'
-        | name -> new System.Text.StringBuilder(name)
-    | tk ->
-        failwithf "unhandled type kind: %A" tk
-
-let typeToString (modRef : ModuleRef) (tyRef : TypeRef) =
-    (typeToStringBuilder modRef tyRef).ToString ()
+let createMemoryBufferWithContentsOfFile (path : string) =
+    let buffPtr = Marshal.AllocHGlobal sizeof<nativeint>
+    let strPtr = Marshal.AllocHGlobal sizeof<nativeint>
+    try
+        // TODO mem leaks!!!
+        if createMemoryBufferWithContentsOfFileNative(path, buffPtr, strPtr) then
+            // TODO use strPtr message
+            failwith "failed to create memory buffer"
+        else
+            let buff = Marshal.ReadIntPtr buffPtr
+            new MemoryBufferRef(buff)
+    finally
+        Marshal.FreeHGlobal buffPtr
+        Marshal.FreeHGlobal strPtr

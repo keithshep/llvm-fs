@@ -48,8 +48,14 @@
     <Compile Include="src\LLVM\Core.fs">
       <Link>Core.fs</Link>
     </Compile>
+    <Compile Include="src\LLVM\BitReader.fs">
+      <Link>BitReader.fs</Link>
+    </Compile>
     <Compile Include="src\LLVM\ExecutionEngine.fs">
       <Link>ExecutionEngine.fs</Link>
+    </Compile>
+    <Compile Include="src\LLVM\Extra.fs">
+      <Link>Extra.fs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" Condition="!Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />

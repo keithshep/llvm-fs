@@ -10,7 +10,9 @@ fsc --nologo --debug --sig:LLVMFSharp.fsi --target:library --out:LLVMFSharp.dll 
     src/LLVM/FFIUtil.fs \
     src/LLVM/Generated.fs \
     src/LLVM/Core.fs \
-    src/LLVM/ExecutionEngine.fs
+    src/LLVM/BitReader.fs \
+    src/LLVM/ExecutionEngine.fs \
+    src/LLVM/Extra.fs
 
 # uncomment the following to build and run the tests
 
