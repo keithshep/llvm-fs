@@ -136,7 +136,11 @@ let toFSharpSource
                     ifprintfn 2 out "// %s is blacklisted by the binding generator" fName
                 else
                     // the native function def
-                    ifprintfn 2 out "[<DllImport(\"%s\", EntryPoint=\"%s\")>]" llvmDLLName fName
+                    ifprintfn 2 out "[<DllImport("
+                    ifprintfn 3 out "\"%s\"," llvmDLLName
+                    ifprintfn 3 out "EntryPoint=\"%s\"," fName
+                    ifprintfn 3 out "CallingConvention=CallingConvention.Cdecl,"
+                    ifprintfn 3 out "CharSet=CharSet.Ansi)>]"
                     ifprintf 2 out "extern %s %sNative(" (typeToStr false retType) (toFSharpFunName fName)
                     let fArgs =
                         Array.ofList fArgs
@@ -253,8 +257,8 @@ let toFSharpSource
             | CTypeAlias ({CFullType.baseType = StructType _; CFullType.pointerDepth = 1}, name) ->
                 let dataName = toFSharpDataName name
                 ifprintfn 2 out "type %s (thePtr : nativeint) =" dataName
-                ifprintfn 3 out "member x.Ptr with get() = (x :> ILLVMRef).Ptr"
-                ifprintfn 3 out "interface ILLVMRef with member x.Ptr with get() = thePtr"
+                ifprintfn 3 out "member x.Ptr = (x :> ILLVMRef).Ptr"
+                ifprintfn 3 out "interface ILLVMRef with member x.Ptr = thePtr"
                 out.WriteLine ()
                 
                 go defTail

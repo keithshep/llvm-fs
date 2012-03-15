@@ -12,13 +12,20 @@ open LLVM.Generated.Target
 // LLVMInitializeNativeTarget never makes it into the LLVM shared library since
 // it is declared static.
 open System.Runtime.InteropServices
-[<DllImport("LLVM-3.0.dll", EntryPoint="LLVMInitializeX86Target")>]
+[<DllImport("LLVM-3.0.dll", EntryPoint="LLVMInitializeX86TargetInfo", CallingConvention=CallingConvention.Cdecl)>]
+extern void initializeX86TargetInfo()
+[<DllImport("LLVM-3.0.dll", EntryPoint="LLVMInitializeX86Target", CallingConvention=CallingConvention.Cdecl)>]
 extern void initializeX86Target()
+[<DllImport("LLVM-3.0.dll", EntryPoint="LLVMInitializeX86TargetMC", CallingConvention=CallingConvention.Cdecl)>]
+extern void initializeX86TargetMC()
 
 [<EntryPoint>]
 let main _ =
 
-    initializeX86Target ()
+    initializeX86TargetInfo()
+    initializeX86Target()
+    initializeX86TargetMC()
+    
     let myModule = moduleCreateWithName "addModule"
 
     // build a function that adds 2 integers (uses unnecessary load/stores)
