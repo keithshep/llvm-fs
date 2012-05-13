@@ -4,28 +4,15 @@ open LLVM.Generated.BitWriter
 open LLVM.Generated.ExecutionEngine
 open LLVM.ExecutionEngine
 open LLVM.Generated.Target
+open LLVM.Target
 
 // an F# example adapted from http://www.mdevan.org/llvm-py/examples.html
-
-// Using LLVMInitializeX86Target in this way is kind of a hack. Ideally we would
-// be using LLVMInitializeNativeTarget but unfortunately the symbol for
-// LLVMInitializeNativeTarget never makes it into the LLVM shared library since
-// it is declared static.
-open System.Runtime.InteropServices
-[<DllImport("LLVM-3.0.dll", EntryPoint="LLVMInitializeX86TargetInfo", CallingConvention=CallingConvention.Cdecl)>]
-extern void initializeX86TargetInfo()
-[<DllImport("LLVM-3.0.dll", EntryPoint="LLVMInitializeX86Target", CallingConvention=CallingConvention.Cdecl)>]
-extern void initializeX86Target()
-[<DllImport("LLVM-3.0.dll", EntryPoint="LLVMInitializeX86TargetMC", CallingConvention=CallingConvention.Cdecl)>]
-extern void initializeX86TargetMC()
 
 [<EntryPoint>]
 let main _ =
 
-    initializeX86TargetInfo()
     initializeX86Target()
-    initializeX86TargetMC()
-    
+
     let myModule = moduleCreateWithName "tut2"
 
     // create a function type taking 2 integers, return a 32-bit integer

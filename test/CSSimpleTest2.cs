@@ -7,16 +7,9 @@ public class SimpleTest2
 {
     // a C# example adapted from http://www.mdevan.org/llvm-py/examples.html
 
-    // Using LLVMInitializeX86Target in this way is kind of a hack. Ideally we would
-    // be using LLVMInitializeNativeTarget but unfortunately the symbol for
-    // LLVMInitializeNativeTarget never makes it into the LLVM shared library since
-    // it is declared static.
-    [DllImport("LLVM-3.0.dll", EntryPoint="LLVMInitializeX86Target")]
-    static extern void initializeX86Target();
-
     public static int Main()
     {
-        initializeX86Target ();
+        Target.initializeX86Target();
         
         var myModule = Gen.Core.moduleCreateWithName("tut2");
 
