@@ -22,7 +22,7 @@ work with mono. The following LLVM configuration works on 10.6:
 
     CXX='g++ -m32' CC='gcc -m32' CFLAGS=-m32 CXXFLAGS=-m32 LDFLAGS=-m32 ./configure \
         --disable-bindings --build=i686-apple-darwin --host=i686-apple-darwin \
-        --target=i686-apple-darwin --enable-targets=x86,x86_64,cbe \
+        --target=i686-apple-darwin --enable-targets=x86,x86_64 \
         --enable-optimized --enable-shared --enable-jit
 
 ## Building the llvm-fs Assembly
