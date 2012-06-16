@@ -137,24 +137,24 @@ namespace LLVM.Generated
             | AtomicRMW = 57
             | Resume = 58
             | LandingPad = 59
-            | Unwind = 60
 
         type TypeKind =
             | VoidTypeKind = 0
-            | FloatTypeKind = 1
-            | DoubleTypeKind = 2
-            | X86_FP80TypeKind = 3
-            | FP128TypeKind = 4
-            | PPC_FP128TypeKind = 5
-            | LabelTypeKind = 6
-            | IntegerTypeKind = 7
-            | FunctionTypeKind = 8
-            | StructTypeKind = 9
-            | ArrayTypeKind = 10
-            | PointerTypeKind = 11
-            | VectorTypeKind = 12
-            | MetadataTypeKind = 13
-            | X86_MMXTypeKind = 14
+            | HalfTypeKind = 1
+            | FloatTypeKind = 2
+            | DoubleTypeKind = 3
+            | X86_FP80TypeKind = 4
+            | FP128TypeKind = 5
+            | PPC_FP128TypeKind = 6
+            | LabelTypeKind = 7
+            | IntegerTypeKind = 8
+            | FunctionTypeKind = 9
+            | StructTypeKind = 10
+            | ArrayTypeKind = 11
+            | PointerTypeKind = 12
+            | VectorTypeKind = 13
+            | MetadataTypeKind = 14
+            | X86_MMXTypeKind = 15
 
         type Linkage =
             | ExternalLinkage = 0
@@ -222,7 +222,7 @@ namespace LLVM.Generated
             | LandingPadFilter = 1
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInitializeCore",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -234,7 +234,7 @@ namespace LLVM.Generated
         // LLVMDisposeMessage is blacklisted by the binding generator
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMContextCreate",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -243,7 +243,7 @@ namespace LLVM.Generated
             new ContextRef (contextCreateNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetGlobalContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -252,7 +252,7 @@ namespace LLVM.Generated
             new ContextRef (getGlobalContextNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMContextDispose",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -262,7 +262,7 @@ namespace LLVM.Generated
             contextDisposeNative ((_C : ContextRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetMDKindIDInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -274,7 +274,7 @@ namespace LLVM.Generated
             getMDKindIDInContextNative ((_C : ContextRef).Ptr, _Name, _SLen)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetMDKindID",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -285,7 +285,7 @@ namespace LLVM.Generated
             getMDKindIDNative (_Name, _SLen)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMModuleCreateWithName",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -295,7 +295,7 @@ namespace LLVM.Generated
             new ModuleRef (moduleCreateWithNameNative (_ModuleID))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMModuleCreateWithNameInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -306,7 +306,7 @@ namespace LLVM.Generated
             new ModuleRef (moduleCreateWithNameInContextNative (_ModuleID, (_C : ContextRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMDisposeModule",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -316,7 +316,7 @@ namespace LLVM.Generated
             disposeModuleNative ((_M : ModuleRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetDataLayout",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -326,7 +326,7 @@ namespace LLVM.Generated
             Marshal.PtrToStringAuto (getDataLayoutNative ((_M : ModuleRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetDataLayout",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -337,7 +337,7 @@ namespace LLVM.Generated
             setDataLayoutNative ((_M : ModuleRef).Ptr, _Triple)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetTarget",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -347,7 +347,7 @@ namespace LLVM.Generated
             Marshal.PtrToStringAuto (getTargetNative ((_M : ModuleRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetTarget",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -358,7 +358,7 @@ namespace LLVM.Generated
             setTargetNative ((_M : ModuleRef).Ptr, _Triple)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMDumpModule",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -368,7 +368,7 @@ namespace LLVM.Generated
             dumpModuleNative ((_M : ModuleRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetModuleInlineAsm",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -379,7 +379,7 @@ namespace LLVM.Generated
             setModuleInlineAsmNative ((_M : ModuleRef).Ptr, _Asm)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetModuleContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -389,7 +389,115 @@ namespace LLVM.Generated
             new ContextRef (getModuleContextNative ((_M : ModuleRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMGetTypeByName",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMTypeRef *) getTypeByNameNative(
+            void* (* LLVMModuleRef *) M,
+            string Name)
+        let getTypeByName _M _Name =
+            new TypeRef (getTypeByNameNative ((_M : ModuleRef).Ptr, _Name))
+
+        [<DllImport(
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMGetNamedMetadataNumOperands",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 getNamedMetadataNumOperandsNative(
+            void* (* LLVMModuleRef *) M,
+            string name)
+        let getNamedMetadataNumOperands _M _name =
+            getNamedMetadataNumOperandsNative ((_M : ModuleRef).Ptr, _name)
+
+        [<DllImport(
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMGetNamedMetadataOperands",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void getNamedMetadataOperandsNative(
+            void* (* LLVMModuleRef *) M,
+            string name,
+            void* (* LLVMValueRef* *) Dest)
+        // I don't know how to generate an "F# friendly" version of LLVMGetNamedMetadataOperands
+
+        [<DllImport(
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMAddNamedMetadataOperand",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void addNamedMetadataOperandNative(
+            void* (* LLVMModuleRef *) M,
+            string name,
+            void* (* LLVMValueRef *) Val)
+        let addNamedMetadataOperand _M _name _Val =
+            addNamedMetadataOperandNative ((_M : ModuleRef).Ptr, _name, (_Val : ValueRef).Ptr)
+
+        [<DllImport(
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMAddFunction",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMValueRef *) addFunctionNative(
+            void* (* LLVMModuleRef *) M,
+            string Name,
+            void* (* LLVMTypeRef *) FunctionTy)
+        let addFunction _M _Name _FunctionTy =
+            new ValueRef (addFunctionNative ((_M : ModuleRef).Ptr, _Name, (_FunctionTy : TypeRef).Ptr))
+
+        [<DllImport(
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMGetNamedFunction",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMValueRef *) getNamedFunctionNative(
+            void* (* LLVMModuleRef *) M,
+            string Name)
+        let getNamedFunction _M _Name =
+            new ValueRef (getNamedFunctionNative ((_M : ModuleRef).Ptr, _Name))
+
+        [<DllImport(
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMGetFirstFunction",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMValueRef *) getFirstFunctionNative(
+            void* (* LLVMModuleRef *) M)
+        let getFirstFunction _M =
+            new ValueRef (getFirstFunctionNative ((_M : ModuleRef).Ptr))
+
+        [<DllImport(
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMGetLastFunction",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMValueRef *) getLastFunctionNative(
+            void* (* LLVMModuleRef *) M)
+        let getLastFunction _M =
+            new ValueRef (getLastFunctionNative ((_M : ModuleRef).Ptr))
+
+        [<DllImport(
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMGetNextFunction",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMValueRef *) getNextFunctionNative(
+            void* (* LLVMValueRef *) Fn)
+        let getNextFunction _Fn =
+            new ValueRef (getNextFunctionNative ((_Fn : ValueRef).Ptr))
+
+        [<DllImport(
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMGetPreviousFunction",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMValueRef *) getPreviousFunctionNative(
+            void* (* LLVMValueRef *) Fn)
+        let getPreviousFunction _Fn =
+            new ValueRef (getPreviousFunctionNative ((_Fn : ValueRef).Ptr))
+
+        [<DllImport(
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetTypeKind",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -399,7 +507,7 @@ namespace LLVM.Generated
             enum<TypeKind> (getTypeKindNative ((_Ty : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMTypeIsSized",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -409,7 +517,7 @@ namespace LLVM.Generated
             typeIsSizedNative ((_Ty : TypeRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetTypeContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -419,7 +527,7 @@ namespace LLVM.Generated
             new ContextRef (getTypeContextNative ((_Ty : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInt1TypeInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -429,7 +537,7 @@ namespace LLVM.Generated
             new TypeRef (int1TypeInContextNative ((_C : ContextRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInt8TypeInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -439,7 +547,7 @@ namespace LLVM.Generated
             new TypeRef (int8TypeInContextNative ((_C : ContextRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInt16TypeInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -449,7 +557,7 @@ namespace LLVM.Generated
             new TypeRef (int16TypeInContextNative ((_C : ContextRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInt32TypeInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -459,7 +567,7 @@ namespace LLVM.Generated
             new TypeRef (int32TypeInContextNative ((_C : ContextRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInt64TypeInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -469,7 +577,7 @@ namespace LLVM.Generated
             new TypeRef (int64TypeInContextNative ((_C : ContextRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMIntTypeInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -480,7 +588,7 @@ namespace LLVM.Generated
             new TypeRef (intTypeInContextNative ((_C : ContextRef).Ptr, _NumBits))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInt1Type",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -489,7 +597,7 @@ namespace LLVM.Generated
             new TypeRef (int1TypeNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInt8Type",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -498,7 +606,7 @@ namespace LLVM.Generated
             new TypeRef (int8TypeNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInt16Type",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -507,7 +615,7 @@ namespace LLVM.Generated
             new TypeRef (int16TypeNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInt32Type",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -516,7 +624,7 @@ namespace LLVM.Generated
             new TypeRef (int32TypeNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInt64Type",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -525,7 +633,7 @@ namespace LLVM.Generated
             new TypeRef (int64TypeNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMIntType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -535,7 +643,7 @@ namespace LLVM.Generated
             new TypeRef (intTypeNative (_NumBits))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetIntTypeWidth",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -545,7 +653,17 @@ namespace LLVM.Generated
             getIntTypeWidthNative ((_IntegerTy : TypeRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMHalfTypeInContext",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMTypeRef *) halfTypeInContextNative(
+            void* (* LLVMContextRef *) C)
+        let halfTypeInContext _C =
+            new TypeRef (halfTypeInContextNative ((_C : ContextRef).Ptr))
+
+        [<DllImport(
+            "LLVM-3.1.dll",
             EntryPoint="LLVMFloatTypeInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -555,7 +673,7 @@ namespace LLVM.Generated
             new TypeRef (floatTypeInContextNative ((_C : ContextRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMDoubleTypeInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -565,7 +683,7 @@ namespace LLVM.Generated
             new TypeRef (doubleTypeInContextNative ((_C : ContextRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMX86FP80TypeInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -575,7 +693,7 @@ namespace LLVM.Generated
             new TypeRef (x86FP80TypeInContextNative ((_C : ContextRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMFP128TypeInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -585,7 +703,7 @@ namespace LLVM.Generated
             new TypeRef (fP128TypeInContextNative ((_C : ContextRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMPPCFP128TypeInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -595,7 +713,16 @@ namespace LLVM.Generated
             new TypeRef (pPCFP128TypeInContextNative ((_C : ContextRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMHalfType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMTypeRef *) halfTypeNative()
+        let halfType () =
+            new TypeRef (halfTypeNative ())
+
+        [<DllImport(
+            "LLVM-3.1.dll",
             EntryPoint="LLVMFloatType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -604,7 +731,7 @@ namespace LLVM.Generated
             new TypeRef (floatTypeNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMDoubleType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -613,7 +740,7 @@ namespace LLVM.Generated
             new TypeRef (doubleTypeNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMX86FP80Type",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -622,7 +749,7 @@ namespace LLVM.Generated
             new TypeRef (x86FP80TypeNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMFP128Type",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -631,7 +758,7 @@ namespace LLVM.Generated
             new TypeRef (fP128TypeNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMPPCFP128Type",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -640,7 +767,7 @@ namespace LLVM.Generated
             new TypeRef (pPCFP128TypeNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMFunctionType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -652,7 +779,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMFunctionType
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMIsFunctionVarArg",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -662,7 +789,7 @@ namespace LLVM.Generated
             isFunctionVarArgNative ((_FunctionTy : TypeRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetReturnType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -672,7 +799,7 @@ namespace LLVM.Generated
             new TypeRef (getReturnTypeNative ((_FunctionTy : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCountParamTypes",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -682,7 +809,7 @@ namespace LLVM.Generated
             countParamTypesNative ((_FunctionTy : TypeRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetParamTypes",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -692,7 +819,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMGetParamTypes
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMStructTypeInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -704,7 +831,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMStructTypeInContext
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMStructType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -715,7 +842,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMStructType
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMStructCreateNamed",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -726,7 +853,7 @@ namespace LLVM.Generated
             new TypeRef (structCreateNamedNative ((_C : ContextRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetStructName",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -736,7 +863,7 @@ namespace LLVM.Generated
             Marshal.PtrToStringAuto (getStructNameNative ((_Ty : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMStructSetBody",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -748,7 +875,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMStructSetBody
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCountStructElementTypes",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -758,7 +885,7 @@ namespace LLVM.Generated
             countStructElementTypesNative ((_StructTy : TypeRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetStructElementTypes",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -768,7 +895,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMGetStructElementTypes
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMIsPackedStruct",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -778,7 +905,7 @@ namespace LLVM.Generated
             isPackedStructNative ((_StructTy : TypeRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMIsOpaqueStruct",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -788,18 +915,17 @@ namespace LLVM.Generated
             isOpaqueStructNative ((_StructTy : TypeRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMGetTypeByName",
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMGetElementType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMTypeRef *) getTypeByNameNative(
-            void* (* LLVMModuleRef *) M,
-            string Name)
-        let getTypeByName _M _Name =
-            new TypeRef (getTypeByNameNative ((_M : ModuleRef).Ptr, _Name))
+        extern void* (* LLVMTypeRef *) getElementTypeNative(
+            void* (* LLVMTypeRef *) Ty)
+        let getElementType _Ty =
+            new TypeRef (getElementTypeNative ((_Ty : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMArrayType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -810,7 +936,17 @@ namespace LLVM.Generated
             new TypeRef (arrayTypeNative ((_ElementType : TypeRef).Ptr, _ElementCount))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMGetArrayLength",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 getArrayLengthNative(
+            void* (* LLVMTypeRef *) ArrayTy)
+        let getArrayLength _ArrayTy =
+            getArrayLengthNative ((_ArrayTy : TypeRef).Ptr)
+
+        [<DllImport(
+            "LLVM-3.1.dll",
             EntryPoint="LLVMPointerType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -821,7 +957,17 @@ namespace LLVM.Generated
             new TypeRef (pointerTypeNative ((_ElementType : TypeRef).Ptr, _AddressSpace))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMGetPointerAddressSpace",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 getPointerAddressSpaceNative(
+            void* (* LLVMTypeRef *) PointerTy)
+        let getPointerAddressSpace _PointerTy =
+            getPointerAddressSpaceNative ((_PointerTy : TypeRef).Ptr)
+
+        [<DllImport(
+            "LLVM-3.1.dll",
             EntryPoint="LLVMVectorType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -832,37 +978,7 @@ namespace LLVM.Generated
             new TypeRef (vectorTypeNative ((_ElementType : TypeRef).Ptr, _ElementCount))
 
         [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMGetElementType",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMTypeRef *) getElementTypeNative(
-            void* (* LLVMTypeRef *) Ty)
-        let getElementType _Ty =
-            new TypeRef (getElementTypeNative ((_Ty : TypeRef).Ptr))
-
-        [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMGetArrayLength",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern uint32 getArrayLengthNative(
-            void* (* LLVMTypeRef *) ArrayTy)
-        let getArrayLength _ArrayTy =
-            getArrayLengthNative ((_ArrayTy : TypeRef).Ptr)
-
-        [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMGetPointerAddressSpace",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern uint32 getPointerAddressSpaceNative(
-            void* (* LLVMTypeRef *) PointerTy)
-        let getPointerAddressSpace _PointerTy =
-            getPointerAddressSpaceNative ((_PointerTy : TypeRef).Ptr)
-
-        [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetVectorSize",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -872,7 +988,7 @@ namespace LLVM.Generated
             getVectorSizeNative ((_VectorTy : TypeRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMVoidTypeInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -882,7 +998,7 @@ namespace LLVM.Generated
             new TypeRef (voidTypeInContextNative ((_C : ContextRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMLabelTypeInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -892,7 +1008,7 @@ namespace LLVM.Generated
             new TypeRef (labelTypeInContextNative ((_C : ContextRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMX86MMXTypeInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -902,7 +1018,7 @@ namespace LLVM.Generated
             new TypeRef (x86MMXTypeInContextNative ((_C : ContextRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMVoidType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -911,7 +1027,7 @@ namespace LLVM.Generated
             new TypeRef (voidTypeNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMLabelType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -920,7 +1036,7 @@ namespace LLVM.Generated
             new TypeRef (labelTypeNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMX86MMXType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -929,7 +1045,7 @@ namespace LLVM.Generated
             new TypeRef (x86MMXTypeNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMTypeOf",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -939,7 +1055,7 @@ namespace LLVM.Generated
             new TypeRef (typeOfNative ((_Val : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetValueName",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -949,7 +1065,7 @@ namespace LLVM.Generated
             Marshal.PtrToStringAuto (getValueNameNative ((_Val : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetValueName",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -960,7 +1076,7 @@ namespace LLVM.Generated
             setValueNameNative ((_Val : ValueRef).Ptr, _Name)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMDumpValue",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -970,7 +1086,7 @@ namespace LLVM.Generated
             dumpValueNative ((_Val : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMReplaceAllUsesWith",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -981,40 +1097,27 @@ namespace LLVM.Generated
             replaceAllUsesWithNative ((_OldVal : ValueRef).Ptr, (_NewVal : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMHasMetadata",
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMIsConstant",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern int hasMetadataNative(
+        extern bool isConstantNative(
             void* (* LLVMValueRef *) Val)
-        let hasMetadata _Val =
-            hasMetadataNative ((_Val : ValueRef).Ptr)
+        let isConstant _Val =
+            isConstantNative ((_Val : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMGetMetadata",
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMIsUndef",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMValueRef *) getMetadataNative(
-            void* (* LLVMValueRef *) Val,
-            uint32 KindID)
-        let getMetadata _Val _KindID =
-            new ValueRef (getMetadataNative ((_Val : ValueRef).Ptr, _KindID))
+        extern bool isUndefNative(
+            void* (* LLVMValueRef *) Val)
+        let isUndef _Val =
+            isUndefNative ((_Val : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMSetMetadata",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void setMetadataNative(
-            void* (* LLVMValueRef *) Val,
-            uint32 KindID,
-            void* (* LLVMValueRef *) Node)
-        let setMetadata _Val _KindID _Node =
-            setMetadataNative ((_Val : ValueRef).Ptr, _KindID, (_Node : ValueRef).Ptr)
-
-        [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetFirstUse",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1024,7 +1127,7 @@ namespace LLVM.Generated
             new UseRef (getFirstUseNative ((_Val : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetNextUse",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1034,7 +1137,7 @@ namespace LLVM.Generated
             new UseRef (getNextUseNative ((_U : UseRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetUser",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1044,7 +1147,7 @@ namespace LLVM.Generated
             new ValueRef (getUserNative ((_U : UseRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetUsedValue",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1054,7 +1157,7 @@ namespace LLVM.Generated
             new ValueRef (getUsedValueNative ((_U : UseRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetOperand",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1065,7 +1168,7 @@ namespace LLVM.Generated
             new ValueRef (getOperandNative ((_Val : ValueRef).Ptr, _Index))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetOperand",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1077,7 +1180,7 @@ namespace LLVM.Generated
             setOperandNative ((_User : ValueRef).Ptr, _Index, (_Val : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetNumOperands",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1087,7 +1190,7 @@ namespace LLVM.Generated
             getNumOperandsNative ((_Val : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstNull",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1097,7 +1200,7 @@ namespace LLVM.Generated
             new ValueRef (constNullNative ((_Ty : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstAllOnes",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1107,7 +1210,7 @@ namespace LLVM.Generated
             new ValueRef (constAllOnesNative ((_Ty : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetUndef",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1117,17 +1220,7 @@ namespace LLVM.Generated
             new ValueRef (getUndefNative ((_Ty : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMIsConstant",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern bool isConstantNative(
-            void* (* LLVMValueRef *) Val)
-        let isConstant _Val =
-            isConstantNative ((_Val : ValueRef).Ptr)
-
-        [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMIsNull",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1137,17 +1230,7 @@ namespace LLVM.Generated
             isNullNative ((_Val : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMIsUndef",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern bool isUndefNative(
-            void* (* LLVMValueRef *) Val)
-        let isUndef _Val =
-            isUndefNative ((_Val : ValueRef).Ptr)
-
-        [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstPointerNull",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1157,103 +1240,7 @@ namespace LLVM.Generated
             new ValueRef (constPointerNullNative ((_Ty : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMMDStringInContext",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMValueRef *) mDStringInContextNative(
-            void* (* LLVMContextRef *) C,
-            string Str,
-            uint32 SLen)
-        let mDStringInContext _C _Str _SLen =
-            new ValueRef (mDStringInContextNative ((_C : ContextRef).Ptr, _Str, _SLen))
-
-        [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMMDString",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMValueRef *) mDStringNative(
-            string Str,
-            uint32 SLen)
-        let mDString _Str _SLen =
-            new ValueRef (mDStringNative (_Str, _SLen))
-
-        [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMMDNodeInContext",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMValueRef *) mDNodeInContextNative(
-            void* (* LLVMContextRef *) C,
-            void* (* LLVMValueRef* *) Vals,
-            uint32 Count)
-        // I don't know how to generate an "F# friendly" version of LLVMMDNodeInContext
-
-        [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMMDNode",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMValueRef *) mDNodeNative(
-            void* (* LLVMValueRef* *) Vals,
-            uint32 Count)
-        // I don't know how to generate an "F# friendly" version of LLVMMDNode
-
-        [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMGetMDString",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void* getMDStringNative(
-            void* (* LLVMValueRef *) V,
-            uint32* Len)
-        // I don't know how to generate an "F# friendly" version of LLVMGetMDString
-
-        [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMGetMDNodeNumOperands",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern int getMDNodeNumOperandsNative(
-            void* (* LLVMValueRef *) V)
-        let getMDNodeNumOperands _V =
-            getMDNodeNumOperandsNative ((_V : ValueRef).Ptr)
-
-        [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMGetMDNodeOperand",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMValueRef* *) getMDNodeOperandNative(
-            void* (* LLVMValueRef *) V,
-            uint32 i)
-        // I don't know how to generate an "F# friendly" version of LLVMGetMDNodeOperand
-
-        [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMGetNamedMetadataNumOperands",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern uint32 getNamedMetadataNumOperandsNative(
-            void* (* LLVMModuleRef *) M,
-            string name)
-        let getNamedMetadataNumOperands _M _name =
-            getNamedMetadataNumOperandsNative ((_M : ModuleRef).Ptr, _name)
-
-        [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMGetNamedMetadataOperands",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void getNamedMetadataOperandsNative(
-            void* (* LLVMModuleRef *) M,
-            string name,
-            void* (* LLVMValueRef* *) Dest)
-        // I don't know how to generate an "F# friendly" version of LLVMGetNamedMetadataOperands
-
-        [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstInt",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1265,7 +1252,7 @@ namespace LLVM.Generated
             new ValueRef (constIntNative ((_IntTy : TypeRef).Ptr, _N, _SignExtend))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstIntOfArbitraryPrecision",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1276,7 +1263,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMConstIntOfArbitraryPrecision
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstIntOfString",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1288,7 +1275,7 @@ namespace LLVM.Generated
             new ValueRef (constIntOfStringNative ((_IntTy : TypeRef).Ptr, _Text, _Radix))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstIntOfStringAndSize",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1301,7 +1288,7 @@ namespace LLVM.Generated
             new ValueRef (constIntOfStringAndSizeNative ((_IntTy : TypeRef).Ptr, _Text, _SLen, _Radix))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstReal",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1312,7 +1299,7 @@ namespace LLVM.Generated
             new ValueRef (constRealNative ((_RealTy : TypeRef).Ptr, _N))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstRealOfString",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1323,7 +1310,7 @@ namespace LLVM.Generated
             new ValueRef (constRealOfStringNative ((_RealTy : TypeRef).Ptr, _Text))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstRealOfStringAndSize",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1335,7 +1322,7 @@ namespace LLVM.Generated
             new ValueRef (constRealOfStringAndSizeNative ((_RealTy : TypeRef).Ptr, _Text, _SLen))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstIntGetZExtValue",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1345,7 +1332,7 @@ namespace LLVM.Generated
             constIntGetZExtValueNative ((_ConstantVal : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstIntGetSExtValue",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1355,7 +1342,7 @@ namespace LLVM.Generated
             constIntGetSExtValueNative ((_ConstantVal : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstStringInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1368,19 +1355,7 @@ namespace LLVM.Generated
             new ValueRef (constStringInContextNative ((_C : ContextRef).Ptr, _Str, _Length, _DontNullTerminate))
 
         [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMConstStructInContext",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMValueRef *) constStructInContextNative(
-            void* (* LLVMContextRef *) C,
-            void* (* LLVMValueRef* *) ConstantVals,
-            uint32 Count,
-            bool Packed)
-        // I don't know how to generate an "F# friendly" version of LLVMConstStructInContext
-
-        [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstString",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1392,18 +1367,19 @@ namespace LLVM.Generated
             new ValueRef (constStringNative (_Str, _Length, _DontNullTerminate))
 
         [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMConstArray",
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMConstStructInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMValueRef *) constArrayNative(
-            void* (* LLVMTypeRef *) ElementTy,
+        extern void* (* LLVMValueRef *) constStructInContextNative(
+            void* (* LLVMContextRef *) C,
             void* (* LLVMValueRef* *) ConstantVals,
-            uint32 Length)
-        // I don't know how to generate an "F# friendly" version of LLVMConstArray
+            uint32 Count,
+            bool Packed)
+        // I don't know how to generate an "F# friendly" version of LLVMConstStructInContext
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstStruct",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1414,7 +1390,18 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMConstStruct
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMConstArray",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMValueRef *) constArrayNative(
+            void* (* LLVMTypeRef *) ElementTy,
+            void* (* LLVMValueRef* *) ConstantVals,
+            uint32 Length)
+        // I don't know how to generate an "F# friendly" version of LLVMConstArray
+
+        [<DllImport(
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstNamedStruct",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1425,7 +1412,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMConstNamedStruct
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstVector",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1435,7 +1422,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMConstVector
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetConstOpcode",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1445,7 +1432,7 @@ namespace LLVM.Generated
             enum<Opcode> (getConstOpcodeNative ((_ConstantVal : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAlignOf",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1455,7 +1442,7 @@ namespace LLVM.Generated
             new ValueRef (alignOfNative ((_Ty : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSizeOf",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1465,7 +1452,7 @@ namespace LLVM.Generated
             new ValueRef (sizeOfNative ((_Ty : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstNeg",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1475,7 +1462,7 @@ namespace LLVM.Generated
             new ValueRef (constNegNative ((_ConstantVal : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstNSWNeg",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1485,7 +1472,7 @@ namespace LLVM.Generated
             new ValueRef (constNSWNegNative ((_ConstantVal : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstNUWNeg",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1495,7 +1482,7 @@ namespace LLVM.Generated
             new ValueRef (constNUWNegNative ((_ConstantVal : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstFNeg",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1505,7 +1492,7 @@ namespace LLVM.Generated
             new ValueRef (constFNegNative ((_ConstantVal : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstNot",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1515,7 +1502,7 @@ namespace LLVM.Generated
             new ValueRef (constNotNative ((_ConstantVal : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstAdd",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1526,7 +1513,7 @@ namespace LLVM.Generated
             new ValueRef (constAddNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstNSWAdd",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1537,7 +1524,7 @@ namespace LLVM.Generated
             new ValueRef (constNSWAddNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstNUWAdd",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1548,7 +1535,7 @@ namespace LLVM.Generated
             new ValueRef (constNUWAddNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstFAdd",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1559,7 +1546,7 @@ namespace LLVM.Generated
             new ValueRef (constFAddNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstSub",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1570,7 +1557,7 @@ namespace LLVM.Generated
             new ValueRef (constSubNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstNSWSub",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1581,7 +1568,7 @@ namespace LLVM.Generated
             new ValueRef (constNSWSubNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstNUWSub",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1592,7 +1579,7 @@ namespace LLVM.Generated
             new ValueRef (constNUWSubNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstFSub",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1603,7 +1590,7 @@ namespace LLVM.Generated
             new ValueRef (constFSubNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstMul",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1614,7 +1601,7 @@ namespace LLVM.Generated
             new ValueRef (constMulNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstNSWMul",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1625,7 +1612,7 @@ namespace LLVM.Generated
             new ValueRef (constNSWMulNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstNUWMul",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1636,7 +1623,7 @@ namespace LLVM.Generated
             new ValueRef (constNUWMulNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstFMul",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1647,7 +1634,7 @@ namespace LLVM.Generated
             new ValueRef (constFMulNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstUDiv",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1658,7 +1645,7 @@ namespace LLVM.Generated
             new ValueRef (constUDivNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstSDiv",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1669,7 +1656,7 @@ namespace LLVM.Generated
             new ValueRef (constSDivNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstExactSDiv",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1680,7 +1667,7 @@ namespace LLVM.Generated
             new ValueRef (constExactSDivNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstFDiv",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1691,7 +1678,7 @@ namespace LLVM.Generated
             new ValueRef (constFDivNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstURem",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1702,7 +1689,7 @@ namespace LLVM.Generated
             new ValueRef (constURemNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstSRem",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1713,7 +1700,7 @@ namespace LLVM.Generated
             new ValueRef (constSRemNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstFRem",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1724,7 +1711,7 @@ namespace LLVM.Generated
             new ValueRef (constFRemNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstAnd",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1735,7 +1722,7 @@ namespace LLVM.Generated
             new ValueRef (constAndNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstOr",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1746,7 +1733,7 @@ namespace LLVM.Generated
             new ValueRef (constOrNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstXor",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1757,7 +1744,7 @@ namespace LLVM.Generated
             new ValueRef (constXorNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstICmp",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1769,7 +1756,7 @@ namespace LLVM.Generated
             new ValueRef (constICmpNative ((int (_Predicate : IntPredicate)), (_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstFCmp",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1781,7 +1768,7 @@ namespace LLVM.Generated
             new ValueRef (constFCmpNative ((int (_Predicate : RealPredicate)), (_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstShl",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1792,7 +1779,7 @@ namespace LLVM.Generated
             new ValueRef (constShlNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstLShr",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1803,7 +1790,7 @@ namespace LLVM.Generated
             new ValueRef (constLShrNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstAShr",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1814,7 +1801,7 @@ namespace LLVM.Generated
             new ValueRef (constAShrNative ((_LHSConstant : ValueRef).Ptr, (_RHSConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstGEP",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1825,7 +1812,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMConstGEP
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstInBoundsGEP",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1836,7 +1823,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMConstInBoundsGEP
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstTrunc",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1847,7 +1834,7 @@ namespace LLVM.Generated
             new ValueRef (constTruncNative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstSExt",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1858,7 +1845,7 @@ namespace LLVM.Generated
             new ValueRef (constSExtNative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstZExt",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1869,7 +1856,7 @@ namespace LLVM.Generated
             new ValueRef (constZExtNative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstFPTrunc",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1880,7 +1867,7 @@ namespace LLVM.Generated
             new ValueRef (constFPTruncNative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstFPExt",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1891,7 +1878,7 @@ namespace LLVM.Generated
             new ValueRef (constFPExtNative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstUIToFP",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1902,7 +1889,7 @@ namespace LLVM.Generated
             new ValueRef (constUIToFPNative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstSIToFP",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1913,7 +1900,7 @@ namespace LLVM.Generated
             new ValueRef (constSIToFPNative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstFPToUI",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1924,7 +1911,7 @@ namespace LLVM.Generated
             new ValueRef (constFPToUINative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstFPToSI",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1935,7 +1922,7 @@ namespace LLVM.Generated
             new ValueRef (constFPToSINative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstPtrToInt",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1946,7 +1933,7 @@ namespace LLVM.Generated
             new ValueRef (constPtrToIntNative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstIntToPtr",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1957,7 +1944,7 @@ namespace LLVM.Generated
             new ValueRef (constIntToPtrNative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstBitCast",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1968,7 +1955,7 @@ namespace LLVM.Generated
             new ValueRef (constBitCastNative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstZExtOrBitCast",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1979,7 +1966,7 @@ namespace LLVM.Generated
             new ValueRef (constZExtOrBitCastNative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstSExtOrBitCast",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -1990,7 +1977,7 @@ namespace LLVM.Generated
             new ValueRef (constSExtOrBitCastNative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstTruncOrBitCast",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2001,7 +1988,7 @@ namespace LLVM.Generated
             new ValueRef (constTruncOrBitCastNative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstPointerCast",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2012,7 +1999,7 @@ namespace LLVM.Generated
             new ValueRef (constPointerCastNative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstIntCast",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2024,7 +2011,7 @@ namespace LLVM.Generated
             new ValueRef (constIntCastNative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr, _isSigned))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstFPCast",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2035,7 +2022,7 @@ namespace LLVM.Generated
             new ValueRef (constFPCastNative ((_ConstantVal : ValueRef).Ptr, (_ToType : TypeRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstSelect",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2047,7 +2034,7 @@ namespace LLVM.Generated
             new ValueRef (constSelectNative ((_ConstantCondition : ValueRef).Ptr, (_ConstantIfTrue : ValueRef).Ptr, (_ConstantIfFalse : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstExtractElement",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2058,7 +2045,7 @@ namespace LLVM.Generated
             new ValueRef (constExtractElementNative ((_VectorConstant : ValueRef).Ptr, (_IndexConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstInsertElement",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2070,7 +2057,7 @@ namespace LLVM.Generated
             new ValueRef (constInsertElementNative ((_VectorConstant : ValueRef).Ptr, (_ElementValueConstant : ValueRef).Ptr, (_IndexConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstShuffleVector",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2082,7 +2069,7 @@ namespace LLVM.Generated
             new ValueRef (constShuffleVectorNative ((_VectorAConstant : ValueRef).Ptr, (_VectorBConstant : ValueRef).Ptr, (_MaskConstant : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstExtractValue",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2093,7 +2080,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMConstExtractValue
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstInsertValue",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2105,7 +2092,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMConstInsertValue
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMConstInlineAsm",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2119,7 +2106,7 @@ namespace LLVM.Generated
             new ValueRef (constInlineAsmNative ((_Ty : TypeRef).Ptr, _AsmString, _Constraints, _HasSideEffects, _IsAlignStack))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBlockAddress",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2130,7 +2117,7 @@ namespace LLVM.Generated
             new ValueRef (blockAddressNative ((_F : ValueRef).Ptr, (_BB : BasicBlockRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetGlobalParent",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2140,7 +2127,7 @@ namespace LLVM.Generated
             new ModuleRef (getGlobalParentNative ((_Global : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMIsDeclaration",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2150,7 +2137,7 @@ namespace LLVM.Generated
             isDeclarationNative ((_Global : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetLinkage",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2160,7 +2147,7 @@ namespace LLVM.Generated
             enum<Linkage> (getLinkageNative ((_Global : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetLinkage",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2171,7 +2158,7 @@ namespace LLVM.Generated
             setLinkageNative ((_Global : ValueRef).Ptr, (int (_Linkage : Linkage)))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetSection",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2181,7 +2168,7 @@ namespace LLVM.Generated
             Marshal.PtrToStringAuto (getSectionNative ((_Global : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetSection",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2192,7 +2179,7 @@ namespace LLVM.Generated
             setSectionNative ((_Global : ValueRef).Ptr, _Section)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetVisibility",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2202,7 +2189,7 @@ namespace LLVM.Generated
             enum<Visibility> (getVisibilityNative ((_Global : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetVisibility",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2213,7 +2200,7 @@ namespace LLVM.Generated
             setVisibilityNative ((_Global : ValueRef).Ptr, (int (_Viz : Visibility)))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetAlignment",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2223,7 +2210,7 @@ namespace LLVM.Generated
             getAlignmentNative ((_Global : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetAlignment",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2234,7 +2221,7 @@ namespace LLVM.Generated
             setAlignmentNative ((_Global : ValueRef).Ptr, _Bytes)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddGlobal",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2246,7 +2233,7 @@ namespace LLVM.Generated
             new ValueRef (addGlobalNative ((_M : ModuleRef).Ptr, (_Ty : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddGlobalInAddressSpace",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2259,7 +2246,7 @@ namespace LLVM.Generated
             new ValueRef (addGlobalInAddressSpaceNative ((_M : ModuleRef).Ptr, (_Ty : TypeRef).Ptr, _Name, _AddressSpace))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetNamedGlobal",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2270,7 +2257,7 @@ namespace LLVM.Generated
             new ValueRef (getNamedGlobalNative ((_M : ModuleRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetFirstGlobal",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2280,7 +2267,7 @@ namespace LLVM.Generated
             new ValueRef (getFirstGlobalNative ((_M : ModuleRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetLastGlobal",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2290,7 +2277,7 @@ namespace LLVM.Generated
             new ValueRef (getLastGlobalNative ((_M : ModuleRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetNextGlobal",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2300,7 +2287,7 @@ namespace LLVM.Generated
             new ValueRef (getNextGlobalNative ((_GlobalVar : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetPreviousGlobal",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2310,7 +2297,7 @@ namespace LLVM.Generated
             new ValueRef (getPreviousGlobalNative ((_GlobalVar : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMDeleteGlobal",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2320,7 +2307,7 @@ namespace LLVM.Generated
             deleteGlobalNative ((_GlobalVar : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetInitializer",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2330,7 +2317,7 @@ namespace LLVM.Generated
             new ValueRef (getInitializerNative ((_GlobalVar : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetInitializer",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2341,7 +2328,7 @@ namespace LLVM.Generated
             setInitializerNative ((_GlobalVar : ValueRef).Ptr, (_ConstantVal : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMIsThreadLocal",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2351,7 +2338,7 @@ namespace LLVM.Generated
             isThreadLocalNative ((_GlobalVar : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetThreadLocal",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2362,7 +2349,7 @@ namespace LLVM.Generated
             setThreadLocalNative ((_GlobalVar : ValueRef).Ptr, _IsThreadLocal)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMIsGlobalConstant",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2372,7 +2359,7 @@ namespace LLVM.Generated
             isGlobalConstantNative ((_GlobalVar : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetGlobalConstant",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2383,7 +2370,7 @@ namespace LLVM.Generated
             setGlobalConstantNative ((_GlobalVar : ValueRef).Ptr, _IsConstant)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddAlias",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2396,70 +2383,7 @@ namespace LLVM.Generated
             new ValueRef (addAliasNative ((_M : ModuleRef).Ptr, (_Ty : TypeRef).Ptr, (_Aliasee : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMAddFunction",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMValueRef *) addFunctionNative(
-            void* (* LLVMModuleRef *) M,
-            string Name,
-            void* (* LLVMTypeRef *) FunctionTy)
-        let addFunction _M _Name _FunctionTy =
-            new ValueRef (addFunctionNative ((_M : ModuleRef).Ptr, _Name, (_FunctionTy : TypeRef).Ptr))
-
-        [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMGetNamedFunction",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMValueRef *) getNamedFunctionNative(
-            void* (* LLVMModuleRef *) M,
-            string Name)
-        let getNamedFunction _M _Name =
-            new ValueRef (getNamedFunctionNative ((_M : ModuleRef).Ptr, _Name))
-
-        [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMGetFirstFunction",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMValueRef *) getFirstFunctionNative(
-            void* (* LLVMModuleRef *) M)
-        let getFirstFunction _M =
-            new ValueRef (getFirstFunctionNative ((_M : ModuleRef).Ptr))
-
-        [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMGetLastFunction",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMValueRef *) getLastFunctionNative(
-            void* (* LLVMModuleRef *) M)
-        let getLastFunction _M =
-            new ValueRef (getLastFunctionNative ((_M : ModuleRef).Ptr))
-
-        [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMGetNextFunction",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMValueRef *) getNextFunctionNative(
-            void* (* LLVMValueRef *) Fn)
-        let getNextFunction _Fn =
-            new ValueRef (getNextFunctionNative ((_Fn : ValueRef).Ptr))
-
-        [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMGetPreviousFunction",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMValueRef *) getPreviousFunctionNative(
-            void* (* LLVMValueRef *) Fn)
-        let getPreviousFunction _Fn =
-            new ValueRef (getPreviousFunctionNative ((_Fn : ValueRef).Ptr))
-
-        [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMDeleteFunction",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2469,7 +2393,7 @@ namespace LLVM.Generated
             deleteFunctionNative ((_Fn : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetIntrinsicID",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2479,7 +2403,7 @@ namespace LLVM.Generated
             getIntrinsicIDNative ((_Fn : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetFunctionCallConv",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2489,7 +2413,7 @@ namespace LLVM.Generated
             getFunctionCallConvNative ((_Fn : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetFunctionCallConv",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2500,7 +2424,7 @@ namespace LLVM.Generated
             setFunctionCallConvNative ((_Fn : ValueRef).Ptr, _CC)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetGC",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2510,7 +2434,7 @@ namespace LLVM.Generated
             Marshal.PtrToStringAuto (getGCNative ((_Fn : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetGC",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2521,7 +2445,7 @@ namespace LLVM.Generated
             setGCNative ((_Fn : ValueRef).Ptr, _Name)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddFunctionAttr",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2532,7 +2456,7 @@ namespace LLVM.Generated
             addFunctionAttrNative ((_Fn : ValueRef).Ptr, (int (_PA : Attribute)))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetFunctionAttr",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2542,7 +2466,7 @@ namespace LLVM.Generated
             enum<Attribute> (getFunctionAttrNative ((_Fn : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMRemoveFunctionAttr",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2553,7 +2477,7 @@ namespace LLVM.Generated
             removeFunctionAttrNative ((_Fn : ValueRef).Ptr, (int (_PA : Attribute)))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCountParams",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2563,7 +2487,7 @@ namespace LLVM.Generated
             countParamsNative ((_Fn : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetParams",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2573,7 +2497,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMGetParams
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetParam",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2584,7 +2508,7 @@ namespace LLVM.Generated
             new ValueRef (getParamNative ((_Fn : ValueRef).Ptr, _Index))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetParamParent",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2594,7 +2518,7 @@ namespace LLVM.Generated
             new ValueRef (getParamParentNative ((_Inst : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetFirstParam",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2604,7 +2528,7 @@ namespace LLVM.Generated
             new ValueRef (getFirstParamNative ((_Fn : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetLastParam",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2614,7 +2538,7 @@ namespace LLVM.Generated
             new ValueRef (getLastParamNative ((_Fn : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetNextParam",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2624,7 +2548,7 @@ namespace LLVM.Generated
             new ValueRef (getNextParamNative ((_Arg : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetPreviousParam",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2634,7 +2558,7 @@ namespace LLVM.Generated
             new ValueRef (getPreviousParamNative ((_Arg : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddAttribute",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2645,7 +2569,7 @@ namespace LLVM.Generated
             addAttributeNative ((_Arg : ValueRef).Ptr, (int (_PA : Attribute)))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMRemoveAttribute",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2656,7 +2580,7 @@ namespace LLVM.Generated
             removeAttributeNative ((_Arg : ValueRef).Ptr, (int (_PA : Attribute)))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetAttribute",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2666,7 +2590,7 @@ namespace LLVM.Generated
             enum<Attribute> (getAttributeNative ((_Arg : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetParamAlignment",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2677,7 +2601,61 @@ namespace LLVM.Generated
             setParamAlignmentNative ((_Arg : ValueRef).Ptr, _align)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMMDStringInContext",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMValueRef *) mDStringInContextNative(
+            void* (* LLVMContextRef *) C,
+            string Str,
+            uint32 SLen)
+        let mDStringInContext _C _Str _SLen =
+            new ValueRef (mDStringInContextNative ((_C : ContextRef).Ptr, _Str, _SLen))
+
+        [<DllImport(
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMMDString",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMValueRef *) mDStringNative(
+            string Str,
+            uint32 SLen)
+        let mDString _Str _SLen =
+            new ValueRef (mDStringNative (_Str, _SLen))
+
+        [<DllImport(
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMMDNodeInContext",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMValueRef *) mDNodeInContextNative(
+            void* (* LLVMContextRef *) C,
+            void* (* LLVMValueRef* *) Vals,
+            uint32 Count)
+        // I don't know how to generate an "F# friendly" version of LLVMMDNodeInContext
+
+        [<DllImport(
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMMDNode",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMValueRef *) mDNodeNative(
+            void* (* LLVMValueRef* *) Vals,
+            uint32 Count)
+        // I don't know how to generate an "F# friendly" version of LLVMMDNode
+
+        [<DllImport(
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMGetMDString",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* getMDStringNative(
+            void* (* LLVMValueRef *) V,
+            uint32* Len)
+        // I don't know how to generate an "F# friendly" version of LLVMGetMDString
+
+        [<DllImport(
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBasicBlockAsValue",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2687,7 +2665,7 @@ namespace LLVM.Generated
             new ValueRef (basicBlockAsValueNative ((_BB : BasicBlockRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMValueIsBasicBlock",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2697,7 +2675,7 @@ namespace LLVM.Generated
             valueIsBasicBlockNative ((_Val : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMValueAsBasicBlock",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2707,7 +2685,7 @@ namespace LLVM.Generated
             new BasicBlockRef (valueAsBasicBlockNative ((_Val : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetBasicBlockParent",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2717,7 +2695,7 @@ namespace LLVM.Generated
             new ValueRef (getBasicBlockParentNative ((_BB : BasicBlockRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetBasicBlockTerminator",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2727,7 +2705,7 @@ namespace LLVM.Generated
             new ValueRef (getBasicBlockTerminatorNative ((_BB : BasicBlockRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCountBasicBlocks",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2737,7 +2715,7 @@ namespace LLVM.Generated
             countBasicBlocksNative ((_Fn : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetBasicBlocks",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2747,7 +2725,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMGetBasicBlocks
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetFirstBasicBlock",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2757,7 +2735,7 @@ namespace LLVM.Generated
             new BasicBlockRef (getFirstBasicBlockNative ((_Fn : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetLastBasicBlock",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2767,7 +2745,7 @@ namespace LLVM.Generated
             new BasicBlockRef (getLastBasicBlockNative ((_Fn : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetNextBasicBlock",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2777,7 +2755,7 @@ namespace LLVM.Generated
             new BasicBlockRef (getNextBasicBlockNative ((_BB : BasicBlockRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetPreviousBasicBlock",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2787,7 +2765,7 @@ namespace LLVM.Generated
             new BasicBlockRef (getPreviousBasicBlockNative ((_BB : BasicBlockRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetEntryBasicBlock",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2797,7 +2775,7 @@ namespace LLVM.Generated
             new BasicBlockRef (getEntryBasicBlockNative ((_Fn : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAppendBasicBlockInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2809,7 +2787,18 @@ namespace LLVM.Generated
             new BasicBlockRef (appendBasicBlockInContextNative ((_C : ContextRef).Ptr, (_Fn : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMAppendBasicBlock",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMBasicBlockRef *) appendBasicBlockNative(
+            void* (* LLVMValueRef *) Fn,
+            string Name)
+        let appendBasicBlock _Fn _Name =
+            new BasicBlockRef (appendBasicBlockNative ((_Fn : ValueRef).Ptr, _Name))
+
+        [<DllImport(
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInsertBasicBlockInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2821,18 +2810,7 @@ namespace LLVM.Generated
             new BasicBlockRef (insertBasicBlockInContextNative ((_C : ContextRef).Ptr, (_BB : BasicBlockRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
-            EntryPoint="LLVMAppendBasicBlock",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void* (* LLVMBasicBlockRef *) appendBasicBlockNative(
-            void* (* LLVMValueRef *) Fn,
-            string Name)
-        let appendBasicBlock _Fn _Name =
-            new BasicBlockRef (appendBasicBlockNative ((_Fn : ValueRef).Ptr, _Name))
-
-        [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInsertBasicBlock",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2843,7 +2821,7 @@ namespace LLVM.Generated
             new BasicBlockRef (insertBasicBlockNative ((_InsertBeforeBB : BasicBlockRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMDeleteBasicBlock",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2853,7 +2831,7 @@ namespace LLVM.Generated
             deleteBasicBlockNative ((_BB : BasicBlockRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMRemoveBasicBlockFromParent",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2863,7 +2841,7 @@ namespace LLVM.Generated
             removeBasicBlockFromParentNative ((_BB : BasicBlockRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMMoveBasicBlockBefore",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2874,7 +2852,7 @@ namespace LLVM.Generated
             moveBasicBlockBeforeNative ((_BB : BasicBlockRef).Ptr, (_MovePos : BasicBlockRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMMoveBasicBlockAfter",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2885,7 +2863,7 @@ namespace LLVM.Generated
             moveBasicBlockAfterNative ((_BB : BasicBlockRef).Ptr, (_MovePos : BasicBlockRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetFirstInstruction",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2895,7 +2873,7 @@ namespace LLVM.Generated
             new ValueRef (getFirstInstructionNative ((_BB : BasicBlockRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetLastInstruction",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2905,7 +2883,40 @@ namespace LLVM.Generated
             new ValueRef (getLastInstructionNative ((_BB : BasicBlockRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMHasMetadata",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int hasMetadataNative(
+            void* (* LLVMValueRef *) Val)
+        let hasMetadata _Val =
+            hasMetadataNative ((_Val : ValueRef).Ptr)
+
+        [<DllImport(
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMGetMetadata",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMValueRef *) getMetadataNative(
+            void* (* LLVMValueRef *) Val,
+            uint32 KindID)
+        let getMetadata _Val _KindID =
+            new ValueRef (getMetadataNative ((_Val : ValueRef).Ptr, _KindID))
+
+        [<DllImport(
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMSetMetadata",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void setMetadataNative(
+            void* (* LLVMValueRef *) Val,
+            uint32 KindID,
+            void* (* LLVMValueRef *) Node)
+        let setMetadata _Val _KindID _Node =
+            setMetadataNative ((_Val : ValueRef).Ptr, _KindID, (_Node : ValueRef).Ptr)
+
+        [<DllImport(
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetInstructionParent",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2915,7 +2926,7 @@ namespace LLVM.Generated
             new BasicBlockRef (getInstructionParentNative ((_Inst : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetNextInstruction",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2925,7 +2936,7 @@ namespace LLVM.Generated
             new ValueRef (getNextInstructionNative ((_Inst : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetPreviousInstruction",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2935,7 +2946,7 @@ namespace LLVM.Generated
             new ValueRef (getPreviousInstructionNative ((_Inst : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInstructionEraseFromParent",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2945,7 +2956,7 @@ namespace LLVM.Generated
             instructionEraseFromParentNative ((_Inst : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetInstructionOpcode",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2955,7 +2966,7 @@ namespace LLVM.Generated
             enum<Opcode> (getInstructionOpcodeNative ((_Inst : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetICmpPredicate",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2965,7 +2976,7 @@ namespace LLVM.Generated
             enum<IntPredicate> (getICmpPredicateNative ((_Inst : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetInstructionCallConv",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2976,7 +2987,7 @@ namespace LLVM.Generated
             setInstructionCallConvNative ((_Instr : ValueRef).Ptr, _CC)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetInstructionCallConv",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2986,7 +2997,7 @@ namespace LLVM.Generated
             getInstructionCallConvNative ((_Instr : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddInstrAttribute",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -2998,7 +3009,7 @@ namespace LLVM.Generated
             addInstrAttributeNative ((_Instr : ValueRef).Ptr, _index, (int (_arg2 : Attribute)))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMRemoveInstrAttribute",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3010,7 +3021,7 @@ namespace LLVM.Generated
             removeInstrAttributeNative ((_Instr : ValueRef).Ptr, _index, (int (_arg2 : Attribute)))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetInstrParamAlignment",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3022,7 +3033,7 @@ namespace LLVM.Generated
             setInstrParamAlignmentNative ((_Instr : ValueRef).Ptr, _index, _align)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMIsTailCall",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3032,7 +3043,7 @@ namespace LLVM.Generated
             isTailCallNative ((_CallInst : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetTailCall",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3043,7 +3054,7 @@ namespace LLVM.Generated
             setTailCallNative ((_CallInst : ValueRef).Ptr, _IsTailCall)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetSwitchDefaultDest",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3053,7 +3064,7 @@ namespace LLVM.Generated
             new BasicBlockRef (getSwitchDefaultDestNative ((_SwitchInstr : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddIncoming",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3065,7 +3076,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMAddIncoming
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCountIncoming",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3075,7 +3086,7 @@ namespace LLVM.Generated
             countIncomingNative ((_PhiNode : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetIncomingValue",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3086,7 +3097,7 @@ namespace LLVM.Generated
             new ValueRef (getIncomingValueNative ((_PhiNode : ValueRef).Ptr, _Index))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetIncomingBlock",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3097,7 +3108,7 @@ namespace LLVM.Generated
             new BasicBlockRef (getIncomingBlockNative ((_PhiNode : ValueRef).Ptr, _Index))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateBuilderInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3107,7 +3118,7 @@ namespace LLVM.Generated
             new BuilderRef (createBuilderInContextNative ((_C : ContextRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateBuilder",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3116,7 +3127,7 @@ namespace LLVM.Generated
             new BuilderRef (createBuilderNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMPositionBuilder",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3128,7 +3139,7 @@ namespace LLVM.Generated
             positionBuilderNative ((_Builder : BuilderRef).Ptr, (_Block : BasicBlockRef).Ptr, (_Instr : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMPositionBuilderBefore",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3139,7 +3150,7 @@ namespace LLVM.Generated
             positionBuilderBeforeNative ((_Builder : BuilderRef).Ptr, (_Instr : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMPositionBuilderAtEnd",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3150,7 +3161,7 @@ namespace LLVM.Generated
             positionBuilderAtEndNative ((_Builder : BuilderRef).Ptr, (_Block : BasicBlockRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetInsertBlock",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3160,7 +3171,7 @@ namespace LLVM.Generated
             new BasicBlockRef (getInsertBlockNative ((_Builder : BuilderRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMClearInsertionPosition",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3170,7 +3181,7 @@ namespace LLVM.Generated
             clearInsertionPositionNative ((_Builder : BuilderRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInsertIntoBuilder",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3181,7 +3192,7 @@ namespace LLVM.Generated
             insertIntoBuilderNative ((_Builder : BuilderRef).Ptr, (_Instr : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInsertIntoBuilderWithName",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3193,7 +3204,7 @@ namespace LLVM.Generated
             insertIntoBuilderWithNameNative ((_Builder : BuilderRef).Ptr, (_Instr : ValueRef).Ptr, _Name)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMDisposeBuilder",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3203,7 +3214,7 @@ namespace LLVM.Generated
             disposeBuilderNative ((_Builder : BuilderRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetCurrentDebugLocation",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3214,7 +3225,7 @@ namespace LLVM.Generated
             setCurrentDebugLocationNative ((_Builder : BuilderRef).Ptr, (_L : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetCurrentDebugLocation",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3224,7 +3235,7 @@ namespace LLVM.Generated
             new ValueRef (getCurrentDebugLocationNative ((_Builder : BuilderRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetInstDebugLocation",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3235,7 +3246,7 @@ namespace LLVM.Generated
             setInstDebugLocationNative ((_Builder : BuilderRef).Ptr, (_Inst : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildRetVoid",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3245,7 +3256,7 @@ namespace LLVM.Generated
             new ValueRef (buildRetVoidNative ((_arg0 : BuilderRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildRet",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3256,7 +3267,7 @@ namespace LLVM.Generated
             new ValueRef (buildRetNative ((_arg0 : BuilderRef).Ptr, (_V : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildAggregateRet",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3267,7 +3278,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMBuildAggregateRet
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildBr",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3278,7 +3289,7 @@ namespace LLVM.Generated
             new ValueRef (buildBrNative ((_arg0 : BuilderRef).Ptr, (_Dest : BasicBlockRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildCondBr",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3291,7 +3302,7 @@ namespace LLVM.Generated
             new ValueRef (buildCondBrNative ((_arg0 : BuilderRef).Ptr, (_If : ValueRef).Ptr, (_Then : BasicBlockRef).Ptr, (_Else : BasicBlockRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildSwitch",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3304,7 +3315,7 @@ namespace LLVM.Generated
             new ValueRef (buildSwitchNative ((_arg0 : BuilderRef).Ptr, (_V : ValueRef).Ptr, (_Else : BasicBlockRef).Ptr, _NumCases))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildIndirectBr",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3316,7 +3327,7 @@ namespace LLVM.Generated
             new ValueRef (buildIndirectBrNative ((_B : BuilderRef).Ptr, (_Addr : ValueRef).Ptr, _NumDests))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildInvoke",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3331,7 +3342,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMBuildInvoke
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildLandingPad",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3345,7 +3356,7 @@ namespace LLVM.Generated
             new ValueRef (buildLandingPadNative ((_B : BuilderRef).Ptr, (_Ty : TypeRef).Ptr, (_PersFn : ValueRef).Ptr, _NumClauses, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildResume",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3356,7 +3367,7 @@ namespace LLVM.Generated
             new ValueRef (buildResumeNative ((_B : BuilderRef).Ptr, (_Exn : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildUnreachable",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3366,7 +3377,7 @@ namespace LLVM.Generated
             new ValueRef (buildUnreachableNative ((_arg0 : BuilderRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddCase",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3378,7 +3389,7 @@ namespace LLVM.Generated
             addCaseNative ((_Switch : ValueRef).Ptr, (_OnVal : ValueRef).Ptr, (_Dest : BasicBlockRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddDestination",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3389,7 +3400,7 @@ namespace LLVM.Generated
             addDestinationNative ((_IndirectBr : ValueRef).Ptr, (_Dest : BasicBlockRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddClause",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3400,7 +3411,7 @@ namespace LLVM.Generated
             addClauseNative ((_LandingPad : ValueRef).Ptr, (_ClauseVal : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSetCleanup",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3411,7 +3422,7 @@ namespace LLVM.Generated
             setCleanupNative ((_LandingPad : ValueRef).Ptr, _Val)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildAdd",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3424,7 +3435,7 @@ namespace LLVM.Generated
             new ValueRef (buildAddNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildNSWAdd",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3437,7 +3448,7 @@ namespace LLVM.Generated
             new ValueRef (buildNSWAddNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildNUWAdd",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3450,7 +3461,7 @@ namespace LLVM.Generated
             new ValueRef (buildNUWAddNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildFAdd",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3463,7 +3474,7 @@ namespace LLVM.Generated
             new ValueRef (buildFAddNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildSub",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3476,7 +3487,7 @@ namespace LLVM.Generated
             new ValueRef (buildSubNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildNSWSub",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3489,7 +3500,7 @@ namespace LLVM.Generated
             new ValueRef (buildNSWSubNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildNUWSub",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3502,7 +3513,7 @@ namespace LLVM.Generated
             new ValueRef (buildNUWSubNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildFSub",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3515,7 +3526,7 @@ namespace LLVM.Generated
             new ValueRef (buildFSubNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildMul",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3528,7 +3539,7 @@ namespace LLVM.Generated
             new ValueRef (buildMulNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildNSWMul",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3541,7 +3552,7 @@ namespace LLVM.Generated
             new ValueRef (buildNSWMulNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildNUWMul",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3554,7 +3565,7 @@ namespace LLVM.Generated
             new ValueRef (buildNUWMulNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildFMul",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3567,7 +3578,7 @@ namespace LLVM.Generated
             new ValueRef (buildFMulNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildUDiv",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3580,7 +3591,7 @@ namespace LLVM.Generated
             new ValueRef (buildUDivNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildSDiv",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3593,7 +3604,7 @@ namespace LLVM.Generated
             new ValueRef (buildSDivNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildExactSDiv",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3606,7 +3617,7 @@ namespace LLVM.Generated
             new ValueRef (buildExactSDivNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildFDiv",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3619,7 +3630,7 @@ namespace LLVM.Generated
             new ValueRef (buildFDivNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildURem",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3632,7 +3643,7 @@ namespace LLVM.Generated
             new ValueRef (buildURemNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildSRem",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3645,7 +3656,7 @@ namespace LLVM.Generated
             new ValueRef (buildSRemNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildFRem",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3658,7 +3669,7 @@ namespace LLVM.Generated
             new ValueRef (buildFRemNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildShl",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3671,7 +3682,7 @@ namespace LLVM.Generated
             new ValueRef (buildShlNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildLShr",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3684,7 +3695,7 @@ namespace LLVM.Generated
             new ValueRef (buildLShrNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildAShr",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3697,7 +3708,7 @@ namespace LLVM.Generated
             new ValueRef (buildAShrNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildAnd",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3710,7 +3721,7 @@ namespace LLVM.Generated
             new ValueRef (buildAndNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildOr",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3723,7 +3734,7 @@ namespace LLVM.Generated
             new ValueRef (buildOrNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildXor",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3736,7 +3747,7 @@ namespace LLVM.Generated
             new ValueRef (buildXorNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildBinOp",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3750,7 +3761,7 @@ namespace LLVM.Generated
             new ValueRef (buildBinOpNative ((_B : BuilderRef).Ptr, (int (_Op : Opcode)), (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildNeg",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3762,7 +3773,7 @@ namespace LLVM.Generated
             new ValueRef (buildNegNative ((_arg0 : BuilderRef).Ptr, (_V : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildNSWNeg",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3774,7 +3785,7 @@ namespace LLVM.Generated
             new ValueRef (buildNSWNegNative ((_B : BuilderRef).Ptr, (_V : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildNUWNeg",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3786,7 +3797,7 @@ namespace LLVM.Generated
             new ValueRef (buildNUWNegNative ((_B : BuilderRef).Ptr, (_V : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildFNeg",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3798,7 +3809,7 @@ namespace LLVM.Generated
             new ValueRef (buildFNegNative ((_arg0 : BuilderRef).Ptr, (_V : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildNot",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3810,7 +3821,7 @@ namespace LLVM.Generated
             new ValueRef (buildNotNative ((_arg0 : BuilderRef).Ptr, (_V : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildMalloc",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3822,7 +3833,7 @@ namespace LLVM.Generated
             new ValueRef (buildMallocNative ((_arg0 : BuilderRef).Ptr, (_Ty : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildArrayMalloc",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3835,7 +3846,7 @@ namespace LLVM.Generated
             new ValueRef (buildArrayMallocNative ((_arg0 : BuilderRef).Ptr, (_Ty : TypeRef).Ptr, (_Val : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildAlloca",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3847,7 +3858,7 @@ namespace LLVM.Generated
             new ValueRef (buildAllocaNative ((_arg0 : BuilderRef).Ptr, (_Ty : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildArrayAlloca",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3860,7 +3871,7 @@ namespace LLVM.Generated
             new ValueRef (buildArrayAllocaNative ((_arg0 : BuilderRef).Ptr, (_Ty : TypeRef).Ptr, (_Val : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildFree",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3871,7 +3882,7 @@ namespace LLVM.Generated
             new ValueRef (buildFreeNative ((_arg0 : BuilderRef).Ptr, (_PointerVal : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildLoad",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3883,7 +3894,7 @@ namespace LLVM.Generated
             new ValueRef (buildLoadNative ((_arg0 : BuilderRef).Ptr, (_PointerVal : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildStore",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3895,7 +3906,7 @@ namespace LLVM.Generated
             new ValueRef (buildStoreNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_Ptr : ValueRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildGEP",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3908,7 +3919,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMBuildGEP
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildInBoundsGEP",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3921,7 +3932,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMBuildInBoundsGEP
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildStructGEP",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3934,7 +3945,7 @@ namespace LLVM.Generated
             new ValueRef (buildStructGEPNative ((_B : BuilderRef).Ptr, (_Pointer : ValueRef).Ptr, _Idx, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildGlobalString",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3946,7 +3957,7 @@ namespace LLVM.Generated
             new ValueRef (buildGlobalStringNative ((_B : BuilderRef).Ptr, _Str, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildGlobalStringPtr",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3958,7 +3969,28 @@ namespace LLVM.Generated
             new ValueRef (buildGlobalStringPtrNative ((_B : BuilderRef).Ptr, _Str, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMGetVolatile",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern bool getVolatileNative(
+            void* (* LLVMValueRef *) MemoryAccessInst)
+        let getVolatile _MemoryAccessInst =
+            getVolatileNative ((_MemoryAccessInst : ValueRef).Ptr)
+
+        [<DllImport(
+            "LLVM-3.1.dll",
+            EntryPoint="LLVMSetVolatile",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void setVolatileNative(
+            void* (* LLVMValueRef *) MemoryAccessInst,
+            bool IsVolatile)
+        let setVolatile _MemoryAccessInst _IsVolatile =
+            setVolatileNative ((_MemoryAccessInst : ValueRef).Ptr, _IsVolatile)
+
+        [<DllImport(
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildTrunc",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3971,7 +4003,7 @@ namespace LLVM.Generated
             new ValueRef (buildTruncNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildZExt",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3984,7 +4016,7 @@ namespace LLVM.Generated
             new ValueRef (buildZExtNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildSExt",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -3997,7 +4029,7 @@ namespace LLVM.Generated
             new ValueRef (buildSExtNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildFPToUI",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4010,7 +4042,7 @@ namespace LLVM.Generated
             new ValueRef (buildFPToUINative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildFPToSI",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4023,7 +4055,7 @@ namespace LLVM.Generated
             new ValueRef (buildFPToSINative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildUIToFP",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4036,7 +4068,7 @@ namespace LLVM.Generated
             new ValueRef (buildUIToFPNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildSIToFP",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4049,7 +4081,7 @@ namespace LLVM.Generated
             new ValueRef (buildSIToFPNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildFPTrunc",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4062,7 +4094,7 @@ namespace LLVM.Generated
             new ValueRef (buildFPTruncNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildFPExt",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4075,7 +4107,7 @@ namespace LLVM.Generated
             new ValueRef (buildFPExtNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildPtrToInt",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4088,7 +4120,7 @@ namespace LLVM.Generated
             new ValueRef (buildPtrToIntNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildIntToPtr",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4101,7 +4133,7 @@ namespace LLVM.Generated
             new ValueRef (buildIntToPtrNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildBitCast",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4114,7 +4146,7 @@ namespace LLVM.Generated
             new ValueRef (buildBitCastNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildZExtOrBitCast",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4127,7 +4159,7 @@ namespace LLVM.Generated
             new ValueRef (buildZExtOrBitCastNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildSExtOrBitCast",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4140,7 +4172,7 @@ namespace LLVM.Generated
             new ValueRef (buildSExtOrBitCastNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildTruncOrBitCast",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4153,7 +4185,7 @@ namespace LLVM.Generated
             new ValueRef (buildTruncOrBitCastNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildCast",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4167,7 +4199,7 @@ namespace LLVM.Generated
             new ValueRef (buildCastNative ((_B : BuilderRef).Ptr, (int (_Op : Opcode)), (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildPointerCast",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4180,7 +4212,7 @@ namespace LLVM.Generated
             new ValueRef (buildPointerCastNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildIntCast",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4193,7 +4225,7 @@ namespace LLVM.Generated
             new ValueRef (buildIntCastNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildFPCast",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4206,7 +4238,7 @@ namespace LLVM.Generated
             new ValueRef (buildFPCastNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, (_DestTy : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildICmp",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4220,7 +4252,7 @@ namespace LLVM.Generated
             new ValueRef (buildICmpNative ((_arg0 : BuilderRef).Ptr, (int (_Op : IntPredicate)), (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildFCmp",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4234,7 +4266,7 @@ namespace LLVM.Generated
             new ValueRef (buildFCmpNative ((_arg0 : BuilderRef).Ptr, (int (_Op : RealPredicate)), (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildPhi",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4246,7 +4278,7 @@ namespace LLVM.Generated
             new ValueRef (buildPhiNative ((_arg0 : BuilderRef).Ptr, (_Ty : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildCall",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4259,7 +4291,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMBuildCall
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildSelect",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4273,7 +4305,7 @@ namespace LLVM.Generated
             new ValueRef (buildSelectNative ((_arg0 : BuilderRef).Ptr, (_If : ValueRef).Ptr, (_Then : ValueRef).Ptr, (_Else : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildVAArg",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4286,7 +4318,7 @@ namespace LLVM.Generated
             new ValueRef (buildVAArgNative ((_arg0 : BuilderRef).Ptr, (_List : ValueRef).Ptr, (_Ty : TypeRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildExtractElement",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4299,7 +4331,7 @@ namespace LLVM.Generated
             new ValueRef (buildExtractElementNative ((_arg0 : BuilderRef).Ptr, (_VecVal : ValueRef).Ptr, (_Index : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildInsertElement",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4313,7 +4345,7 @@ namespace LLVM.Generated
             new ValueRef (buildInsertElementNative ((_arg0 : BuilderRef).Ptr, (_VecVal : ValueRef).Ptr, (_EltVal : ValueRef).Ptr, (_Index : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildShuffleVector",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4327,7 +4359,7 @@ namespace LLVM.Generated
             new ValueRef (buildShuffleVectorNative ((_arg0 : BuilderRef).Ptr, (_V1 : ValueRef).Ptr, (_V2 : ValueRef).Ptr, (_Mask : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildExtractValue",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4340,7 +4372,7 @@ namespace LLVM.Generated
             new ValueRef (buildExtractValueNative ((_arg0 : BuilderRef).Ptr, (_AggVal : ValueRef).Ptr, _Index, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildInsertValue",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4354,7 +4386,7 @@ namespace LLVM.Generated
             new ValueRef (buildInsertValueNative ((_arg0 : BuilderRef).Ptr, (_AggVal : ValueRef).Ptr, (_EltVal : ValueRef).Ptr, _Index, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildIsNull",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4366,7 +4398,7 @@ namespace LLVM.Generated
             new ValueRef (buildIsNullNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildIsNotNull",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4378,7 +4410,7 @@ namespace LLVM.Generated
             new ValueRef (buildIsNotNullNative ((_arg0 : BuilderRef).Ptr, (_Val : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMBuildPtrDiff",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4391,7 +4423,7 @@ namespace LLVM.Generated
             new ValueRef (buildPtrDiffNative ((_arg0 : BuilderRef).Ptr, (_LHS : ValueRef).Ptr, (_RHS : ValueRef).Ptr, _Name))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateModuleProviderForExistingModule",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4401,7 +4433,7 @@ namespace LLVM.Generated
             new ModuleProviderRef (createModuleProviderForExistingModuleNative ((_M : ModuleRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMDisposeModuleProvider",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4411,7 +4443,7 @@ namespace LLVM.Generated
             disposeModuleProviderNative ((_M : ModuleProviderRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateMemoryBufferWithContentsOfFile",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4422,7 +4454,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMCreateMemoryBufferWithContentsOfFile
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateMemoryBufferWithSTDIN",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4432,7 +4464,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMCreateMemoryBufferWithSTDIN
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMDisposeMemoryBuffer",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4442,7 +4474,7 @@ namespace LLVM.Generated
             disposeMemoryBufferNative ((_MemBuf : MemoryBufferRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetGlobalPassRegistry",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4451,7 +4483,7 @@ namespace LLVM.Generated
             new PassRegistryRef (getGlobalPassRegistryNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreatePassManager",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4460,7 +4492,7 @@ namespace LLVM.Generated
             new PassManagerRef (createPassManagerNative ())
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateFunctionPassManagerForModule",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4470,7 +4502,7 @@ namespace LLVM.Generated
             new PassManagerRef (createFunctionPassManagerForModuleNative ((_M : ModuleRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateFunctionPassManager",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4480,7 +4512,7 @@ namespace LLVM.Generated
             new PassManagerRef (createFunctionPassManagerNative ((_MP : ModuleProviderRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMRunPassManager",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4491,7 +4523,7 @@ namespace LLVM.Generated
             runPassManagerNative ((_PM : PassManagerRef).Ptr, (_M : ModuleRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMInitializeFunctionPassManager",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4501,7 +4533,7 @@ namespace LLVM.Generated
             initializeFunctionPassManagerNative ((_FPM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMRunFunctionPassManager",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4512,7 +4544,7 @@ namespace LLVM.Generated
             runFunctionPassManagerNative ((_FPM : PassManagerRef).Ptr, (_F : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMFinalizeFunctionPassManager",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4522,7 +4554,7 @@ namespace LLVM.Generated
             finalizeFunctionPassManagerNative ((_FPM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMDisposePassManager",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4541,7 +4573,7 @@ namespace LLVM.Generated
     module BitReader =
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMParseBitcode",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4552,7 +4584,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMParseBitcode
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMParseBitcodeInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4564,7 +4596,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMParseBitcodeInContext
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetBitcodeModuleInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4576,7 +4608,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMGetBitcodeModuleInContext
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetBitcodeModule",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4587,7 +4619,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMGetBitcodeModule
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetBitcodeModuleProviderInContext",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4599,7 +4631,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMGetBitcodeModuleProviderInContext
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetBitcodeModuleProvider",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4619,7 +4651,7 @@ namespace LLVM.Generated
     module BitWriter =
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMWriteBitcodeToFile",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4630,7 +4662,7 @@ namespace LLVM.Generated
             writeBitcodeToFileNative ((_M : ModuleRef).Ptr, _Path)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMWriteBitcodeToFD",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4643,7 +4675,7 @@ namespace LLVM.Generated
             writeBitcodeToFDNative ((_M : ModuleRef).Ptr, _FD, _ShouldClose, _Unbuffered)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMWriteBitcodeToFileHandle",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4679,7 +4711,7 @@ namespace LLVM.Generated
             interface ILLVMRef with member x.Ptr = thePtr
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateTargetData",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4689,7 +4721,7 @@ namespace LLVM.Generated
             new TargetDataRef (createTargetDataNative (_StringRep))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddTargetData",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4700,7 +4732,7 @@ namespace LLVM.Generated
             addTargetDataNative ((_arg0 : TargetDataRef).Ptr, (_arg1 : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddTargetLibraryInfo",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4711,7 +4743,7 @@ namespace LLVM.Generated
             addTargetLibraryInfoNative ((_arg0 : TargetLibraryInfoRef).Ptr, (_arg1 : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCopyStringRepOfTargetData",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4721,7 +4753,7 @@ namespace LLVM.Generated
             Marshal.PtrToStringAuto (copyStringRepOfTargetDataNative ((_arg0 : TargetDataRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMByteOrder",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4731,7 +4763,7 @@ namespace LLVM.Generated
             enum<ByteOrdering> (byteOrderNative ((_arg0 : TargetDataRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMPointerSize",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4741,7 +4773,7 @@ namespace LLVM.Generated
             pointerSizeNative ((_arg0 : TargetDataRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMIntPtrType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4751,7 +4783,7 @@ namespace LLVM.Generated
             new TypeRef (intPtrTypeNative ((_arg0 : TargetDataRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMSizeOfTypeInBits",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4762,7 +4794,7 @@ namespace LLVM.Generated
             sizeOfTypeInBitsNative ((_arg0 : TargetDataRef).Ptr, (_arg1 : TypeRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMStoreSizeOfType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4773,7 +4805,7 @@ namespace LLVM.Generated
             storeSizeOfTypeNative ((_arg0 : TargetDataRef).Ptr, (_arg1 : TypeRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMABISizeOfType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4784,7 +4816,7 @@ namespace LLVM.Generated
             aBISizeOfTypeNative ((_arg0 : TargetDataRef).Ptr, (_arg1 : TypeRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMABIAlignmentOfType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4795,7 +4827,7 @@ namespace LLVM.Generated
             aBIAlignmentOfTypeNative ((_arg0 : TargetDataRef).Ptr, (_arg1 : TypeRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCallFrameAlignmentOfType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4806,7 +4838,7 @@ namespace LLVM.Generated
             callFrameAlignmentOfTypeNative ((_arg0 : TargetDataRef).Ptr, (_arg1 : TypeRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMPreferredAlignmentOfType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4817,7 +4849,7 @@ namespace LLVM.Generated
             preferredAlignmentOfTypeNative ((_arg0 : TargetDataRef).Ptr, (_arg1 : TypeRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMPreferredAlignmentOfGlobal",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4828,7 +4860,7 @@ namespace LLVM.Generated
             preferredAlignmentOfGlobalNative ((_arg0 : TargetDataRef).Ptr, (_GlobalVar : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMElementAtOffset",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4840,7 +4872,7 @@ namespace LLVM.Generated
             elementAtOffsetNative ((_arg0 : TargetDataRef).Ptr, (_StructTy : TypeRef).Ptr, _Offset)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMOffsetOfElement",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4852,7 +4884,7 @@ namespace LLVM.Generated
             offsetOfElementNative ((_arg0 : TargetDataRef).Ptr, (_StructTy : TypeRef).Ptr, _Element)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMDisposeTargetData",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4872,7 +4904,7 @@ namespace LLVM.Generated
     module ExecutionEngine =
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMLinkInJIT",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4881,7 +4913,7 @@ namespace LLVM.Generated
             linkInJITNative ()
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMLinkInInterpreter",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4898,7 +4930,7 @@ namespace LLVM.Generated
             interface ILLVMRef with member x.Ptr = thePtr
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateGenericValueOfInt",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4910,7 +4942,7 @@ namespace LLVM.Generated
             new GenericValueRef (createGenericValueOfIntNative ((_Ty : TypeRef).Ptr, _N, _IsSigned))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateGenericValueOfPointer",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4919,7 +4951,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMCreateGenericValueOfPointer
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateGenericValueOfFloat",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4930,7 +4962,7 @@ namespace LLVM.Generated
             new GenericValueRef (createGenericValueOfFloatNative ((_Ty : TypeRef).Ptr, _N))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGenericValueIntWidth",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4940,7 +4972,7 @@ namespace LLVM.Generated
             genericValueIntWidthNative ((_GenValRef : GenericValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGenericValueToInt",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4951,7 +4983,7 @@ namespace LLVM.Generated
             genericValueToIntNative ((_GenVal : GenericValueRef).Ptr, _IsSigned)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGenericValueToPointer",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4960,7 +4992,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMGenericValueToPointer
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGenericValueToFloat",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4971,7 +5003,7 @@ namespace LLVM.Generated
             genericValueToFloatNative ((_TyRef : TypeRef).Ptr, (_GenVal : GenericValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMDisposeGenericValue",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4981,7 +5013,7 @@ namespace LLVM.Generated
             disposeGenericValueNative ((_GenVal : GenericValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateExecutionEngineForModule",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4992,7 +5024,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMCreateExecutionEngineForModule
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateInterpreterForModule",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5003,7 +5035,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMCreateInterpreterForModule
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateJITCompilerForModule",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5015,7 +5047,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMCreateJITCompilerForModule
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateExecutionEngine",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5026,7 +5058,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMCreateExecutionEngine
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateInterpreter",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5037,7 +5069,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMCreateInterpreter
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMCreateJITCompiler",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5049,7 +5081,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMCreateJITCompiler
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMDisposeExecutionEngine",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5059,7 +5091,7 @@ namespace LLVM.Generated
             disposeExecutionEngineNative ((_EE : ExecutionEngineRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMRunStaticConstructors",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5069,7 +5101,7 @@ namespace LLVM.Generated
             runStaticConstructorsNative ((_EE : ExecutionEngineRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMRunStaticDestructors",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5079,7 +5111,7 @@ namespace LLVM.Generated
             runStaticDestructorsNative ((_EE : ExecutionEngineRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMRunFunctionAsMain",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5092,7 +5124,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMRunFunctionAsMain
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMRunFunction",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5104,7 +5136,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMRunFunction
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMFreeMachineCodeForFunction",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5115,7 +5147,7 @@ namespace LLVM.Generated
             freeMachineCodeForFunctionNative ((_EE : ExecutionEngineRef).Ptr, (_F : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddModule",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5126,7 +5158,7 @@ namespace LLVM.Generated
             addModuleNative ((_EE : ExecutionEngineRef).Ptr, (_M : ModuleRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddModuleProvider",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5137,7 +5169,7 @@ namespace LLVM.Generated
             addModuleProviderNative ((_EE : ExecutionEngineRef).Ptr, (_MP : ModuleProviderRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMRemoveModule",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5149,7 +5181,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMRemoveModule
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMRemoveModuleProvider",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5161,7 +5193,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMRemoveModuleProvider
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMFindFunction",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5172,7 +5204,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMFindFunction
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMRecompileAndRelinkFunction",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5182,7 +5214,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMRecompileAndRelinkFunction
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetExecutionEngineTargetData",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5192,7 +5224,7 @@ namespace LLVM.Generated
             new TargetDataRef (getExecutionEngineTargetDataNative ((_EE : ExecutionEngineRef).Ptr))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddGlobalMapping",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5203,7 +5235,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMAddGlobalMapping
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMGetPointerToGlobal",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5227,7 +5259,7 @@ namespace LLVM.Generated
             | ReturnStatusAction = 2
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMVerifyModule",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5238,7 +5270,7 @@ namespace LLVM.Generated
         // I don't know how to generate an "F# friendly" version of LLVMVerifyModule
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMVerifyFunction",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5249,7 +5281,7 @@ namespace LLVM.Generated
             verifyFunctionNative ((_Fn : ValueRef).Ptr, (int (_Action : VerifierFailureAction)))
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMViewFunctionCFG",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5259,7 +5291,7 @@ namespace LLVM.Generated
             viewFunctionCFGNative ((_Fn : ValueRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMViewFunctionCFGOnly",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5278,7 +5310,7 @@ namespace LLVM.Generated.Transforms
     module Scalar =
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddAggressiveDCEPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5288,7 +5320,7 @@ namespace LLVM.Generated.Transforms
             addAggressiveDCEPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddCFGSimplificationPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5298,7 +5330,7 @@ namespace LLVM.Generated.Transforms
             addCFGSimplificationPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddDeadStoreEliminationPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5308,7 +5340,7 @@ namespace LLVM.Generated.Transforms
             addDeadStoreEliminationPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddGVNPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5318,7 +5350,7 @@ namespace LLVM.Generated.Transforms
             addGVNPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddIndVarSimplifyPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5328,7 +5360,7 @@ namespace LLVM.Generated.Transforms
             addIndVarSimplifyPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddInstructionCombiningPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5338,7 +5370,7 @@ namespace LLVM.Generated.Transforms
             addInstructionCombiningPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddJumpThreadingPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5348,7 +5380,7 @@ namespace LLVM.Generated.Transforms
             addJumpThreadingPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddLICMPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5358,7 +5390,7 @@ namespace LLVM.Generated.Transforms
             addLICMPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddLoopDeletionPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5368,7 +5400,7 @@ namespace LLVM.Generated.Transforms
             addLoopDeletionPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddLoopIdiomPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5378,7 +5410,7 @@ namespace LLVM.Generated.Transforms
             addLoopIdiomPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddLoopRotatePass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5388,7 +5420,7 @@ namespace LLVM.Generated.Transforms
             addLoopRotatePassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddLoopUnrollPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5398,7 +5430,7 @@ namespace LLVM.Generated.Transforms
             addLoopUnrollPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddLoopUnswitchPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5408,7 +5440,7 @@ namespace LLVM.Generated.Transforms
             addLoopUnswitchPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddMemCpyOptPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5418,7 +5450,7 @@ namespace LLVM.Generated.Transforms
             addMemCpyOptPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddPromoteMemoryToRegisterPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5428,7 +5460,7 @@ namespace LLVM.Generated.Transforms
             addPromoteMemoryToRegisterPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddReassociatePass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5438,7 +5470,7 @@ namespace LLVM.Generated.Transforms
             addReassociatePassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddSCCPPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5448,7 +5480,7 @@ namespace LLVM.Generated.Transforms
             addSCCPPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddScalarReplAggregatesPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5458,7 +5490,7 @@ namespace LLVM.Generated.Transforms
             addScalarReplAggregatesPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddScalarReplAggregatesPassSSA",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5468,7 +5500,7 @@ namespace LLVM.Generated.Transforms
             addScalarReplAggregatesPassSSANative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddScalarReplAggregatesPassWithThreshold",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5479,7 +5511,7 @@ namespace LLVM.Generated.Transforms
             addScalarReplAggregatesPassWithThresholdNative ((_PM : PassManagerRef).Ptr, _Threshold)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddSimplifyLibCallsPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5489,7 +5521,7 @@ namespace LLVM.Generated.Transforms
             addSimplifyLibCallsPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddTailCallEliminationPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5499,7 +5531,7 @@ namespace LLVM.Generated.Transforms
             addTailCallEliminationPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddConstantPropagationPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5509,7 +5541,7 @@ namespace LLVM.Generated.Transforms
             addConstantPropagationPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddDemoteMemoryToRegisterPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5519,7 +5551,7 @@ namespace LLVM.Generated.Transforms
             addDemoteMemoryToRegisterPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddVerifierPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5529,7 +5561,7 @@ namespace LLVM.Generated.Transforms
             addVerifierPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddCorrelatedValuePropagationPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5539,7 +5571,7 @@ namespace LLVM.Generated.Transforms
             addCorrelatedValuePropagationPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddEarlyCSEPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5549,7 +5581,7 @@ namespace LLVM.Generated.Transforms
             addEarlyCSEPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddLowerExpectIntrinsicPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5559,7 +5591,7 @@ namespace LLVM.Generated.Transforms
             addLowerExpectIntrinsicPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddTypeBasedAliasAnalysisPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5569,7 +5601,7 @@ namespace LLVM.Generated.Transforms
             addTypeBasedAliasAnalysisPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddBasicAliasAnalysisPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5588,7 +5620,7 @@ namespace LLVM.Generated.Transforms
     module IPO =
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddArgumentPromotionPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5598,7 +5630,7 @@ namespace LLVM.Generated.Transforms
             addArgumentPromotionPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddConstantMergePass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5608,7 +5640,7 @@ namespace LLVM.Generated.Transforms
             addConstantMergePassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddDeadArgEliminationPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5618,7 +5650,7 @@ namespace LLVM.Generated.Transforms
             addDeadArgEliminationPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddFunctionAttrsPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5628,7 +5660,7 @@ namespace LLVM.Generated.Transforms
             addFunctionAttrsPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddFunctionInliningPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5638,7 +5670,7 @@ namespace LLVM.Generated.Transforms
             addFunctionInliningPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddAlwaysInlinerPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5648,7 +5680,7 @@ namespace LLVM.Generated.Transforms
             addAlwaysInlinerPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddGlobalDCEPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5658,7 +5690,7 @@ namespace LLVM.Generated.Transforms
             addGlobalDCEPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddGlobalOptimizerPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5668,7 +5700,7 @@ namespace LLVM.Generated.Transforms
             addGlobalOptimizerPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddIPConstantPropagationPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5678,7 +5710,7 @@ namespace LLVM.Generated.Transforms
             addIPConstantPropagationPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddPruneEHPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5688,7 +5720,7 @@ namespace LLVM.Generated.Transforms
             addPruneEHPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddIPSCCPPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5698,7 +5730,7 @@ namespace LLVM.Generated.Transforms
             addIPSCCPPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddInternalizePass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5709,7 +5741,7 @@ namespace LLVM.Generated.Transforms
             addInternalizePassNative ((_arg0 : PassManagerRef).Ptr, _AllButMain)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddStripDeadPrototypesPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -5719,7 +5751,7 @@ namespace LLVM.Generated.Transforms
             addStripDeadPrototypesPassNative ((_PM : PassManagerRef).Ptr)
 
         [<DllImport(
-            "LLVM-3.0.dll",
+            "LLVM-3.1.dll",
             EntryPoint="LLVMAddStripSymbolsPass",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
