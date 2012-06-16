@@ -19,7 +19,11 @@ using a build command like:
 `./configure --enable-shared --enable-jit && make && make install`.
 OS X 10.6 needs more convincing to build the 32-bit libraries as required to
 work with mono. The following LLVM configuration works on 10.6:
-`CXX='g++ -m32' CC='gcc -m32' CFLAGS=-m32 CXXFLAGS=-m32 LDFLAGS=-m32 ./configure --disable-bindings --build=i686-apple-darwin --host=i686-apple-darwin --target=i686-apple-darwin --enable-targets=x86,x86_64,cbe --enable-optimized --enable-shared --enable-jit`
+
+    CXX='g++ -m32' CC='gcc -m32' CFLAGS=-m32 CXXFLAGS=-m32 LDFLAGS=-m32 ./configure \
+        --disable-bindings --build=i686-apple-darwin --host=i686-apple-darwin \
+        --target=i686-apple-darwin --enable-targets=x86,x86_64 \
+        --enable-optimized --enable-shared --enable-jit
 
 ## Building the llvm-fs Assembly
 
