@@ -51,6 +51,12 @@
     <Compile Include="Parsing.fs">
       <Link>Parsing.fs</Link>
     </Compile>
+    <Compile Include="Lexer.fs">
+      <Link>Lexer.fs</Link>
+    </Compile>
+    <Compile Include="Parser.fs">
+      <Link>Parser.fs</Link>
+    </Compile>
     <Compile Include="bindinggen.fs">
       <Link>bindinggen.fs</Link>
     </Compile>
