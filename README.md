@@ -8,15 +8,14 @@ use the project google group: http://groups.google.com/group/llvm-fs
 
 ## Building LLVM for llvm-fs
 
-NOTE: this has been tested on OS X 10.5, 10.6 and on Windows 7 (using MinGW
+NOTE: this has been tested on OS X 10.6 and on Windows 7 (using MinGW
 bash/gcc/g++ with python 2.7 installed)
 
-Download a copy of the LLVM 3.0 source code. In order to use the LLVM native
+Download a copy of the LLVM 3.1 source code. In order to use the LLVM native
 libraries with llvm-fs they must be built with `--enabled-shared`.
 Unfortunately the prebuilt LLVM binaries don't come with shared libraries so you
-will have to build LLVM yourself. For windows and OS X 10.5 you can do this by
-using a build command like:
-`./configure --enable-shared --enable-jit && make && make install`.
+will have to build LLVM yourself. For windows you can do this by using a build
+command like: `./configure --enable-shared --enable-jit && make && make install`.
 OS X 10.6 needs more convincing to build the 32-bit libraries as required to
 work with mono. The following LLVM configuration works on 10.6:
 
@@ -45,7 +44,8 @@ In order to use llvm-fs you will want to consult the following:
 2. The [LLVM C](http://llvm.org/doxygen/dir_ba5bdc16f452288d1429bb9e178a5965.html)
    documentation. Almost all of the llvm-fs binding functions are
    auto-generated from the C header files so these docs are very useful.
-3. The [fsi file for llvm-fs](https://github.com/keithshep/llvm-fs/wiki/LLVM-F%23-Interface)
+3. The LLVMFSharp.fsi file for all of the types and function signatures and
+   of course the source code.
 
 ## Regenerating bindings
 
