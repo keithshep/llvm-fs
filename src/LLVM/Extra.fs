@@ -21,7 +21,15 @@ let rec private typeToStringBuilder (modRef : ModuleRef) (tyRef : TypeRef) =
     | TypeKind.PPC_FP128TypeKind -> newStrBldr "PPC FP 128"
     | TypeKind.LabelTypeKind     -> newStrBldr "Label"
     | TypeKind.IntegerTypeKind   -> newStrBldr "int"
-    | TypeKind.FunctionTypeKind  -> newStrBldr "function"
+    | TypeKind.FunctionTypeKind  ->
+        let sb = newStrBldr "(fun "
+        let argTys = getParamTypes tyRef
+        for i = 0 to argTys.Length - 1 do
+            if i >= 1 then
+                sb.Append(", ") |> ignore
+            sb.Append(typeToStringBuilder modRef argTys.[i]) |> ignore
+        sb.Append "->" |> ignore
+        sb.Append(typeToStringBuilder modRef (getReturnType tyRef)).Append(")")
     | TypeKind.MetadataTypeKind  -> newStrBldr "Metadata"
     | TypeKind.X86_MMXTypeKind   -> newStrBldr "X86 MMX"
     | TypeKind.ArrayTypeKind     -> withElemTySB "Array"

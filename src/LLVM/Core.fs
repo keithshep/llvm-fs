@@ -81,6 +81,13 @@ let getParams (func : ValueRef) =
     let paramCount = int (countParams func)
     [|for i in 0 .. paramCount - 1 -> getParam func (uint32 i)|]
 
+let getParamTypes (funcTy : TypeRef) =
+    let paramCount = int (countParamTypes funcTy)
+    use nativeParamTyPtrs = new NativePtrs([|for _ in 0 .. paramCount - 1 -> 0n|])
+    getParamTypesNative (funcTy.Ptr, nativeParamTyPtrs.Ptrs)
+
+    [|for ptr in nativeParamTyPtrs.PtrArr -> new TypeRef (ptr)|]
+
 let buildSwitchWithCases
         (bldr : BuilderRef)
         (testVal : ValueRef)
@@ -108,8 +115,8 @@ let structSetBody (structTy : TypeRef) (elemTys : TypeRef array) (packed : bool)
     structSetBodyNative(structTy.Ptr, elemPtrs.Ptrs, uint32 elemTys.Length, packed)
 
 let getStructElementTypes (structTy : TypeRef) =
-    let elemCount = countStructElementTypes structTy
-    use nativeElemTyPtrs = new NativePtrs([|for _ in 0u .. elemCount - 1u -> 0n|])
+    let elemCount = int (countStructElementTypes structTy)
+    use nativeElemTyPtrs = new NativePtrs([|for _ in 0 .. elemCount - 1 -> 0n|])
     getStructElementTypesNative (structTy.Ptr, nativeElemTyPtrs.Ptrs)
 
     [|for ptr in nativeElemTyPtrs.PtrArr -> new TypeRef (ptr)|]

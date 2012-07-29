@@ -1393,6 +1393,7 @@ namespace LLVM
     val tryGetNamedFunction :
       Generated.Core.ModuleRef -> string -> Generated.Core.ValueRef option
     val getParams : Generated.Core.ValueRef -> Generated.Core.ValueRef []
+    val getParamTypes : Generated.Core.TypeRef -> Generated.Core.TypeRef []
     val buildSwitchWithCases :
       Generated.Core.BuilderRef ->
         Generated.Core.ValueRef ->
