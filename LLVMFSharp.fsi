@@ -11,6 +11,8 @@ namespace LLVM
         member PtrArr : nativeint []
         member Ptrs : nativeint
       end
+    [<LiteralAttribute ()>]
+    val llvmAssemblyName : string
   end
 
 namespace LLVM.Generated

@@ -65,7 +65,6 @@ let getEnumDefs (defs : CDef list) =
     go Set.empty defs
 
 let toFSharpSource
-        (llvmDLLName : string)
         (moduleName : string)
         (out : System.IO.TextWriter)
         (deps : (string * CDef list) list)
@@ -137,7 +136,7 @@ let toFSharpSource
                 else
                     // the native function def
                     ifprintfn 2 out "[<DllImport("
-                    ifprintfn 3 out "\"%s\"," llvmDLLName
+                    ifprintfn 3 out "llvmAssemblyName,"
                     ifprintfn 3 out "EntryPoint=\"%s\"," fName
                     ifprintfn 3 out "CallingConvention=CallingConvention.Cdecl,"
                     ifprintfn 3 out "CharSet=CharSet.Ansi)>]"
@@ -288,7 +287,7 @@ let toFSharpSource
 [<EntryPoint>]
 let main (args : string array) =
     match args with
-    | [|llvmDLLName; llvmHome; outSrcFile|] ->
+    | [|llvmHome; outSrcFile|] ->
         let cPrefix = Path.Combine [|llvmHome; "include"; "llvm-c"|]
         let modulePrefix = "LLVM.Generated."
         let parseMod (m : string) =
@@ -304,7 +303,7 @@ let main (args : string array) =
                 let modName m = "LLVM.Generated." + m
                 let depDefs = List.map (fun m -> (modName m, parseMod m)) deps
                 let friendlyFuncCount, nativeFuncCount =
-                    toFSharpSource llvmDLLName (modName m) writer depDefs (parseMod m)
+                    toFSharpSource (modName m) writer depDefs (parseMod m)
                 printfn
                     "inferred friendly types for %i/%i functions in %s"
                     friendlyFuncCount
@@ -331,7 +330,7 @@ let main (args : string array) =
         printfn "inferred friendly types for %i/%i functions in total" friendlyFuncCount nativeFuncCount
     
     | _ ->
-        failwith "usage: bindinggen llvmDLLName llvmHome outSrcFile"
+        failwith "usage: bindinggen llvmHome outSrcFile"
     
     // Exit code
     0

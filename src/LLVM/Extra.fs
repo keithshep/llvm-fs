@@ -20,7 +20,8 @@ let rec private typeToStringBuilder (modRef : ModuleRef) (tyRef : TypeRef) =
     | TypeKind.FP128TypeKind     -> newStrBldr "FP 128"
     | TypeKind.PPC_FP128TypeKind -> newStrBldr "PPC FP 128"
     | TypeKind.LabelTypeKind     -> newStrBldr "Label"
-    | TypeKind.IntegerTypeKind   -> newStrBldr "int"
+    | TypeKind.IntegerTypeKind   ->
+        newStrBldr("int").Append(getIntTypeWidth tyRef)
     | TypeKind.FunctionTypeKind  ->
         let sb = newStrBldr "(fun "
         let argTys = getParamTypes tyRef
