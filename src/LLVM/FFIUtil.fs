@@ -22,4 +22,5 @@ type NativePtrs(managedPtrs : nativeint array) =
             if Interlocked.CompareExchange(&disposed, 1, 0) = 0 then
                 Marshal.FreeHGlobal ptrs
 
-let [<Literal>] llvmAssemblyName = "LLVM-3.1.dll"
+//let [<Literal>] llvmAssemblyName = "LLVM-3.1.dll"
+let [<Literal>] llvmAssemblyName = "LLVM-3.2svn.dll"

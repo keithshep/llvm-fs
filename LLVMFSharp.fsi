@@ -191,19 +191,19 @@ namespace LLVM.Generated
       |  AvailableExternallyLinkage  =  1
       |  LinkOnceAnyLinkage  =  2
       |  LinkOnceODRLinkage  =  3
-      |  WeakAnyLinkage  =  4
-      |  WeakODRLinkage  =  5
-      |  AppendingLinkage  =  6
-      |  InternalLinkage  =  7
-      |  PrivateLinkage  =  8
-      |  DLLImportLinkage  =  9
-      |  DLLExportLinkage  =  10
-      |  ExternalWeakLinkage  =  11
-      |  GhostLinkage  =  12
-      |  CommonLinkage  =  13
-      |  LinkerPrivateLinkage  =  14
-      |  LinkerPrivateWeakLinkage  =  15
-      |  LinkerPrivateWeakDefAutoLinkage  =  16
+      |  LinkOnceODRAutoHideLinkage  =  4
+      |  WeakAnyLinkage  =  5
+      |  WeakODRLinkage  =  6
+      |  AppendingLinkage  =  7
+      |  InternalLinkage  =  8
+      |  PrivateLinkage  =  9
+      |  DLLImportLinkage  =  10
+      |  DLLExportLinkage  =  11
+      |  ExternalWeakLinkage  =  12
+      |  GhostLinkage  =  13
+      |  CommonLinkage  =  14
+      |  LinkerPrivateLinkage  =  15
+      |  LinkerPrivateWeakLinkage  =  16
     type Visibility =
       |  DefaultVisibility  =  0
       |  HiddenVisibility  =  1
@@ -273,6 +273,7 @@ namespace LLVM.Generated
     val setTarget : ModuleRef -> string -> unit
     val dumpModuleNative : nativeint -> unit
     val dumpModule : ModuleRef -> unit
+    val printModuleToFileNative : nativeint * string * nativeint -> bool
     val setModuleInlineAsmNative : nativeint * string -> unit
     val setModuleInlineAsm : ModuleRef -> string -> unit
     val getModuleContextNative : nativeint -> nativeint
@@ -699,6 +700,9 @@ namespace LLVM.Generated
     val mDNodeInContextNative : nativeint * nativeint * uint32 -> nativeint
     val mDNodeNative : nativeint * uint32 -> nativeint
     val getMDStringNative : nativeint * nativeptr<uint32> -> nativeint
+    val getMDNodeNumOperandsNative : nativeint -> uint32
+    val getMDNodeNumOperands : ValueRef -> uint32
+    val getMDNodeOperandsNative : nativeint * nativeint -> unit
     val basicBlockAsValueNative : nativeint -> nativeint
     val basicBlockAsValue : BasicBlockRef -> ValueRef
     val valueIsBasicBlockNative : nativeint -> bool
@@ -1159,8 +1163,12 @@ namespace LLVM.Generated
     val byteOrder : TargetDataRef -> ByteOrdering
     val pointerSizeNative : nativeint -> uint32
     val pointerSize : TargetDataRef -> uint32
+    val pointerSizeForASNative : nativeint * uint32 -> uint32
+    val pointerSizeForAS : TargetDataRef -> uint32 -> uint32
     val intPtrTypeNative : nativeint -> nativeint
     val intPtrType : TargetDataRef -> Core.TypeRef
+    val intPtrTypeForASNative : nativeint * uint32 -> nativeint
+    val intPtrTypeForAS : TargetDataRef -> uint32 -> Core.TypeRef
     val sizeOfTypeInBitsNative : nativeint * nativeint -> uint64
     val sizeOfTypeInBits : TargetDataRef -> Core.TypeRef -> uint64
     val storeSizeOfTypeNative : nativeint * nativeint -> uint64
@@ -1416,6 +1424,27 @@ namespace LLVM
       Generated.Core.TypeRef -> Generated.Core.TypeRef []
     val createMemoryBufferWithContentsOfFile :
       string -> Generated.Core.MemoryBufferRef
+    val constUInt8 : uint8 -> Generated.Core.ValueRef
+    val constInt8 : int8 -> Generated.Core.ValueRef
+    val constUInt16 : uint16 -> Generated.Core.ValueRef
+    val constInt16 : int16 -> Generated.Core.ValueRef
+    val constUInt32 : uint32 -> Generated.Core.ValueRef
+    val constInt32 : int32 -> Generated.Core.ValueRef
+    val constUInt64 : uint64 -> Generated.Core.ValueRef
+    val constInt64 : int64 -> Generated.Core.ValueRef
+    val constFloat : float32 -> Generated.Core.ValueRef
+    val constDouble : double -> Generated.Core.ValueRef
+    val constArray :
+      Generated.Core.TypeRef ->
+        Generated.Core.ValueRef array -> Generated.Core.ValueRef
+    val constStruct :
+      Generated.Core.ValueRef array -> bool -> Generated.Core.ValueRef
+    val constStructInContext :
+      Generated.Core.ContextRef ->
+        Generated.Core.ValueRef array -> bool -> Generated.Core.ValueRef
+    val constNamedStruct :
+      Generated.Core.TypeRef ->
+        Generated.Core.ValueRef array -> Generated.Core.ValueRef
   end
 
 namespace LLVM
