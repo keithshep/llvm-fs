@@ -135,3 +135,43 @@ let createMemoryBufferWithContentsOfFile (path : string) =
     finally
         Marshal.FreeHGlobal buffPtr
         Marshal.FreeHGlobal strPtr
+
+let constUInt8 (i:uint8) : ValueRef =
+    constInt (int8Type()) (uint64 i) false
+let constInt8 (i:int8) : ValueRef =
+    constInt (int8Type()) (uint64 i) false
+let constUInt16 (i:uint16) : ValueRef =
+    constInt (int16Type()) (uint64 i) false
+let constInt16 (i:int16) : ValueRef =
+    constInt (int16Type()) (uint64 i) false
+let constUInt32 (i:uint32) : ValueRef =
+    constInt (int32Type()) (uint64 i) false
+let constInt32 (i:int32) : ValueRef =
+    constInt (int32Type()) (uint64 i) false
+let constUInt64 (i:uint64) : ValueRef =
+    constInt (int64Type()) i false
+let constInt64 (i:int64) : ValueRef =
+    constInt (int64Type()) (uint64 i) false
+
+let constFloat (f:float32) : ValueRef =
+    constReal (floatType()) (double f)
+let constDouble (d:double) : ValueRef =
+    constReal (doubleType()) d
+
+let constArray (elemTy:TypeRef) (constVals:ValueRef array) : ValueRef =
+    use constPtrs = new NativePtrs([|for constVal in constVals -> constVal.Ptr|])
+    let elemCount = uint32 constVals.Length
+    ValueRef(constArrayNative(elemTy.Ptr, constPtrs.Ptrs, elemCount))
+
+let constStruct (constVals:ValueRef array) (packed:bool) : ValueRef =
+    use constPtrs = new NativePtrs([|for constVal in constVals -> constVal.Ptr|])
+    let valCount = uint32 constVals.Length
+    ValueRef(constStructNative(constPtrs.Ptrs, valCount, packed))
+let constStructInContext (c:ContextRef) (constVals:ValueRef array) (packed:bool) : ValueRef =
+    use constPtrs = new NativePtrs([|for constVal in constVals -> constVal.Ptr|])
+    let valCount = uint32 constVals.Length
+    ValueRef(constStructInContextNative(c.Ptr, constPtrs.Ptrs, valCount, packed))
+let constNamedStruct (structTy:TypeRef) (constVals:ValueRef array) =
+    use constPtrs = new NativePtrs([|for constVal in constVals -> constVal.Ptr|])
+    let valCount = uint32 constVals.Length
+    ValueRef(constNamedStructNative(structTy.Ptr, constPtrs.Ptrs, valCount))
