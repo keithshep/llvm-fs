@@ -136,6 +136,13 @@ let createMemoryBufferWithContentsOfFile (path : string) =
         Marshal.FreeHGlobal buffPtr
         Marshal.FreeHGlobal strPtr
 
+let mdNode (vals:ValueRef array) : ValueRef =
+    use valPtrs = new NativePtrs([|for v in vals -> v.Ptr|])
+    new ValueRef(mDNodeNative(valPtrs.Ptrs, uint32 vals.Length))
+let mdNodeInContext (ctxt:ContextRef) (vals:ValueRef array) : ValueRef =
+    use valPtrs = new NativePtrs([|for v in vals -> v.Ptr|])
+    new ValueRef(mDNodeInContextNative(ctxt.Ptr, valPtrs.Ptrs, uint32 vals.Length))
+
 let constUInt8 (i:uint8) : ValueRef =
     constInt (int8Type()) (uint64 i) false
 let constInt8 (i:int8) : ValueRef =
