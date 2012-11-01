@@ -1424,6 +1424,11 @@ namespace LLVM
       Generated.Core.TypeRef -> Generated.Core.TypeRef []
     val createMemoryBufferWithContentsOfFile :
       string -> Generated.Core.MemoryBufferRef
+    val mdNode : Generated.Core.ValueRef array -> Generated.Core.ValueRef
+    val mdNodeInContext :
+      Generated.Core.ContextRef ->
+        Generated.Core.ValueRef array -> Generated.Core.ValueRef
+    val constInt1 : bool -> Generated.Core.ValueRef
     val constUInt8 : uint8 -> Generated.Core.ValueRef
     val constInt8 : int8 -> Generated.Core.ValueRef
     val constUInt16 : uint16 -> Generated.Core.ValueRef
