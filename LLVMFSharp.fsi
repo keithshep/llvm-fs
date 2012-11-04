@@ -245,76 +245,86 @@ namespace LLVM.Generated
     type LandingPadClauseTy =
       |  LandingPadCatch  =  0
       |  LandingPadFilter  =  1
-    val initializeCoreNative : nativeint -> unit
-    val initializeCore : PassRegistryRef -> unit
+    val initializeCoreNative : R:nativeint -> unit
+    val initializeCore : _R:PassRegistryRef -> unit
     val contextCreateNative : unit -> nativeint
     val contextCreate : unit -> ContextRef
     val getGlobalContextNative : unit -> nativeint
     val getGlobalContext : unit -> ContextRef
-    val contextDisposeNative : nativeint -> unit
-    val contextDispose : ContextRef -> unit
-    val getMDKindIDInContextNative : nativeint * string * uint32 -> uint32
-    val getMDKindIDInContext : ContextRef -> string -> uint32 -> uint32
-    val getMDKindIDNative : string * uint32 -> uint32
-    val getMDKindID : string -> uint32 -> uint32
-    val moduleCreateWithNameNative : string -> nativeint
-    val moduleCreateWithName : string -> ModuleRef
-    val moduleCreateWithNameInContextNative : string * nativeint -> nativeint
-    val moduleCreateWithNameInContext : string -> ContextRef -> ModuleRef
-    val disposeModuleNative : nativeint -> unit
-    val disposeModule : ModuleRef -> unit
-    val getDataLayoutNative : nativeint -> nativeint
-    val getDataLayout : ModuleRef -> string
-    val setDataLayoutNative : nativeint * string -> unit
-    val setDataLayout : ModuleRef -> string -> unit
-    val getTargetNative : nativeint -> nativeint
-    val getTarget : ModuleRef -> string
-    val setTargetNative : nativeint * string -> unit
-    val setTarget : ModuleRef -> string -> unit
-    val dumpModuleNative : nativeint -> unit
-    val dumpModule : ModuleRef -> unit
-    val printModuleToFileNative : nativeint * string * nativeint -> bool
-    val setModuleInlineAsmNative : nativeint * string -> unit
-    val setModuleInlineAsm : ModuleRef -> string -> unit
-    val getModuleContextNative : nativeint -> nativeint
-    val getModuleContext : ModuleRef -> ContextRef
-    val getTypeByNameNative : nativeint * string -> nativeint
-    val getTypeByName : ModuleRef -> string -> TypeRef
-    val getNamedMetadataNumOperandsNative : nativeint * string -> uint32
-    val getNamedMetadataNumOperands : ModuleRef -> string -> uint32
-    val getNamedMetadataOperandsNative : nativeint * string * nativeint -> unit
-    val addNamedMetadataOperandNative : nativeint * string * nativeint -> unit
-    val addNamedMetadataOperand : ModuleRef -> string -> ValueRef -> unit
-    val addFunctionNative : nativeint * string * nativeint -> nativeint
-    val addFunction : ModuleRef -> string -> TypeRef -> ValueRef
-    val getNamedFunctionNative : nativeint * string -> nativeint
-    val getNamedFunction : ModuleRef -> string -> ValueRef
-    val getFirstFunctionNative : nativeint -> nativeint
-    val getFirstFunction : ModuleRef -> ValueRef
-    val getLastFunctionNative : nativeint -> nativeint
-    val getLastFunction : ModuleRef -> ValueRef
-    val getNextFunctionNative : nativeint -> nativeint
-    val getNextFunction : ValueRef -> ValueRef
-    val getPreviousFunctionNative : nativeint -> nativeint
-    val getPreviousFunction : ValueRef -> ValueRef
-    val getTypeKindNative : nativeint -> int
-    val getTypeKind : TypeRef -> TypeKind
-    val typeIsSizedNative : nativeint -> bool
-    val typeIsSized : TypeRef -> bool
-    val getTypeContextNative : nativeint -> nativeint
-    val getTypeContext : TypeRef -> ContextRef
-    val int1TypeInContextNative : nativeint -> nativeint
-    val int1TypeInContext : ContextRef -> TypeRef
-    val int8TypeInContextNative : nativeint -> nativeint
-    val int8TypeInContext : ContextRef -> TypeRef
-    val int16TypeInContextNative : nativeint -> nativeint
-    val int16TypeInContext : ContextRef -> TypeRef
-    val int32TypeInContextNative : nativeint -> nativeint
-    val int32TypeInContext : ContextRef -> TypeRef
-    val int64TypeInContextNative : nativeint -> nativeint
-    val int64TypeInContext : ContextRef -> TypeRef
-    val intTypeInContextNative : nativeint * uint32 -> nativeint
-    val intTypeInContext : ContextRef -> uint32 -> TypeRef
+    val contextDisposeNative : C:nativeint -> unit
+    val contextDispose : _C:ContextRef -> unit
+    val getMDKindIDInContextNative :
+      C:nativeint * Name:string * SLen:uint32 -> uint32
+    val getMDKindIDInContext :
+      _C:ContextRef -> _Name:string -> _SLen:uint32 -> uint32
+    val getMDKindIDNative : Name:string * SLen:uint32 -> uint32
+    val getMDKindID : _Name:string -> _SLen:uint32 -> uint32
+    val moduleCreateWithNameNative : ModuleID:string -> nativeint
+    val moduleCreateWithName : _ModuleID:string -> ModuleRef
+    val moduleCreateWithNameInContextNative :
+      ModuleID:string * C:nativeint -> nativeint
+    val moduleCreateWithNameInContext :
+      _ModuleID:string -> _C:ContextRef -> ModuleRef
+    val disposeModuleNative : M:nativeint -> unit
+    val disposeModule : _M:ModuleRef -> unit
+    val getDataLayoutNative : M:nativeint -> nativeint
+    val getDataLayout : _M:ModuleRef -> string
+    val setDataLayoutNative : M:nativeint * Triple:string -> unit
+    val setDataLayout : _M:ModuleRef -> _Triple:string -> unit
+    val getTargetNative : M:nativeint -> nativeint
+    val getTarget : _M:ModuleRef -> string
+    val setTargetNative : M:nativeint * Triple:string -> unit
+    val setTarget : _M:ModuleRef -> _Triple:string -> unit
+    val dumpModuleNative : M:nativeint -> unit
+    val dumpModule : _M:ModuleRef -> unit
+    val printModuleToFileNative :
+      M:nativeint * Filename:string * ErrorMessage:nativeint -> bool
+    val setModuleInlineAsmNative : M:nativeint * Asm:string -> unit
+    val setModuleInlineAsm : _M:ModuleRef -> _Asm:string -> unit
+    val getModuleContextNative : M:nativeint -> nativeint
+    val getModuleContext : _M:ModuleRef -> ContextRef
+    val getTypeByNameNative : M:nativeint * Name:string -> nativeint
+    val getTypeByName : _M:ModuleRef -> _Name:string -> TypeRef
+    val getNamedMetadataNumOperandsNative : M:nativeint * name:string -> uint32
+    val getNamedMetadataNumOperands : _M:ModuleRef -> _name:string -> uint32
+    val getNamedMetadataOperandsNative :
+      M:nativeint * name:string * Dest:nativeint -> unit
+    val addNamedMetadataOperandNative :
+      M:nativeint * name:string * Val:nativeint -> unit
+    val addNamedMetadataOperand :
+      _M:ModuleRef -> _name:string -> _Val:ValueRef -> unit
+    val addFunctionNative :
+      M:nativeint * Name:string * FunctionTy:nativeint -> nativeint
+    val addFunction :
+      _M:ModuleRef -> _Name:string -> _FunctionTy:TypeRef -> ValueRef
+    val getNamedFunctionNative : M:nativeint * Name:string -> nativeint
+    val getNamedFunction : _M:ModuleRef -> _Name:string -> ValueRef
+    val getFirstFunctionNative : M:nativeint -> nativeint
+    val getFirstFunction : _M:ModuleRef -> ValueRef
+    val getLastFunctionNative : M:nativeint -> nativeint
+    val getLastFunction : _M:ModuleRef -> ValueRef
+    val getNextFunctionNative : Fn:nativeint -> nativeint
+    val getNextFunction : _Fn:ValueRef -> ValueRef
+    val getPreviousFunctionNative : Fn:nativeint -> nativeint
+    val getPreviousFunction : _Fn:ValueRef -> ValueRef
+    val getTypeKindNative : Ty:nativeint -> int
+    val getTypeKind : _Ty:TypeRef -> TypeKind
+    val typeIsSizedNative : Ty:nativeint -> bool
+    val typeIsSized : _Ty:TypeRef -> bool
+    val getTypeContextNative : Ty:nativeint -> nativeint
+    val getTypeContext : _Ty:TypeRef -> ContextRef
+    val int1TypeInContextNative : C:nativeint -> nativeint
+    val int1TypeInContext : _C:ContextRef -> TypeRef
+    val int8TypeInContextNative : C:nativeint -> nativeint
+    val int8TypeInContext : _C:ContextRef -> TypeRef
+    val int16TypeInContextNative : C:nativeint -> nativeint
+    val int16TypeInContext : _C:ContextRef -> TypeRef
+    val int32TypeInContextNative : C:nativeint -> nativeint
+    val int32TypeInContext : _C:ContextRef -> TypeRef
+    val int64TypeInContextNative : C:nativeint -> nativeint
+    val int64TypeInContext : _C:ContextRef -> TypeRef
+    val intTypeInContextNative : C:nativeint * NumBits:uint32 -> nativeint
+    val intTypeInContext : _C:ContextRef -> _NumBits:uint32 -> TypeRef
     val int1TypeNative : unit -> nativeint
     val int1Type : unit -> TypeRef
     val int8TypeNative : unit -> nativeint
@@ -325,22 +335,22 @@ namespace LLVM.Generated
     val int32Type : unit -> TypeRef
     val int64TypeNative : unit -> nativeint
     val int64Type : unit -> TypeRef
-    val intTypeNative : uint32 -> nativeint
-    val intType : uint32 -> TypeRef
-    val getIntTypeWidthNative : nativeint -> uint32
-    val getIntTypeWidth : TypeRef -> uint32
-    val halfTypeInContextNative : nativeint -> nativeint
-    val halfTypeInContext : ContextRef -> TypeRef
-    val floatTypeInContextNative : nativeint -> nativeint
-    val floatTypeInContext : ContextRef -> TypeRef
-    val doubleTypeInContextNative : nativeint -> nativeint
-    val doubleTypeInContext : ContextRef -> TypeRef
-    val x86FP80TypeInContextNative : nativeint -> nativeint
-    val x86FP80TypeInContext : ContextRef -> TypeRef
-    val fP128TypeInContextNative : nativeint -> nativeint
-    val fP128TypeInContext : ContextRef -> TypeRef
-    val pPCFP128TypeInContextNative : nativeint -> nativeint
-    val pPCFP128TypeInContext : ContextRef -> TypeRef
+    val intTypeNative : NumBits:uint32 -> nativeint
+    val intType : _NumBits:uint32 -> TypeRef
+    val getIntTypeWidthNative : IntegerTy:nativeint -> uint32
+    val getIntTypeWidth : _IntegerTy:TypeRef -> uint32
+    val halfTypeInContextNative : C:nativeint -> nativeint
+    val halfTypeInContext : _C:ContextRef -> TypeRef
+    val floatTypeInContextNative : C:nativeint -> nativeint
+    val floatTypeInContext : _C:ContextRef -> TypeRef
+    val doubleTypeInContextNative : C:nativeint -> nativeint
+    val doubleTypeInContext : _C:ContextRef -> TypeRef
+    val x86FP80TypeInContextNative : C:nativeint -> nativeint
+    val x86FP80TypeInContext : _C:ContextRef -> TypeRef
+    val fP128TypeInContextNative : C:nativeint -> nativeint
+    val fP128TypeInContext : _C:ContextRef -> TypeRef
+    val pPCFP128TypeInContextNative : C:nativeint -> nativeint
+    val pPCFP128TypeInContext : _C:ContextRef -> TypeRef
     val halfTypeNative : unit -> nativeint
     val halfType : unit -> TypeRef
     val floatTypeNative : unit -> nativeint
@@ -353,779 +363,1086 @@ namespace LLVM.Generated
     val fP128Type : unit -> TypeRef
     val pPCFP128TypeNative : unit -> nativeint
     val pPCFP128Type : unit -> TypeRef
-    val functionTypeNative : nativeint * nativeint * uint32 * bool -> nativeint
-    val isFunctionVarArgNative : nativeint -> bool
-    val isFunctionVarArg : TypeRef -> bool
-    val getReturnTypeNative : nativeint -> nativeint
-    val getReturnType : TypeRef -> TypeRef
-    val countParamTypesNative : nativeint -> uint32
-    val countParamTypes : TypeRef -> uint32
-    val getParamTypesNative : nativeint * nativeint -> unit
+    val functionTypeNative :
+      ReturnType:nativeint * ParamTypes:nativeint * ParamCount:uint32 *
+      IsVarArg:bool -> nativeint
+    val isFunctionVarArgNative : FunctionTy:nativeint -> bool
+    val isFunctionVarArg : _FunctionTy:TypeRef -> bool
+    val getReturnTypeNative : FunctionTy:nativeint -> nativeint
+    val getReturnType : _FunctionTy:TypeRef -> TypeRef
+    val countParamTypesNative : FunctionTy:nativeint -> uint32
+    val countParamTypes : _FunctionTy:TypeRef -> uint32
+    val getParamTypesNative : FunctionTy:nativeint * Dest:nativeint -> unit
     val structTypeInContextNative :
-      nativeint * nativeint * uint32 * bool -> nativeint
-    val structTypeNative : nativeint * uint32 * bool -> nativeint
-    val structCreateNamedNative : nativeint * string -> nativeint
-    val structCreateNamed : ContextRef -> string -> TypeRef
-    val getStructNameNative : nativeint -> nativeint
-    val getStructName : TypeRef -> string
-    val structSetBodyNative : nativeint * nativeint * uint32 * bool -> unit
-    val countStructElementTypesNative : nativeint -> uint32
-    val countStructElementTypes : TypeRef -> uint32
-    val getStructElementTypesNative : nativeint * nativeint -> unit
-    val isPackedStructNative : nativeint -> bool
-    val isPackedStruct : TypeRef -> bool
-    val isOpaqueStructNative : nativeint -> bool
-    val isOpaqueStruct : TypeRef -> bool
-    val getElementTypeNative : nativeint -> nativeint
-    val getElementType : TypeRef -> TypeRef
-    val arrayTypeNative : nativeint * uint32 -> nativeint
-    val arrayType : TypeRef -> uint32 -> TypeRef
-    val getArrayLengthNative : nativeint -> uint32
-    val getArrayLength : TypeRef -> uint32
-    val pointerTypeNative : nativeint * uint32 -> nativeint
-    val pointerType : TypeRef -> uint32 -> TypeRef
-    val getPointerAddressSpaceNative : nativeint -> uint32
-    val getPointerAddressSpace : TypeRef -> uint32
-    val vectorTypeNative : nativeint * uint32 -> nativeint
-    val vectorType : TypeRef -> uint32 -> TypeRef
-    val getVectorSizeNative : nativeint -> uint32
-    val getVectorSize : TypeRef -> uint32
-    val voidTypeInContextNative : nativeint -> nativeint
-    val voidTypeInContext : ContextRef -> TypeRef
-    val labelTypeInContextNative : nativeint -> nativeint
-    val labelTypeInContext : ContextRef -> TypeRef
-    val x86MMXTypeInContextNative : nativeint -> nativeint
-    val x86MMXTypeInContext : ContextRef -> TypeRef
+      C:nativeint * ElementTypes:nativeint * ElementCount:uint32 * Packed:bool ->
+        nativeint
+    val structTypeNative :
+      ElementTypes:nativeint * ElementCount:uint32 * Packed:bool -> nativeint
+    val structCreateNamedNative : C:nativeint * Name:string -> nativeint
+    val structCreateNamed : _C:ContextRef -> _Name:string -> TypeRef
+    val getStructNameNative : Ty:nativeint -> nativeint
+    val getStructName : _Ty:TypeRef -> string
+    val structSetBodyNative :
+      StructTy:nativeint * ElementTypes:nativeint * ElementCount:uint32 *
+      Packed:bool -> unit
+    val countStructElementTypesNative : StructTy:nativeint -> uint32
+    val countStructElementTypes : _StructTy:TypeRef -> uint32
+    val getStructElementTypesNative :
+      StructTy:nativeint * Dest:nativeint -> unit
+    val isPackedStructNative : StructTy:nativeint -> bool
+    val isPackedStruct : _StructTy:TypeRef -> bool
+    val isOpaqueStructNative : StructTy:nativeint -> bool
+    val isOpaqueStruct : _StructTy:TypeRef -> bool
+    val getElementTypeNative : Ty:nativeint -> nativeint
+    val getElementType : _Ty:TypeRef -> TypeRef
+    val arrayTypeNative :
+      ElementType:nativeint * ElementCount:uint32 -> nativeint
+    val arrayType : _ElementType:TypeRef -> _ElementCount:uint32 -> TypeRef
+    val getArrayLengthNative : ArrayTy:nativeint -> uint32
+    val getArrayLength : _ArrayTy:TypeRef -> uint32
+    val pointerTypeNative :
+      ElementType:nativeint * AddressSpace:uint32 -> nativeint
+    val pointerType : _ElementType:TypeRef -> _AddressSpace:uint32 -> TypeRef
+    val getPointerAddressSpaceNative : PointerTy:nativeint -> uint32
+    val getPointerAddressSpace : _PointerTy:TypeRef -> uint32
+    val vectorTypeNative :
+      ElementType:nativeint * ElementCount:uint32 -> nativeint
+    val vectorType : _ElementType:TypeRef -> _ElementCount:uint32 -> TypeRef
+    val getVectorSizeNative : VectorTy:nativeint -> uint32
+    val getVectorSize : _VectorTy:TypeRef -> uint32
+    val voidTypeInContextNative : C:nativeint -> nativeint
+    val voidTypeInContext : _C:ContextRef -> TypeRef
+    val labelTypeInContextNative : C:nativeint -> nativeint
+    val labelTypeInContext : _C:ContextRef -> TypeRef
+    val x86MMXTypeInContextNative : C:nativeint -> nativeint
+    val x86MMXTypeInContext : _C:ContextRef -> TypeRef
     val voidTypeNative : unit -> nativeint
     val voidType : unit -> TypeRef
     val labelTypeNative : unit -> nativeint
     val labelType : unit -> TypeRef
     val x86MMXTypeNative : unit -> nativeint
     val x86MMXType : unit -> TypeRef
-    val typeOfNative : nativeint -> nativeint
-    val typeOf : ValueRef -> TypeRef
-    val getValueNameNative : nativeint -> nativeint
-    val getValueName : ValueRef -> string
-    val setValueNameNative : nativeint * string -> unit
-    val setValueName : ValueRef -> string -> unit
-    val dumpValueNative : nativeint -> unit
-    val dumpValue : ValueRef -> unit
-    val replaceAllUsesWithNative : nativeint * nativeint -> unit
-    val replaceAllUsesWith : ValueRef -> ValueRef -> unit
-    val isConstantNative : nativeint -> bool
-    val isConstant : ValueRef -> bool
-    val isUndefNative : nativeint -> bool
-    val isUndef : ValueRef -> bool
-    val getFirstUseNative : nativeint -> nativeint
-    val getFirstUse : ValueRef -> UseRef
-    val getNextUseNative : nativeint -> nativeint
-    val getNextUse : UseRef -> UseRef
-    val getUserNative : nativeint -> nativeint
-    val getUser : UseRef -> ValueRef
-    val getUsedValueNative : nativeint -> nativeint
-    val getUsedValue : UseRef -> ValueRef
-    val getOperandNative : nativeint * uint32 -> nativeint
-    val getOperand : ValueRef -> uint32 -> ValueRef
-    val setOperandNative : nativeint * uint32 * nativeint -> unit
-    val setOperand : ValueRef -> uint32 -> ValueRef -> unit
-    val getNumOperandsNative : nativeint -> int
-    val getNumOperands : ValueRef -> int
-    val constNullNative : nativeint -> nativeint
-    val constNull : TypeRef -> ValueRef
-    val constAllOnesNative : nativeint -> nativeint
-    val constAllOnes : TypeRef -> ValueRef
-    val getUndefNative : nativeint -> nativeint
-    val getUndef : TypeRef -> ValueRef
-    val isNullNative : nativeint -> bool
-    val isNull : ValueRef -> bool
-    val constPointerNullNative : nativeint -> nativeint
-    val constPointerNull : TypeRef -> ValueRef
-    val constIntNative : nativeint * uint64 * bool -> nativeint
-    val constInt : TypeRef -> uint64 -> bool -> ValueRef
+    val typeOfNative : Val:nativeint -> nativeint
+    val typeOf : _Val:ValueRef -> TypeRef
+    val getValueNameNative : Val:nativeint -> nativeint
+    val getValueName : _Val:ValueRef -> string
+    val setValueNameNative : Val:nativeint * Name:string -> unit
+    val setValueName : _Val:ValueRef -> _Name:string -> unit
+    val dumpValueNative : Val:nativeint -> unit
+    val dumpValue : _Val:ValueRef -> unit
+    val replaceAllUsesWithNative : OldVal:nativeint * NewVal:nativeint -> unit
+    val replaceAllUsesWith : _OldVal:ValueRef -> _NewVal:ValueRef -> unit
+    val isConstantNative : Val:nativeint -> bool
+    val isConstant : _Val:ValueRef -> bool
+    val isUndefNative : Val:nativeint -> bool
+    val isUndef : _Val:ValueRef -> bool
+    val getFirstUseNative : Val:nativeint -> nativeint
+    val getFirstUse : _Val:ValueRef -> UseRef
+    val getNextUseNative : U:nativeint -> nativeint
+    val getNextUse : _U:UseRef -> UseRef
+    val getUserNative : U:nativeint -> nativeint
+    val getUser : _U:UseRef -> ValueRef
+    val getUsedValueNative : U:nativeint -> nativeint
+    val getUsedValue : _U:UseRef -> ValueRef
+    val getOperandNative : Val:nativeint * Index:uint32 -> nativeint
+    val getOperand : _Val:ValueRef -> _Index:uint32 -> ValueRef
+    val setOperandNative : User:nativeint * Index:uint32 * Val:nativeint -> unit
+    val setOperand : _User:ValueRef -> _Index:uint32 -> _Val:ValueRef -> unit
+    val getNumOperandsNative : Val:nativeint -> int
+    val getNumOperands : _Val:ValueRef -> int
+    val constNullNative : Ty:nativeint -> nativeint
+    val constNull : _Ty:TypeRef -> ValueRef
+    val constAllOnesNative : Ty:nativeint -> nativeint
+    val constAllOnes : _Ty:TypeRef -> ValueRef
+    val getUndefNative : Ty:nativeint -> nativeint
+    val getUndef : _Ty:TypeRef -> ValueRef
+    val isNullNative : Val:nativeint -> bool
+    val isNull : _Val:ValueRef -> bool
+    val constPointerNullNative : Ty:nativeint -> nativeint
+    val constPointerNull : _Ty:TypeRef -> ValueRef
+    val constIntNative :
+      IntTy:nativeint * N:uint64 * SignExtend:bool -> nativeint
+    val constInt : _IntTy:TypeRef -> _N:uint64 -> _SignExtend:bool -> ValueRef
     val constIntOfArbitraryPrecisionNative :
-      nativeint * uint32 * nativeptr<uint64> -> nativeint
-    val constIntOfStringNative : nativeint * string * uint8 -> nativeint
-    val constIntOfString : TypeRef -> string -> uint8 -> ValueRef
+      IntTy:nativeint * NumWords:uint32 * Words:nativeptr<uint64> -> nativeint
+    val constIntOfStringNative :
+      IntTy:nativeint * Text:string * Radix:uint8 -> nativeint
+    val constIntOfString :
+      _IntTy:TypeRef -> _Text:string -> _Radix:uint8 -> ValueRef
     val constIntOfStringAndSizeNative :
-      nativeint * string * uint32 * uint8 -> nativeint
+      IntTy:nativeint * Text:string * SLen:uint32 * Radix:uint8 -> nativeint
     val constIntOfStringAndSize :
-      TypeRef -> string -> uint32 -> uint8 -> ValueRef
-    val constRealNative : nativeint * double -> nativeint
-    val constReal : TypeRef -> double -> ValueRef
-    val constRealOfStringNative : nativeint * string -> nativeint
-    val constRealOfString : TypeRef -> string -> ValueRef
+      _IntTy:TypeRef -> _Text:string -> _SLen:uint32 -> _Radix:uint8 -> ValueRef
+    val constRealNative : RealTy:nativeint * N:double -> nativeint
+    val constReal : _RealTy:TypeRef -> _N:double -> ValueRef
+    val constRealOfStringNative : RealTy:nativeint * Text:string -> nativeint
+    val constRealOfString : _RealTy:TypeRef -> _Text:string -> ValueRef
     val constRealOfStringAndSizeNative :
-      nativeint * string * uint32 -> nativeint
-    val constRealOfStringAndSize : TypeRef -> string -> uint32 -> ValueRef
-    val constIntGetZExtValueNative : nativeint -> uint64
-    val constIntGetZExtValue : ValueRef -> uint64
-    val constIntGetSExtValueNative : nativeint -> int64
-    val constIntGetSExtValue : ValueRef -> int64
+      RealTy:nativeint * Text:string * SLen:uint32 -> nativeint
+    val constRealOfStringAndSize :
+      _RealTy:TypeRef -> _Text:string -> _SLen:uint32 -> ValueRef
+    val constIntGetZExtValueNative : ConstantVal:nativeint -> uint64
+    val constIntGetZExtValue : _ConstantVal:ValueRef -> uint64
+    val constIntGetSExtValueNative : ConstantVal:nativeint -> int64
+    val constIntGetSExtValue : _ConstantVal:ValueRef -> int64
     val constStringInContextNative :
-      nativeint * string * uint32 * bool -> nativeint
+      C:nativeint * Str:string * Length:uint32 * DontNullTerminate:bool ->
+        nativeint
     val constStringInContext :
-      ContextRef -> string -> uint32 -> bool -> ValueRef
-    val constStringNative : string * uint32 * bool -> nativeint
-    val constString : string -> uint32 -> bool -> ValueRef
+      _C:ContextRef ->
+        _Str:string -> _Length:uint32 -> _DontNullTerminate:bool -> ValueRef
+    val constStringNative :
+      Str:string * Length:uint32 * DontNullTerminate:bool -> nativeint
+    val constString :
+      _Str:string -> _Length:uint32 -> _DontNullTerminate:bool -> ValueRef
     val constStructInContextNative :
-      nativeint * nativeint * uint32 * bool -> nativeint
-    val constStructNative : nativeint * uint32 * bool -> nativeint
-    val constArrayNative : nativeint * nativeint * uint32 -> nativeint
-    val constNamedStructNative : nativeint * nativeint * uint32 -> nativeint
-    val constVectorNative : nativeint * uint32 -> nativeint
-    val getConstOpcodeNative : nativeint -> int
-    val getConstOpcode : ValueRef -> Opcode
-    val alignOfNative : nativeint -> nativeint
-    val alignOf : TypeRef -> ValueRef
-    val sizeOfNative : nativeint -> nativeint
-    val sizeOf : TypeRef -> ValueRef
-    val constNegNative : nativeint -> nativeint
-    val constNeg : ValueRef -> ValueRef
-    val constNSWNegNative : nativeint -> nativeint
-    val constNSWNeg : ValueRef -> ValueRef
-    val constNUWNegNative : nativeint -> nativeint
-    val constNUWNeg : ValueRef -> ValueRef
-    val constFNegNative : nativeint -> nativeint
-    val constFNeg : ValueRef -> ValueRef
-    val constNotNative : nativeint -> nativeint
-    val constNot : ValueRef -> ValueRef
-    val constAddNative : nativeint * nativeint -> nativeint
-    val constAdd : ValueRef -> ValueRef -> ValueRef
-    val constNSWAddNative : nativeint * nativeint -> nativeint
-    val constNSWAdd : ValueRef -> ValueRef -> ValueRef
-    val constNUWAddNative : nativeint * nativeint -> nativeint
-    val constNUWAdd : ValueRef -> ValueRef -> ValueRef
-    val constFAddNative : nativeint * nativeint -> nativeint
-    val constFAdd : ValueRef -> ValueRef -> ValueRef
-    val constSubNative : nativeint * nativeint -> nativeint
-    val constSub : ValueRef -> ValueRef -> ValueRef
-    val constNSWSubNative : nativeint * nativeint -> nativeint
-    val constNSWSub : ValueRef -> ValueRef -> ValueRef
-    val constNUWSubNative : nativeint * nativeint -> nativeint
-    val constNUWSub : ValueRef -> ValueRef -> ValueRef
-    val constFSubNative : nativeint * nativeint -> nativeint
-    val constFSub : ValueRef -> ValueRef -> ValueRef
-    val constMulNative : nativeint * nativeint -> nativeint
-    val constMul : ValueRef -> ValueRef -> ValueRef
-    val constNSWMulNative : nativeint * nativeint -> nativeint
-    val constNSWMul : ValueRef -> ValueRef -> ValueRef
-    val constNUWMulNative : nativeint * nativeint -> nativeint
-    val constNUWMul : ValueRef -> ValueRef -> ValueRef
-    val constFMulNative : nativeint * nativeint -> nativeint
-    val constFMul : ValueRef -> ValueRef -> ValueRef
-    val constUDivNative : nativeint * nativeint -> nativeint
-    val constUDiv : ValueRef -> ValueRef -> ValueRef
-    val constSDivNative : nativeint * nativeint -> nativeint
-    val constSDiv : ValueRef -> ValueRef -> ValueRef
-    val constExactSDivNative : nativeint * nativeint -> nativeint
-    val constExactSDiv : ValueRef -> ValueRef -> ValueRef
-    val constFDivNative : nativeint * nativeint -> nativeint
-    val constFDiv : ValueRef -> ValueRef -> ValueRef
-    val constURemNative : nativeint * nativeint -> nativeint
-    val constURem : ValueRef -> ValueRef -> ValueRef
-    val constSRemNative : nativeint * nativeint -> nativeint
-    val constSRem : ValueRef -> ValueRef -> ValueRef
-    val constFRemNative : nativeint * nativeint -> nativeint
-    val constFRem : ValueRef -> ValueRef -> ValueRef
-    val constAndNative : nativeint * nativeint -> nativeint
-    val constAnd : ValueRef -> ValueRef -> ValueRef
-    val constOrNative : nativeint * nativeint -> nativeint
-    val constOr : ValueRef -> ValueRef -> ValueRef
-    val constXorNative : nativeint * nativeint -> nativeint
-    val constXor : ValueRef -> ValueRef -> ValueRef
-    val constICmpNative : int * nativeint * nativeint -> nativeint
-    val constICmp : IntPredicate -> ValueRef -> ValueRef -> ValueRef
-    val constFCmpNative : int * nativeint * nativeint -> nativeint
-    val constFCmp : RealPredicate -> ValueRef -> ValueRef -> ValueRef
-    val constShlNative : nativeint * nativeint -> nativeint
-    val constShl : ValueRef -> ValueRef -> ValueRef
-    val constLShrNative : nativeint * nativeint -> nativeint
-    val constLShr : ValueRef -> ValueRef -> ValueRef
-    val constAShrNative : nativeint * nativeint -> nativeint
-    val constAShr : ValueRef -> ValueRef -> ValueRef
-    val constGEPNative : nativeint * nativeint * uint32 -> nativeint
-    val constInBoundsGEPNative : nativeint * nativeint * uint32 -> nativeint
-    val constTruncNative : nativeint * nativeint -> nativeint
-    val constTrunc : ValueRef -> TypeRef -> ValueRef
-    val constSExtNative : nativeint * nativeint -> nativeint
-    val constSExt : ValueRef -> TypeRef -> ValueRef
-    val constZExtNative : nativeint * nativeint -> nativeint
-    val constZExt : ValueRef -> TypeRef -> ValueRef
-    val constFPTruncNative : nativeint * nativeint -> nativeint
-    val constFPTrunc : ValueRef -> TypeRef -> ValueRef
-    val constFPExtNative : nativeint * nativeint -> nativeint
-    val constFPExt : ValueRef -> TypeRef -> ValueRef
-    val constUIToFPNative : nativeint * nativeint -> nativeint
-    val constUIToFP : ValueRef -> TypeRef -> ValueRef
-    val constSIToFPNative : nativeint * nativeint -> nativeint
-    val constSIToFP : ValueRef -> TypeRef -> ValueRef
-    val constFPToUINative : nativeint * nativeint -> nativeint
-    val constFPToUI : ValueRef -> TypeRef -> ValueRef
-    val constFPToSINative : nativeint * nativeint -> nativeint
-    val constFPToSI : ValueRef -> TypeRef -> ValueRef
-    val constPtrToIntNative : nativeint * nativeint -> nativeint
-    val constPtrToInt : ValueRef -> TypeRef -> ValueRef
-    val constIntToPtrNative : nativeint * nativeint -> nativeint
-    val constIntToPtr : ValueRef -> TypeRef -> ValueRef
-    val constBitCastNative : nativeint * nativeint -> nativeint
-    val constBitCast : ValueRef -> TypeRef -> ValueRef
-    val constZExtOrBitCastNative : nativeint * nativeint -> nativeint
-    val constZExtOrBitCast : ValueRef -> TypeRef -> ValueRef
-    val constSExtOrBitCastNative : nativeint * nativeint -> nativeint
-    val constSExtOrBitCast : ValueRef -> TypeRef -> ValueRef
-    val constTruncOrBitCastNative : nativeint * nativeint -> nativeint
-    val constTruncOrBitCast : ValueRef -> TypeRef -> ValueRef
-    val constPointerCastNative : nativeint * nativeint -> nativeint
-    val constPointerCast : ValueRef -> TypeRef -> ValueRef
-    val constIntCastNative : nativeint * nativeint * bool -> nativeint
-    val constIntCast : ValueRef -> TypeRef -> bool -> ValueRef
-    val constFPCastNative : nativeint * nativeint -> nativeint
-    val constFPCast : ValueRef -> TypeRef -> ValueRef
-    val constSelectNative : nativeint * nativeint * nativeint -> nativeint
-    val constSelect : ValueRef -> ValueRef -> ValueRef -> ValueRef
-    val constExtractElementNative : nativeint * nativeint -> nativeint
-    val constExtractElement : ValueRef -> ValueRef -> ValueRef
+      C:nativeint * ConstantVals:nativeint * Count:uint32 * Packed:bool ->
+        nativeint
+    val constStructNative :
+      ConstantVals:nativeint * Count:uint32 * Packed:bool -> nativeint
+    val constArrayNative :
+      ElementTy:nativeint * ConstantVals:nativeint * Length:uint32 -> nativeint
+    val constNamedStructNative :
+      StructTy:nativeint * ConstantVals:nativeint * Count:uint32 -> nativeint
+    val constVectorNative :
+      ScalarConstantVals:nativeint * Size:uint32 -> nativeint
+    val getConstOpcodeNative : ConstantVal:nativeint -> int
+    val getConstOpcode : _ConstantVal:ValueRef -> Opcode
+    val alignOfNative : Ty:nativeint -> nativeint
+    val alignOf : _Ty:TypeRef -> ValueRef
+    val sizeOfNative : Ty:nativeint -> nativeint
+    val sizeOf : _Ty:TypeRef -> ValueRef
+    val constNegNative : ConstantVal:nativeint -> nativeint
+    val constNeg : _ConstantVal:ValueRef -> ValueRef
+    val constNSWNegNative : ConstantVal:nativeint -> nativeint
+    val constNSWNeg : _ConstantVal:ValueRef -> ValueRef
+    val constNUWNegNative : ConstantVal:nativeint -> nativeint
+    val constNUWNeg : _ConstantVal:ValueRef -> ValueRef
+    val constFNegNative : ConstantVal:nativeint -> nativeint
+    val constFNeg : _ConstantVal:ValueRef -> ValueRef
+    val constNotNative : ConstantVal:nativeint -> nativeint
+    val constNot : _ConstantVal:ValueRef -> ValueRef
+    val constAddNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constAdd : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constNSWAddNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constNSWAdd : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constNUWAddNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constNUWAdd : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constFAddNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constFAdd : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constSubNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constSub : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constNSWSubNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constNSWSub : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constNUWSubNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constNUWSub : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constFSubNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constFSub : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constMulNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constMul : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constNSWMulNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constNSWMul : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constNUWMulNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constNUWMul : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constFMulNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constFMul : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constUDivNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constUDiv : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constSDivNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constSDiv : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constExactSDivNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constExactSDiv :
+      _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constFDivNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constFDiv : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constURemNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constURem : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constSRemNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constSRem : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constFRemNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constFRem : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constAndNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constAnd : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constOrNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constOr : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constXorNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constXor : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constICmpNative :
+      Predicate:int * LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constICmp :
+      _Predicate:IntPredicate ->
+        _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constFCmpNative :
+      Predicate:int * LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constFCmp :
+      _Predicate:RealPredicate ->
+        _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constShlNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constShl : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constLShrNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constLShr : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constAShrNative :
+      LHSConstant:nativeint * RHSConstant:nativeint -> nativeint
+    val constAShr : _LHSConstant:ValueRef -> _RHSConstant:ValueRef -> ValueRef
+    val constGEPNative :
+      ConstantVal:nativeint * ConstantIndices:nativeint * NumIndices:uint32 ->
+        nativeint
+    val constInBoundsGEPNative :
+      ConstantVal:nativeint * ConstantIndices:nativeint * NumIndices:uint32 ->
+        nativeint
+    val constTruncNative : ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constTrunc : _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constSExtNative : ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constSExt : _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constZExtNative : ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constZExt : _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constFPTruncNative :
+      ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constFPTrunc : _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constFPExtNative : ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constFPExt : _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constUIToFPNative :
+      ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constUIToFP : _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constSIToFPNative :
+      ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constSIToFP : _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constFPToUINative :
+      ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constFPToUI : _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constFPToSINative :
+      ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constFPToSI : _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constPtrToIntNative :
+      ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constPtrToInt : _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constIntToPtrNative :
+      ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constIntToPtr : _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constBitCastNative :
+      ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constBitCast : _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constZExtOrBitCastNative :
+      ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constZExtOrBitCast :
+      _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constSExtOrBitCastNative :
+      ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constSExtOrBitCast :
+      _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constTruncOrBitCastNative :
+      ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constTruncOrBitCast :
+      _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constPointerCastNative :
+      ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constPointerCast : _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constIntCastNative :
+      ConstantVal:nativeint * ToType:nativeint * isSigned:bool -> nativeint
+    val constIntCast :
+      _ConstantVal:ValueRef -> _ToType:TypeRef -> _isSigned:bool -> ValueRef
+    val constFPCastNative :
+      ConstantVal:nativeint * ToType:nativeint -> nativeint
+    val constFPCast : _ConstantVal:ValueRef -> _ToType:TypeRef -> ValueRef
+    val constSelectNative :
+      ConstantCondition:nativeint * ConstantIfTrue:nativeint *
+      ConstantIfFalse:nativeint -> nativeint
+    val constSelect :
+      _ConstantCondition:ValueRef ->
+        _ConstantIfTrue:ValueRef -> _ConstantIfFalse:ValueRef -> ValueRef
+    val constExtractElementNative :
+      VectorConstant:nativeint * IndexConstant:nativeint -> nativeint
+    val constExtractElement :
+      _VectorConstant:ValueRef -> _IndexConstant:ValueRef -> ValueRef
     val constInsertElementNative :
-      nativeint * nativeint * nativeint -> nativeint
-    val constInsertElement : ValueRef -> ValueRef -> ValueRef -> ValueRef
+      VectorConstant:nativeint * ElementValueConstant:nativeint *
+      IndexConstant:nativeint -> nativeint
+    val constInsertElement :
+      _VectorConstant:ValueRef ->
+        _ElementValueConstant:ValueRef -> _IndexConstant:ValueRef -> ValueRef
     val constShuffleVectorNative :
-      nativeint * nativeint * nativeint -> nativeint
-    val constShuffleVector : ValueRef -> ValueRef -> ValueRef -> ValueRef
+      VectorAConstant:nativeint * VectorBConstant:nativeint *
+      MaskConstant:nativeint -> nativeint
+    val constShuffleVector :
+      _VectorAConstant:ValueRef ->
+        _VectorBConstant:ValueRef -> _MaskConstant:ValueRef -> ValueRef
     val constExtractValueNative :
-      nativeint * nativeptr<uint32> * uint32 -> nativeint
+      AggConstant:nativeint * IdxList:nativeptr<uint32> * NumIdx:uint32 ->
+        nativeint
     val constInsertValueNative :
-      nativeint * nativeint * nativeptr<uint32> * uint32 -> nativeint
+      AggConstant:nativeint * ElementValueConstant:nativeint *
+      IdxList:nativeptr<uint32> * NumIdx:uint32 -> nativeint
     val constInlineAsmNative :
-      nativeint * string * string * bool * bool -> nativeint
-    val constInlineAsm : TypeRef -> string -> string -> bool -> bool -> ValueRef
-    val blockAddressNative : nativeint * nativeint -> nativeint
-    val blockAddress : ValueRef -> BasicBlockRef -> ValueRef
-    val getGlobalParentNative : nativeint -> nativeint
-    val getGlobalParent : ValueRef -> ModuleRef
-    val isDeclarationNative : nativeint -> bool
-    val isDeclaration : ValueRef -> bool
-    val getLinkageNative : nativeint -> int
-    val getLinkage : ValueRef -> Linkage
-    val setLinkageNative : nativeint * int -> unit
-    val setLinkage : ValueRef -> Linkage -> unit
-    val getSectionNative : nativeint -> nativeint
-    val getSection : ValueRef -> string
-    val setSectionNative : nativeint * string -> unit
-    val setSection : ValueRef -> string -> unit
-    val getVisibilityNative : nativeint -> int
-    val getVisibility : ValueRef -> Visibility
-    val setVisibilityNative : nativeint * int -> unit
-    val setVisibility : ValueRef -> Visibility -> unit
-    val getAlignmentNative : nativeint -> uint32
-    val getAlignment : ValueRef -> uint32
-    val setAlignmentNative : nativeint * uint32 -> unit
-    val setAlignment : ValueRef -> uint32 -> unit
-    val addGlobalNative : nativeint * nativeint * string -> nativeint
-    val addGlobal : ModuleRef -> TypeRef -> string -> ValueRef
+      Ty:nativeint * AsmString:string * Constraints:string * HasSideEffects:bool *
+      IsAlignStack:bool -> nativeint
+    val constInlineAsm :
+      _Ty:TypeRef ->
+        _AsmString:string ->
+          _Constraints:string ->
+            _HasSideEffects:bool -> _IsAlignStack:bool -> ValueRef
+    val blockAddressNative : F:nativeint * BB:nativeint -> nativeint
+    val blockAddress : _F:ValueRef -> _BB:BasicBlockRef -> ValueRef
+    val getGlobalParentNative : Global:nativeint -> nativeint
+    val getGlobalParent : _Global:ValueRef -> ModuleRef
+    val isDeclarationNative : Global:nativeint -> bool
+    val isDeclaration : _Global:ValueRef -> bool
+    val getLinkageNative : Global:nativeint -> int
+    val getLinkage : _Global:ValueRef -> Linkage
+    val setLinkageNative : Global:nativeint * Linkage:int -> unit
+    val setLinkage : _Global:ValueRef -> _Linkage:Linkage -> unit
+    val getSectionNative : Global:nativeint -> nativeint
+    val getSection : _Global:ValueRef -> string
+    val setSectionNative : Global:nativeint * Section:string -> unit
+    val setSection : _Global:ValueRef -> _Section:string -> unit
+    val getVisibilityNative : Global:nativeint -> int
+    val getVisibility : _Global:ValueRef -> Visibility
+    val setVisibilityNative : Global:nativeint * Viz:int -> unit
+    val setVisibility : _Global:ValueRef -> _Viz:Visibility -> unit
+    val getAlignmentNative : Global:nativeint -> uint32
+    val getAlignment : _Global:ValueRef -> uint32
+    val setAlignmentNative : Global:nativeint * Bytes:uint32 -> unit
+    val setAlignment : _Global:ValueRef -> _Bytes:uint32 -> unit
+    val addGlobalNative : M:nativeint * Ty:nativeint * Name:string -> nativeint
+    val addGlobal : _M:ModuleRef -> _Ty:TypeRef -> _Name:string -> ValueRef
     val addGlobalInAddressSpaceNative :
-      nativeint * nativeint * string * uint32 -> nativeint
+      M:nativeint * Ty:nativeint * Name:string * AddressSpace:uint32 ->
+        nativeint
     val addGlobalInAddressSpace :
-      ModuleRef -> TypeRef -> string -> uint32 -> ValueRef
-    val getNamedGlobalNative : nativeint * string -> nativeint
-    val getNamedGlobal : ModuleRef -> string -> ValueRef
-    val getFirstGlobalNative : nativeint -> nativeint
-    val getFirstGlobal : ModuleRef -> ValueRef
-    val getLastGlobalNative : nativeint -> nativeint
-    val getLastGlobal : ModuleRef -> ValueRef
-    val getNextGlobalNative : nativeint -> nativeint
-    val getNextGlobal : ValueRef -> ValueRef
-    val getPreviousGlobalNative : nativeint -> nativeint
-    val getPreviousGlobal : ValueRef -> ValueRef
-    val deleteGlobalNative : nativeint -> unit
-    val deleteGlobal : ValueRef -> unit
-    val getInitializerNative : nativeint -> nativeint
-    val getInitializer : ValueRef -> ValueRef
-    val setInitializerNative : nativeint * nativeint -> unit
-    val setInitializer : ValueRef -> ValueRef -> unit
-    val isThreadLocalNative : nativeint -> bool
-    val isThreadLocal : ValueRef -> bool
-    val setThreadLocalNative : nativeint * bool -> unit
-    val setThreadLocal : ValueRef -> bool -> unit
-    val isGlobalConstantNative : nativeint -> bool
-    val isGlobalConstant : ValueRef -> bool
-    val setGlobalConstantNative : nativeint * bool -> unit
-    val setGlobalConstant : ValueRef -> bool -> unit
-    val addAliasNative : nativeint * nativeint * nativeint * string -> nativeint
-    val addAlias : ModuleRef -> TypeRef -> ValueRef -> string -> ValueRef
-    val deleteFunctionNative : nativeint -> unit
-    val deleteFunction : ValueRef -> unit
-    val getIntrinsicIDNative : nativeint -> uint32
-    val getIntrinsicID : ValueRef -> uint32
-    val getFunctionCallConvNative : nativeint -> uint32
-    val getFunctionCallConv : ValueRef -> uint32
-    val setFunctionCallConvNative : nativeint * uint32 -> unit
-    val setFunctionCallConv : ValueRef -> uint32 -> unit
-    val getGCNative : nativeint -> nativeint
-    val getGC : ValueRef -> string
-    val setGCNative : nativeint * string -> unit
-    val setGC : ValueRef -> string -> unit
-    val addFunctionAttrNative : nativeint * int -> unit
-    val addFunctionAttr : ValueRef -> Attribute -> unit
-    val getFunctionAttrNative : nativeint -> int
-    val getFunctionAttr : ValueRef -> Attribute
-    val removeFunctionAttrNative : nativeint * int -> unit
-    val removeFunctionAttr : ValueRef -> Attribute -> unit
-    val countParamsNative : nativeint -> uint32
-    val countParams : ValueRef -> uint32
-    val getParamsNative : nativeint * nativeint -> unit
-    val getParamNative : nativeint * uint32 -> nativeint
-    val getParam : ValueRef -> uint32 -> ValueRef
-    val getParamParentNative : nativeint -> nativeint
-    val getParamParent : ValueRef -> ValueRef
-    val getFirstParamNative : nativeint -> nativeint
-    val getFirstParam : ValueRef -> ValueRef
-    val getLastParamNative : nativeint -> nativeint
-    val getLastParam : ValueRef -> ValueRef
-    val getNextParamNative : nativeint -> nativeint
-    val getNextParam : ValueRef -> ValueRef
-    val getPreviousParamNative : nativeint -> nativeint
-    val getPreviousParam : ValueRef -> ValueRef
-    val addAttributeNative : nativeint * int -> unit
-    val addAttribute : ValueRef -> Attribute -> unit
-    val removeAttributeNative : nativeint * int -> unit
-    val removeAttribute : ValueRef -> Attribute -> unit
-    val getAttributeNative : nativeint -> int
-    val getAttribute : ValueRef -> Attribute
-    val setParamAlignmentNative : nativeint * uint32 -> unit
-    val setParamAlignment : ValueRef -> uint32 -> unit
-    val mDStringInContextNative : nativeint * string * uint32 -> nativeint
-    val mDStringInContext : ContextRef -> string -> uint32 -> ValueRef
-    val mDStringNative : string * uint32 -> nativeint
-    val mDString : string -> uint32 -> ValueRef
-    val mDNodeInContextNative : nativeint * nativeint * uint32 -> nativeint
-    val mDNodeNative : nativeint * uint32 -> nativeint
-    val getMDStringNative : nativeint * nativeptr<uint32> -> nativeint
-    val getMDNodeNumOperandsNative : nativeint -> uint32
-    val getMDNodeNumOperands : ValueRef -> uint32
-    val getMDNodeOperandsNative : nativeint * nativeint -> unit
-    val basicBlockAsValueNative : nativeint -> nativeint
-    val basicBlockAsValue : BasicBlockRef -> ValueRef
-    val valueIsBasicBlockNative : nativeint -> bool
-    val valueIsBasicBlock : ValueRef -> bool
-    val valueAsBasicBlockNative : nativeint -> nativeint
-    val valueAsBasicBlock : ValueRef -> BasicBlockRef
-    val getBasicBlockParentNative : nativeint -> nativeint
-    val getBasicBlockParent : BasicBlockRef -> ValueRef
-    val getBasicBlockTerminatorNative : nativeint -> nativeint
-    val getBasicBlockTerminator : BasicBlockRef -> ValueRef
-    val countBasicBlocksNative : nativeint -> uint32
-    val countBasicBlocks : ValueRef -> uint32
-    val getBasicBlocksNative : nativeint * nativeint -> unit
-    val getFirstBasicBlockNative : nativeint -> nativeint
-    val getFirstBasicBlock : ValueRef -> BasicBlockRef
-    val getLastBasicBlockNative : nativeint -> nativeint
-    val getLastBasicBlock : ValueRef -> BasicBlockRef
-    val getNextBasicBlockNative : nativeint -> nativeint
-    val getNextBasicBlock : BasicBlockRef -> BasicBlockRef
-    val getPreviousBasicBlockNative : nativeint -> nativeint
-    val getPreviousBasicBlock : BasicBlockRef -> BasicBlockRef
-    val getEntryBasicBlockNative : nativeint -> nativeint
-    val getEntryBasicBlock : ValueRef -> BasicBlockRef
+      _M:ModuleRef ->
+        _Ty:TypeRef -> _Name:string -> _AddressSpace:uint32 -> ValueRef
+    val getNamedGlobalNative : M:nativeint * Name:string -> nativeint
+    val getNamedGlobal : _M:ModuleRef -> _Name:string -> ValueRef
+    val getFirstGlobalNative : M:nativeint -> nativeint
+    val getFirstGlobal : _M:ModuleRef -> ValueRef
+    val getLastGlobalNative : M:nativeint -> nativeint
+    val getLastGlobal : _M:ModuleRef -> ValueRef
+    val getNextGlobalNative : GlobalVar:nativeint -> nativeint
+    val getNextGlobal : _GlobalVar:ValueRef -> ValueRef
+    val getPreviousGlobalNative : GlobalVar:nativeint -> nativeint
+    val getPreviousGlobal : _GlobalVar:ValueRef -> ValueRef
+    val deleteGlobalNative : GlobalVar:nativeint -> unit
+    val deleteGlobal : _GlobalVar:ValueRef -> unit
+    val getInitializerNative : GlobalVar:nativeint -> nativeint
+    val getInitializer : _GlobalVar:ValueRef -> ValueRef
+    val setInitializerNative :
+      GlobalVar:nativeint * ConstantVal:nativeint -> unit
+    val setInitializer : _GlobalVar:ValueRef -> _ConstantVal:ValueRef -> unit
+    val isThreadLocalNative : GlobalVar:nativeint -> bool
+    val isThreadLocal : _GlobalVar:ValueRef -> bool
+    val setThreadLocalNative : GlobalVar:nativeint * IsThreadLocal:bool -> unit
+    val setThreadLocal : _GlobalVar:ValueRef -> _IsThreadLocal:bool -> unit
+    val isGlobalConstantNative : GlobalVar:nativeint -> bool
+    val isGlobalConstant : _GlobalVar:ValueRef -> bool
+    val setGlobalConstantNative : GlobalVar:nativeint * IsConstant:bool -> unit
+    val setGlobalConstant : _GlobalVar:ValueRef -> _IsConstant:bool -> unit
+    val addAliasNative :
+      M:nativeint * Ty:nativeint * Aliasee:nativeint * Name:string -> nativeint
+    val addAlias :
+      _M:ModuleRef ->
+        _Ty:TypeRef -> _Aliasee:ValueRef -> _Name:string -> ValueRef
+    val deleteFunctionNative : Fn:nativeint -> unit
+    val deleteFunction : _Fn:ValueRef -> unit
+    val getIntrinsicIDNative : Fn:nativeint -> uint32
+    val getIntrinsicID : _Fn:ValueRef -> uint32
+    val getFunctionCallConvNative : Fn:nativeint -> uint32
+    val getFunctionCallConv : _Fn:ValueRef -> uint32
+    val setFunctionCallConvNative : Fn:nativeint * CC:uint32 -> unit
+    val setFunctionCallConv : _Fn:ValueRef -> _CC:uint32 -> unit
+    val getGCNative : Fn:nativeint -> nativeint
+    val getGC : _Fn:ValueRef -> string
+    val setGCNative : Fn:nativeint * Name:string -> unit
+    val setGC : _Fn:ValueRef -> _Name:string -> unit
+    val addFunctionAttrNative : Fn:nativeint * PA:int -> unit
+    val addFunctionAttr : _Fn:ValueRef -> _PA:Attribute -> unit
+    val getFunctionAttrNative : Fn:nativeint -> int
+    val getFunctionAttr : _Fn:ValueRef -> Attribute
+    val removeFunctionAttrNative : Fn:nativeint * PA:int -> unit
+    val removeFunctionAttr : _Fn:ValueRef -> _PA:Attribute -> unit
+    val countParamsNative : Fn:nativeint -> uint32
+    val countParams : _Fn:ValueRef -> uint32
+    val getParamsNative : Fn:nativeint * Params:nativeint -> unit
+    val getParamNative : Fn:nativeint * Index:uint32 -> nativeint
+    val getParam : _Fn:ValueRef -> _Index:uint32 -> ValueRef
+    val getParamParentNative : Inst:nativeint -> nativeint
+    val getParamParent : _Inst:ValueRef -> ValueRef
+    val getFirstParamNative : Fn:nativeint -> nativeint
+    val getFirstParam : _Fn:ValueRef -> ValueRef
+    val getLastParamNative : Fn:nativeint -> nativeint
+    val getLastParam : _Fn:ValueRef -> ValueRef
+    val getNextParamNative : Arg:nativeint -> nativeint
+    val getNextParam : _Arg:ValueRef -> ValueRef
+    val getPreviousParamNative : Arg:nativeint -> nativeint
+    val getPreviousParam : _Arg:ValueRef -> ValueRef
+    val addAttributeNative : Arg:nativeint * PA:int -> unit
+    val addAttribute : _Arg:ValueRef -> _PA:Attribute -> unit
+    val removeAttributeNative : Arg:nativeint * PA:int -> unit
+    val removeAttribute : _Arg:ValueRef -> _PA:Attribute -> unit
+    val getAttributeNative : Arg:nativeint -> int
+    val getAttribute : _Arg:ValueRef -> Attribute
+    val setParamAlignmentNative : Arg:nativeint * align:uint32 -> unit
+    val setParamAlignment : _Arg:ValueRef -> _align:uint32 -> unit
+    val mDStringInContextNative :
+      C:nativeint * Str:string * SLen:uint32 -> nativeint
+    val mDStringInContext :
+      _C:ContextRef -> _Str:string -> _SLen:uint32 -> ValueRef
+    val mDStringNative : Str:string * SLen:uint32 -> nativeint
+    val mDString : _Str:string -> _SLen:uint32 -> ValueRef
+    val mDNodeInContextNative :
+      C:nativeint * Vals:nativeint * Count:uint32 -> nativeint
+    val mDNodeNative : Vals:nativeint * Count:uint32 -> nativeint
+    val getMDStringNative : V:nativeint * Len:nativeptr<uint32> -> nativeint
+    val getMDNodeNumOperandsNative : V:nativeint -> uint32
+    val getMDNodeNumOperands : _V:ValueRef -> uint32
+    val getMDNodeOperandsNative : V:nativeint * Dest:nativeint -> unit
+    val basicBlockAsValueNative : BB:nativeint -> nativeint
+    val basicBlockAsValue : _BB:BasicBlockRef -> ValueRef
+    val valueIsBasicBlockNative : Val:nativeint -> bool
+    val valueIsBasicBlock : _Val:ValueRef -> bool
+    val valueAsBasicBlockNative : Val:nativeint -> nativeint
+    val valueAsBasicBlock : _Val:ValueRef -> BasicBlockRef
+    val getBasicBlockParentNative : BB:nativeint -> nativeint
+    val getBasicBlockParent : _BB:BasicBlockRef -> ValueRef
+    val getBasicBlockTerminatorNative : BB:nativeint -> nativeint
+    val getBasicBlockTerminator : _BB:BasicBlockRef -> ValueRef
+    val countBasicBlocksNative : Fn:nativeint -> uint32
+    val countBasicBlocks : _Fn:ValueRef -> uint32
+    val getBasicBlocksNative : Fn:nativeint * BasicBlocks:nativeint -> unit
+    val getFirstBasicBlockNative : Fn:nativeint -> nativeint
+    val getFirstBasicBlock : _Fn:ValueRef -> BasicBlockRef
+    val getLastBasicBlockNative : Fn:nativeint -> nativeint
+    val getLastBasicBlock : _Fn:ValueRef -> BasicBlockRef
+    val getNextBasicBlockNative : BB:nativeint -> nativeint
+    val getNextBasicBlock : _BB:BasicBlockRef -> BasicBlockRef
+    val getPreviousBasicBlockNative : BB:nativeint -> nativeint
+    val getPreviousBasicBlock : _BB:BasicBlockRef -> BasicBlockRef
+    val getEntryBasicBlockNative : Fn:nativeint -> nativeint
+    val getEntryBasicBlock : _Fn:ValueRef -> BasicBlockRef
     val appendBasicBlockInContextNative :
-      nativeint * nativeint * string -> nativeint
+      C:nativeint * Fn:nativeint * Name:string -> nativeint
     val appendBasicBlockInContext :
-      ContextRef -> ValueRef -> string -> BasicBlockRef
-    val appendBasicBlockNative : nativeint * string -> nativeint
-    val appendBasicBlock : ValueRef -> string -> BasicBlockRef
+      _C:ContextRef -> _Fn:ValueRef -> _Name:string -> BasicBlockRef
+    val appendBasicBlockNative : Fn:nativeint * Name:string -> nativeint
+    val appendBasicBlock : _Fn:ValueRef -> _Name:string -> BasicBlockRef
     val insertBasicBlockInContextNative :
-      nativeint * nativeint * string -> nativeint
+      C:nativeint * BB:nativeint * Name:string -> nativeint
     val insertBasicBlockInContext :
-      ContextRef -> BasicBlockRef -> string -> BasicBlockRef
-    val insertBasicBlockNative : nativeint * string -> nativeint
-    val insertBasicBlock : BasicBlockRef -> string -> BasicBlockRef
-    val deleteBasicBlockNative : nativeint -> unit
-    val deleteBasicBlock : BasicBlockRef -> unit
-    val removeBasicBlockFromParentNative : nativeint -> unit
-    val removeBasicBlockFromParent : BasicBlockRef -> unit
-    val moveBasicBlockBeforeNative : nativeint * nativeint -> unit
-    val moveBasicBlockBefore : BasicBlockRef -> BasicBlockRef -> unit
-    val moveBasicBlockAfterNative : nativeint * nativeint -> unit
-    val moveBasicBlockAfter : BasicBlockRef -> BasicBlockRef -> unit
-    val getFirstInstructionNative : nativeint -> nativeint
-    val getFirstInstruction : BasicBlockRef -> ValueRef
-    val getLastInstructionNative : nativeint -> nativeint
-    val getLastInstruction : BasicBlockRef -> ValueRef
-    val hasMetadataNative : nativeint -> int
-    val hasMetadata : ValueRef -> int
-    val getMetadataNative : nativeint * uint32 -> nativeint
-    val getMetadata : ValueRef -> uint32 -> ValueRef
-    val setMetadataNative : nativeint * uint32 * nativeint -> unit
-    val setMetadata : ValueRef -> uint32 -> ValueRef -> unit
-    val getInstructionParentNative : nativeint -> nativeint
-    val getInstructionParent : ValueRef -> BasicBlockRef
-    val getNextInstructionNative : nativeint -> nativeint
-    val getNextInstruction : ValueRef -> ValueRef
-    val getPreviousInstructionNative : nativeint -> nativeint
-    val getPreviousInstruction : ValueRef -> ValueRef
-    val instructionEraseFromParentNative : nativeint -> unit
-    val instructionEraseFromParent : ValueRef -> unit
-    val getInstructionOpcodeNative : nativeint -> int
-    val getInstructionOpcode : ValueRef -> Opcode
-    val getICmpPredicateNative : nativeint -> int
-    val getICmpPredicate : ValueRef -> IntPredicate
-    val setInstructionCallConvNative : nativeint * uint32 -> unit
-    val setInstructionCallConv : ValueRef -> uint32 -> unit
-    val getInstructionCallConvNative : nativeint -> uint32
-    val getInstructionCallConv : ValueRef -> uint32
-    val addInstrAttributeNative : nativeint * uint32 * int -> unit
-    val addInstrAttribute : ValueRef -> uint32 -> Attribute -> unit
-    val removeInstrAttributeNative : nativeint * uint32 * int -> unit
-    val removeInstrAttribute : ValueRef -> uint32 -> Attribute -> unit
-    val setInstrParamAlignmentNative : nativeint * uint32 * uint32 -> unit
-    val setInstrParamAlignment : ValueRef -> uint32 -> uint32 -> unit
-    val isTailCallNative : nativeint -> bool
-    val isTailCall : ValueRef -> bool
-    val setTailCallNative : nativeint * bool -> unit
-    val setTailCall : ValueRef -> bool -> unit
-    val getSwitchDefaultDestNative : nativeint -> nativeint
-    val getSwitchDefaultDest : ValueRef -> BasicBlockRef
-    val addIncomingNative : nativeint * nativeint * nativeint * uint32 -> unit
-    val countIncomingNative : nativeint -> uint32
-    val countIncoming : ValueRef -> uint32
-    val getIncomingValueNative : nativeint * uint32 -> nativeint
-    val getIncomingValue : ValueRef -> uint32 -> ValueRef
-    val getIncomingBlockNative : nativeint * uint32 -> nativeint
-    val getIncomingBlock : ValueRef -> uint32 -> BasicBlockRef
-    val createBuilderInContextNative : nativeint -> nativeint
-    val createBuilderInContext : ContextRef -> BuilderRef
+      _C:ContextRef -> _BB:BasicBlockRef -> _Name:string -> BasicBlockRef
+    val insertBasicBlockNative :
+      InsertBeforeBB:nativeint * Name:string -> nativeint
+    val insertBasicBlock :
+      _InsertBeforeBB:BasicBlockRef -> _Name:string -> BasicBlockRef
+    val deleteBasicBlockNative : BB:nativeint -> unit
+    val deleteBasicBlock : _BB:BasicBlockRef -> unit
+    val removeBasicBlockFromParentNative : BB:nativeint -> unit
+    val removeBasicBlockFromParent : _BB:BasicBlockRef -> unit
+    val moveBasicBlockBeforeNative : BB:nativeint * MovePos:nativeint -> unit
+    val moveBasicBlockBefore :
+      _BB:BasicBlockRef -> _MovePos:BasicBlockRef -> unit
+    val moveBasicBlockAfterNative : BB:nativeint * MovePos:nativeint -> unit
+    val moveBasicBlockAfter :
+      _BB:BasicBlockRef -> _MovePos:BasicBlockRef -> unit
+    val getFirstInstructionNative : BB:nativeint -> nativeint
+    val getFirstInstruction : _BB:BasicBlockRef -> ValueRef
+    val getLastInstructionNative : BB:nativeint -> nativeint
+    val getLastInstruction : _BB:BasicBlockRef -> ValueRef
+    val hasMetadataNative : Val:nativeint -> int
+    val hasMetadata : _Val:ValueRef -> int
+    val getMetadataNative : Val:nativeint * KindID:uint32 -> nativeint
+    val getMetadata : _Val:ValueRef -> _KindID:uint32 -> ValueRef
+    val setMetadataNative :
+      Val:nativeint * KindID:uint32 * Node:nativeint -> unit
+    val setMetadata : _Val:ValueRef -> _KindID:uint32 -> _Node:ValueRef -> unit
+    val getInstructionParentNative : Inst:nativeint -> nativeint
+    val getInstructionParent : _Inst:ValueRef -> BasicBlockRef
+    val getNextInstructionNative : Inst:nativeint -> nativeint
+    val getNextInstruction : _Inst:ValueRef -> ValueRef
+    val getPreviousInstructionNative : Inst:nativeint -> nativeint
+    val getPreviousInstruction : _Inst:ValueRef -> ValueRef
+    val instructionEraseFromParentNative : Inst:nativeint -> unit
+    val instructionEraseFromParent : _Inst:ValueRef -> unit
+    val getInstructionOpcodeNative : Inst:nativeint -> int
+    val getInstructionOpcode : _Inst:ValueRef -> Opcode
+    val getICmpPredicateNative : Inst:nativeint -> int
+    val getICmpPredicate : _Inst:ValueRef -> IntPredicate
+    val setInstructionCallConvNative : Instr:nativeint * CC:uint32 -> unit
+    val setInstructionCallConv : _Instr:ValueRef -> _CC:uint32 -> unit
+    val getInstructionCallConvNative : Instr:nativeint -> uint32
+    val getInstructionCallConv : _Instr:ValueRef -> uint32
+    val addInstrAttributeNative :
+      Instr:nativeint * index:uint32 * arg2:int -> unit
+    val addInstrAttribute :
+      _Instr:ValueRef -> _index:uint32 -> _arg2:Attribute -> unit
+    val removeInstrAttributeNative :
+      Instr:nativeint * index:uint32 * arg2:int -> unit
+    val removeInstrAttribute :
+      _Instr:ValueRef -> _index:uint32 -> _arg2:Attribute -> unit
+    val setInstrParamAlignmentNative :
+      Instr:nativeint * index:uint32 * align:uint32 -> unit
+    val setInstrParamAlignment :
+      _Instr:ValueRef -> _index:uint32 -> _align:uint32 -> unit
+    val isTailCallNative : CallInst:nativeint -> bool
+    val isTailCall : _CallInst:ValueRef -> bool
+    val setTailCallNative : CallInst:nativeint * IsTailCall:bool -> unit
+    val setTailCall : _CallInst:ValueRef -> _IsTailCall:bool -> unit
+    val getSwitchDefaultDestNative : SwitchInstr:nativeint -> nativeint
+    val getSwitchDefaultDest : _SwitchInstr:ValueRef -> BasicBlockRef
+    val addIncomingNative :
+      PhiNode:nativeint * IncomingValues:nativeint * IncomingBlocks:nativeint *
+      Count:uint32 -> unit
+    val countIncomingNative : PhiNode:nativeint -> uint32
+    val countIncoming : _PhiNode:ValueRef -> uint32
+    val getIncomingValueNative : PhiNode:nativeint * Index:uint32 -> nativeint
+    val getIncomingValue : _PhiNode:ValueRef -> _Index:uint32 -> ValueRef
+    val getIncomingBlockNative : PhiNode:nativeint * Index:uint32 -> nativeint
+    val getIncomingBlock : _PhiNode:ValueRef -> _Index:uint32 -> BasicBlockRef
+    val createBuilderInContextNative : C:nativeint -> nativeint
+    val createBuilderInContext : _C:ContextRef -> BuilderRef
     val createBuilderNative : unit -> nativeint
     val createBuilder : unit -> BuilderRef
-    val positionBuilderNative : nativeint * nativeint * nativeint -> unit
-    val positionBuilder : BuilderRef -> BasicBlockRef -> ValueRef -> unit
-    val positionBuilderBeforeNative : nativeint * nativeint -> unit
-    val positionBuilderBefore : BuilderRef -> ValueRef -> unit
-    val positionBuilderAtEndNative : nativeint * nativeint -> unit
-    val positionBuilderAtEnd : BuilderRef -> BasicBlockRef -> unit
-    val getInsertBlockNative : nativeint -> nativeint
-    val getInsertBlock : BuilderRef -> BasicBlockRef
-    val clearInsertionPositionNative : nativeint -> unit
-    val clearInsertionPosition : BuilderRef -> unit
-    val insertIntoBuilderNative : nativeint * nativeint -> unit
-    val insertIntoBuilder : BuilderRef -> ValueRef -> unit
-    val insertIntoBuilderWithNameNative : nativeint * nativeint * string -> unit
-    val insertIntoBuilderWithName : BuilderRef -> ValueRef -> string -> unit
-    val disposeBuilderNative : nativeint -> unit
-    val disposeBuilder : BuilderRef -> unit
-    val setCurrentDebugLocationNative : nativeint * nativeint -> unit
-    val setCurrentDebugLocation : BuilderRef -> ValueRef -> unit
-    val getCurrentDebugLocationNative : nativeint -> nativeint
-    val getCurrentDebugLocation : BuilderRef -> ValueRef
-    val setInstDebugLocationNative : nativeint * nativeint -> unit
-    val setInstDebugLocation : BuilderRef -> ValueRef -> unit
-    val buildRetVoidNative : nativeint -> nativeint
-    val buildRetVoid : BuilderRef -> ValueRef
-    val buildRetNative : nativeint * nativeint -> nativeint
-    val buildRet : BuilderRef -> ValueRef -> ValueRef
-    val buildAggregateRetNative : nativeint * nativeint * uint32 -> nativeint
-    val buildBrNative : nativeint * nativeint -> nativeint
-    val buildBr : BuilderRef -> BasicBlockRef -> ValueRef
+    val positionBuilderNative :
+      Builder:nativeint * Block:nativeint * Instr:nativeint -> unit
+    val positionBuilder :
+      _Builder:BuilderRef -> _Block:BasicBlockRef -> _Instr:ValueRef -> unit
+    val positionBuilderBeforeNative :
+      Builder:nativeint * Instr:nativeint -> unit
+    val positionBuilderBefore : _Builder:BuilderRef -> _Instr:ValueRef -> unit
+    val positionBuilderAtEndNative : Builder:nativeint * Block:nativeint -> unit
+    val positionBuilderAtEnd :
+      _Builder:BuilderRef -> _Block:BasicBlockRef -> unit
+    val getInsertBlockNative : Builder:nativeint -> nativeint
+    val getInsertBlock : _Builder:BuilderRef -> BasicBlockRef
+    val clearInsertionPositionNative : Builder:nativeint -> unit
+    val clearInsertionPosition : _Builder:BuilderRef -> unit
+    val insertIntoBuilderNative : Builder:nativeint * Instr:nativeint -> unit
+    val insertIntoBuilder : _Builder:BuilderRef -> _Instr:ValueRef -> unit
+    val insertIntoBuilderWithNameNative :
+      Builder:nativeint * Instr:nativeint * Name:string -> unit
+    val insertIntoBuilderWithName :
+      _Builder:BuilderRef -> _Instr:ValueRef -> _Name:string -> unit
+    val disposeBuilderNative : Builder:nativeint -> unit
+    val disposeBuilder : _Builder:BuilderRef -> unit
+    val setCurrentDebugLocationNative : Builder:nativeint * L:nativeint -> unit
+    val setCurrentDebugLocation : _Builder:BuilderRef -> _L:ValueRef -> unit
+    val getCurrentDebugLocationNative : Builder:nativeint -> nativeint
+    val getCurrentDebugLocation : _Builder:BuilderRef -> ValueRef
+    val setInstDebugLocationNative : Builder:nativeint * Inst:nativeint -> unit
+    val setInstDebugLocation : _Builder:BuilderRef -> _Inst:ValueRef -> unit
+    val buildRetVoidNative : arg0:nativeint -> nativeint
+    val buildRetVoid : _arg0:BuilderRef -> ValueRef
+    val buildRetNative : arg0:nativeint * V:nativeint -> nativeint
+    val buildRet : _arg0:BuilderRef -> _V:ValueRef -> ValueRef
+    val buildAggregateRetNative :
+      arg0:nativeint * RetVals:nativeint * N:uint32 -> nativeint
+    val buildBrNative : arg0:nativeint * Dest:nativeint -> nativeint
+    val buildBr : _arg0:BuilderRef -> _Dest:BasicBlockRef -> ValueRef
     val buildCondBrNative :
-      nativeint * nativeint * nativeint * nativeint -> nativeint
+      arg0:nativeint * If:nativeint * Then:nativeint * Else:nativeint ->
+        nativeint
     val buildCondBr :
-      BuilderRef -> ValueRef -> BasicBlockRef -> BasicBlockRef -> ValueRef
+      _arg0:BuilderRef ->
+        _If:ValueRef -> _Then:BasicBlockRef -> _Else:BasicBlockRef -> ValueRef
     val buildSwitchNative :
-      nativeint * nativeint * nativeint * uint32 -> nativeint
+      arg0:nativeint * V:nativeint * Else:nativeint * NumCases:uint32 ->
+        nativeint
     val buildSwitch :
-      BuilderRef -> ValueRef -> BasicBlockRef -> uint32 -> ValueRef
-    val buildIndirectBrNative : nativeint * nativeint * uint32 -> nativeint
-    val buildIndirectBr : BuilderRef -> ValueRef -> uint32 -> ValueRef
+      _arg0:BuilderRef ->
+        _V:ValueRef -> _Else:BasicBlockRef -> _NumCases:uint32 -> ValueRef
+    val buildIndirectBrNative :
+      B:nativeint * Addr:nativeint * NumDests:uint32 -> nativeint
+    val buildIndirectBr :
+      _B:BuilderRef -> _Addr:ValueRef -> _NumDests:uint32 -> ValueRef
     val buildInvokeNative :
-      nativeint * nativeint * nativeint * uint32 * nativeint * nativeint *
-      string -> nativeint
+      arg0:nativeint * Fn:nativeint * Args:nativeint * NumArgs:uint32 *
+      Then:nativeint * Catch:nativeint * Name:string -> nativeint
     val buildLandingPadNative :
-      nativeint * nativeint * nativeint * uint32 * string -> nativeint
+      B:nativeint * Ty:nativeint * PersFn:nativeint * NumClauses:uint32 *
+      Name:string -> nativeint
     val buildLandingPad :
-      BuilderRef -> TypeRef -> ValueRef -> uint32 -> string -> ValueRef
-    val buildResumeNative : nativeint * nativeint -> nativeint
-    val buildResume : BuilderRef -> ValueRef -> ValueRef
-    val buildUnreachableNative : nativeint -> nativeint
-    val buildUnreachable : BuilderRef -> ValueRef
-    val addCaseNative : nativeint * nativeint * nativeint -> unit
-    val addCase : ValueRef -> ValueRef -> BasicBlockRef -> unit
-    val addDestinationNative : nativeint * nativeint -> unit
-    val addDestination : ValueRef -> BasicBlockRef -> unit
-    val addClauseNative : nativeint * nativeint -> unit
-    val addClause : ValueRef -> ValueRef -> unit
-    val setCleanupNative : nativeint * bool -> unit
-    val setCleanup : ValueRef -> bool -> unit
-    val buildAddNative : nativeint * nativeint * nativeint * string -> nativeint
-    val buildAdd : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      _B:BuilderRef ->
+        _Ty:TypeRef ->
+          _PersFn:ValueRef -> _NumClauses:uint32 -> _Name:string -> ValueRef
+    val buildResumeNative : B:nativeint * Exn:nativeint -> nativeint
+    val buildResume : _B:BuilderRef -> _Exn:ValueRef -> ValueRef
+    val buildUnreachableNative : arg0:nativeint -> nativeint
+    val buildUnreachable : _arg0:BuilderRef -> ValueRef
+    val addCaseNative :
+      Switch:nativeint * OnVal:nativeint * Dest:nativeint -> unit
+    val addCase :
+      _Switch:ValueRef -> _OnVal:ValueRef -> _Dest:BasicBlockRef -> unit
+    val addDestinationNative : IndirectBr:nativeint * Dest:nativeint -> unit
+    val addDestination : _IndirectBr:ValueRef -> _Dest:BasicBlockRef -> unit
+    val addClauseNative : LandingPad:nativeint * ClauseVal:nativeint -> unit
+    val addClause : _LandingPad:ValueRef -> _ClauseVal:ValueRef -> unit
+    val setCleanupNative : LandingPad:nativeint * Val:bool -> unit
+    val setCleanup : _LandingPad:ValueRef -> _Val:bool -> unit
+    val buildAddNative :
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildAdd :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildNSWAddNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildNSWAdd : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildNSWAdd :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildNUWAddNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildNUWAdd : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildNUWAdd :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildFAddNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildFAdd : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
-    val buildSubNative : nativeint * nativeint * nativeint * string -> nativeint
-    val buildSub : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildFAdd :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
+    val buildSubNative :
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildSub :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildNSWSubNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildNSWSub : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildNSWSub :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildNUWSubNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildNUWSub : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildNUWSub :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildFSubNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildFSub : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
-    val buildMulNative : nativeint * nativeint * nativeint * string -> nativeint
-    val buildMul : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildFSub :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
+    val buildMulNative :
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildMul :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildNSWMulNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildNSWMul : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildNSWMul :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildNUWMulNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildNUWMul : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildNUWMul :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildFMulNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildFMul : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildFMul :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildUDivNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildUDiv : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildUDiv :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildSDivNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildSDiv : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildSDiv :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildExactSDivNative :
-      nativeint * nativeint * nativeint * string -> nativeint
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
     val buildExactSDiv :
-      BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildFDivNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildFDiv : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildFDiv :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildURemNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildURem : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildURem :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildSRemNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildSRem : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildSRem :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildFRemNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildFRem : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
-    val buildShlNative : nativeint * nativeint * nativeint * string -> nativeint
-    val buildShl : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildFRem :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
+    val buildShlNative :
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildShl :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildLShrNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildLShr : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildLShr :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildAShrNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildAShr : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
-    val buildAndNative : nativeint * nativeint * nativeint * string -> nativeint
-    val buildAnd : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
-    val buildOrNative : nativeint * nativeint * nativeint * string -> nativeint
-    val buildOr : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
-    val buildXorNative : nativeint * nativeint * nativeint * string -> nativeint
-    val buildXor : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildAShr :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
+    val buildAndNative :
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildAnd :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
+    val buildOrNative :
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildOr :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
+    val buildXorNative :
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildXor :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildBinOpNative :
-      nativeint * int * nativeint * nativeint * string -> nativeint
+      B:nativeint * Op:int * LHS:nativeint * RHS:nativeint * Name:string ->
+        nativeint
     val buildBinOp :
-      BuilderRef -> Opcode -> ValueRef -> ValueRef -> string -> ValueRef
-    val buildNegNative : nativeint * nativeint * string -> nativeint
-    val buildNeg : BuilderRef -> ValueRef -> string -> ValueRef
-    val buildNSWNegNative : nativeint * nativeint * string -> nativeint
-    val buildNSWNeg : BuilderRef -> ValueRef -> string -> ValueRef
-    val buildNUWNegNative : nativeint * nativeint * string -> nativeint
-    val buildNUWNeg : BuilderRef -> ValueRef -> string -> ValueRef
-    val buildFNegNative : nativeint * nativeint * string -> nativeint
-    val buildFNeg : BuilderRef -> ValueRef -> string -> ValueRef
-    val buildNotNative : nativeint * nativeint * string -> nativeint
-    val buildNot : BuilderRef -> ValueRef -> string -> ValueRef
-    val buildMallocNative : nativeint * nativeint * string -> nativeint
-    val buildMalloc : BuilderRef -> TypeRef -> string -> ValueRef
+      _B:BuilderRef ->
+        _Op:Opcode -> _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
+    val buildNegNative : arg0:nativeint * V:nativeint * Name:string -> nativeint
+    val buildNeg : _arg0:BuilderRef -> _V:ValueRef -> _Name:string -> ValueRef
+    val buildNSWNegNative : B:nativeint * V:nativeint * Name:string -> nativeint
+    val buildNSWNeg : _B:BuilderRef -> _V:ValueRef -> _Name:string -> ValueRef
+    val buildNUWNegNative : B:nativeint * V:nativeint * Name:string -> nativeint
+    val buildNUWNeg : _B:BuilderRef -> _V:ValueRef -> _Name:string -> ValueRef
+    val buildFNegNative :
+      arg0:nativeint * V:nativeint * Name:string -> nativeint
+    val buildFNeg : _arg0:BuilderRef -> _V:ValueRef -> _Name:string -> ValueRef
+    val buildNotNative : arg0:nativeint * V:nativeint * Name:string -> nativeint
+    val buildNot : _arg0:BuilderRef -> _V:ValueRef -> _Name:string -> ValueRef
+    val buildMallocNative :
+      arg0:nativeint * Ty:nativeint * Name:string -> nativeint
+    val buildMalloc :
+      _arg0:BuilderRef -> _Ty:TypeRef -> _Name:string -> ValueRef
     val buildArrayMallocNative :
-      nativeint * nativeint * nativeint * string -> nativeint
+      arg0:nativeint * Ty:nativeint * Val:nativeint * Name:string -> nativeint
     val buildArrayMalloc :
-      BuilderRef -> TypeRef -> ValueRef -> string -> ValueRef
-    val buildAllocaNative : nativeint * nativeint * string -> nativeint
-    val buildAlloca : BuilderRef -> TypeRef -> string -> ValueRef
+      _arg0:BuilderRef ->
+        _Ty:TypeRef -> _Val:ValueRef -> _Name:string -> ValueRef
+    val buildAllocaNative :
+      arg0:nativeint * Ty:nativeint * Name:string -> nativeint
+    val buildAlloca :
+      _arg0:BuilderRef -> _Ty:TypeRef -> _Name:string -> ValueRef
     val buildArrayAllocaNative :
-      nativeint * nativeint * nativeint * string -> nativeint
+      arg0:nativeint * Ty:nativeint * Val:nativeint * Name:string -> nativeint
     val buildArrayAlloca :
-      BuilderRef -> TypeRef -> ValueRef -> string -> ValueRef
-    val buildFreeNative : nativeint * nativeint -> nativeint
-    val buildFree : BuilderRef -> ValueRef -> ValueRef
-    val buildLoadNative : nativeint * nativeint * string -> nativeint
-    val buildLoad : BuilderRef -> ValueRef -> string -> ValueRef
-    val buildStoreNative : nativeint * nativeint * nativeint -> nativeint
-    val buildStore : BuilderRef -> ValueRef -> ValueRef -> ValueRef
+      _arg0:BuilderRef ->
+        _Ty:TypeRef -> _Val:ValueRef -> _Name:string -> ValueRef
+    val buildFreeNative : arg0:nativeint * PointerVal:nativeint -> nativeint
+    val buildFree : _arg0:BuilderRef -> _PointerVal:ValueRef -> ValueRef
+    val buildLoadNative :
+      arg0:nativeint * PointerVal:nativeint * Name:string -> nativeint
+    val buildLoad :
+      _arg0:BuilderRef -> _PointerVal:ValueRef -> _Name:string -> ValueRef
+    val buildStoreNative :
+      arg0:nativeint * Val:nativeint * Ptr:nativeint -> nativeint
+    val buildStore :
+      _arg0:BuilderRef -> _Val:ValueRef -> _Ptr:ValueRef -> ValueRef
     val buildGEPNative :
-      nativeint * nativeint * nativeint * uint32 * string -> nativeint
+      B:nativeint * Pointer:nativeint * Indices:nativeint * NumIndices:uint32 *
+      Name:string -> nativeint
     val buildInBoundsGEPNative :
-      nativeint * nativeint * nativeint * uint32 * string -> nativeint
+      B:nativeint * Pointer:nativeint * Indices:nativeint * NumIndices:uint32 *
+      Name:string -> nativeint
     val buildStructGEPNative :
-      nativeint * nativeint * uint32 * string -> nativeint
-    val buildStructGEP : BuilderRef -> ValueRef -> uint32 -> string -> ValueRef
-    val buildGlobalStringNative : nativeint * string * string -> nativeint
-    val buildGlobalString : BuilderRef -> string -> string -> ValueRef
-    val buildGlobalStringPtrNative : nativeint * string * string -> nativeint
-    val buildGlobalStringPtr : BuilderRef -> string -> string -> ValueRef
-    val getVolatileNative : nativeint -> bool
-    val getVolatile : ValueRef -> bool
-    val setVolatileNative : nativeint * bool -> unit
-    val setVolatile : ValueRef -> bool -> unit
+      B:nativeint * Pointer:nativeint * Idx:uint32 * Name:string -> nativeint
+    val buildStructGEP :
+      _B:BuilderRef ->
+        _Pointer:ValueRef -> _Idx:uint32 -> _Name:string -> ValueRef
+    val buildGlobalStringNative :
+      B:nativeint * Str:string * Name:string -> nativeint
+    val buildGlobalString :
+      _B:BuilderRef -> _Str:string -> _Name:string -> ValueRef
+    val buildGlobalStringPtrNative :
+      B:nativeint * Str:string * Name:string -> nativeint
+    val buildGlobalStringPtr :
+      _B:BuilderRef -> _Str:string -> _Name:string -> ValueRef
+    val getVolatileNative : MemoryAccessInst:nativeint -> bool
+    val getVolatile : _MemoryAccessInst:ValueRef -> bool
+    val setVolatileNative : MemoryAccessInst:nativeint * IsVolatile:bool -> unit
+    val setVolatile : _MemoryAccessInst:ValueRef -> _IsVolatile:bool -> unit
     val buildTruncNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildTrunc : BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
+    val buildTrunc :
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildZExtNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildZExt : BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
+    val buildZExt :
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildSExtNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildSExt : BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
+    val buildSExt :
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildFPToUINative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildFPToUI : BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
+    val buildFPToUI :
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildFPToSINative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildFPToSI : BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
+    val buildFPToSI :
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildUIToFPNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildUIToFP : BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
+    val buildUIToFP :
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildSIToFPNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildSIToFP : BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
+    val buildSIToFP :
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildFPTruncNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildFPTrunc : BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
+    val buildFPTrunc :
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildFPExtNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildFPExt : BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
+    val buildFPExt :
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildPtrToIntNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildPtrToInt : BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
+    val buildPtrToInt :
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildIntToPtrNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildIntToPtr : BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
+    val buildIntToPtr :
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildBitCastNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildBitCast : BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
+    val buildBitCast :
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildZExtOrBitCastNative :
-      nativeint * nativeint * nativeint * string -> nativeint
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
     val buildZExtOrBitCast :
-      BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildSExtOrBitCastNative :
-      nativeint * nativeint * nativeint * string -> nativeint
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
     val buildSExtOrBitCast :
-      BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildTruncOrBitCastNative :
-      nativeint * nativeint * nativeint * string -> nativeint
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
     val buildTruncOrBitCast :
-      BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildCastNative :
-      nativeint * int * nativeint * nativeint * string -> nativeint
+      B:nativeint * Op:int * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
     val buildCast :
-      BuilderRef -> Opcode -> ValueRef -> TypeRef -> string -> ValueRef
+      _B:BuilderRef ->
+        _Op:Opcode ->
+          _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildPointerCastNative :
-      nativeint * nativeint * nativeint * string -> nativeint
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
     val buildPointerCast :
-      BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildIntCastNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildIntCast : BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
+    val buildIntCast :
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildFPCastNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildFPCast : BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      arg0:nativeint * Val:nativeint * DestTy:nativeint * Name:string ->
+        nativeint
+    val buildFPCast :
+      _arg0:BuilderRef ->
+        _Val:ValueRef -> _DestTy:TypeRef -> _Name:string -> ValueRef
     val buildICmpNative :
-      nativeint * int * nativeint * nativeint * string -> nativeint
+      arg0:nativeint * Op:int * LHS:nativeint * RHS:nativeint * Name:string ->
+        nativeint
     val buildICmp :
-      BuilderRef -> IntPredicate -> ValueRef -> ValueRef -> string -> ValueRef
+      _arg0:BuilderRef ->
+        _Op:IntPredicate ->
+          _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
     val buildFCmpNative :
-      nativeint * int * nativeint * nativeint * string -> nativeint
+      arg0:nativeint * Op:int * LHS:nativeint * RHS:nativeint * Name:string ->
+        nativeint
     val buildFCmp :
-      BuilderRef -> RealPredicate -> ValueRef -> ValueRef -> string -> ValueRef
-    val buildPhiNative : nativeint * nativeint * string -> nativeint
-    val buildPhi : BuilderRef -> TypeRef -> string -> ValueRef
+      _arg0:BuilderRef ->
+        _Op:RealPredicate ->
+          _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
+    val buildPhiNative :
+      arg0:nativeint * Ty:nativeint * Name:string -> nativeint
+    val buildPhi : _arg0:BuilderRef -> _Ty:TypeRef -> _Name:string -> ValueRef
     val buildCallNative :
-      nativeint * nativeint * nativeint * uint32 * string -> nativeint
+      arg0:nativeint * Fn:nativeint * Args:nativeint * NumArgs:uint32 *
+      Name:string -> nativeint
     val buildSelectNative :
-      nativeint * nativeint * nativeint * nativeint * string -> nativeint
+      arg0:nativeint * If:nativeint * Then:nativeint * Else:nativeint *
+      Name:string -> nativeint
     val buildSelect :
-      BuilderRef -> ValueRef -> ValueRef -> ValueRef -> string -> ValueRef
+      _arg0:BuilderRef ->
+        _If:ValueRef ->
+          _Then:ValueRef -> _Else:ValueRef -> _Name:string -> ValueRef
     val buildVAArgNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildVAArg : BuilderRef -> ValueRef -> TypeRef -> string -> ValueRef
+      arg0:nativeint * List:nativeint * Ty:nativeint * Name:string -> nativeint
+    val buildVAArg :
+      _arg0:BuilderRef ->
+        _List:ValueRef -> _Ty:TypeRef -> _Name:string -> ValueRef
     val buildExtractElementNative :
-      nativeint * nativeint * nativeint * string -> nativeint
+      arg0:nativeint * VecVal:nativeint * Index:nativeint * Name:string ->
+        nativeint
     val buildExtractElement :
-      BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
+      _arg0:BuilderRef ->
+        _VecVal:ValueRef -> _Index:ValueRef -> _Name:string -> ValueRef
     val buildInsertElementNative :
-      nativeint * nativeint * nativeint * nativeint * string -> nativeint
+      arg0:nativeint * VecVal:nativeint * EltVal:nativeint * Index:nativeint *
+      Name:string -> nativeint
     val buildInsertElement :
-      BuilderRef -> ValueRef -> ValueRef -> ValueRef -> string -> ValueRef
+      _arg0:BuilderRef ->
+        _VecVal:ValueRef ->
+          _EltVal:ValueRef -> _Index:ValueRef -> _Name:string -> ValueRef
     val buildShuffleVectorNative :
-      nativeint * nativeint * nativeint * nativeint * string -> nativeint
+      arg0:nativeint * V1:nativeint * V2:nativeint * Mask:nativeint *
+      Name:string -> nativeint
     val buildShuffleVector :
-      BuilderRef -> ValueRef -> ValueRef -> ValueRef -> string -> ValueRef
+      _arg0:BuilderRef ->
+        _V1:ValueRef ->
+          _V2:ValueRef -> _Mask:ValueRef -> _Name:string -> ValueRef
     val buildExtractValueNative :
-      nativeint * nativeint * uint32 * string -> nativeint
+      arg0:nativeint * AggVal:nativeint * Index:uint32 * Name:string ->
+        nativeint
     val buildExtractValue :
-      BuilderRef -> ValueRef -> uint32 -> string -> ValueRef
+      _arg0:BuilderRef ->
+        _AggVal:ValueRef -> _Index:uint32 -> _Name:string -> ValueRef
     val buildInsertValueNative :
-      nativeint * nativeint * nativeint * uint32 * string -> nativeint
+      arg0:nativeint * AggVal:nativeint * EltVal:nativeint * Index:uint32 *
+      Name:string -> nativeint
     val buildInsertValue :
-      BuilderRef -> ValueRef -> ValueRef -> uint32 -> string -> ValueRef
-    val buildIsNullNative : nativeint * nativeint * string -> nativeint
-    val buildIsNull : BuilderRef -> ValueRef -> string -> ValueRef
-    val buildIsNotNullNative : nativeint * nativeint * string -> nativeint
-    val buildIsNotNull : BuilderRef -> ValueRef -> string -> ValueRef
+      _arg0:BuilderRef ->
+        _AggVal:ValueRef ->
+          _EltVal:ValueRef -> _Index:uint32 -> _Name:string -> ValueRef
+    val buildIsNullNative :
+      arg0:nativeint * Val:nativeint * Name:string -> nativeint
+    val buildIsNull :
+      _arg0:BuilderRef -> _Val:ValueRef -> _Name:string -> ValueRef
+    val buildIsNotNullNative :
+      arg0:nativeint * Val:nativeint * Name:string -> nativeint
+    val buildIsNotNull :
+      _arg0:BuilderRef -> _Val:ValueRef -> _Name:string -> ValueRef
     val buildPtrDiffNative :
-      nativeint * nativeint * nativeint * string -> nativeint
-    val buildPtrDiff : BuilderRef -> ValueRef -> ValueRef -> string -> ValueRef
-    val createModuleProviderForExistingModuleNative : nativeint -> nativeint
-    val createModuleProviderForExistingModule : ModuleRef -> ModuleProviderRef
-    val disposeModuleProviderNative : nativeint -> unit
-    val disposeModuleProvider : ModuleProviderRef -> unit
+      arg0:nativeint * LHS:nativeint * RHS:nativeint * Name:string -> nativeint
+    val buildPtrDiff :
+      _arg0:BuilderRef ->
+        _LHS:ValueRef -> _RHS:ValueRef -> _Name:string -> ValueRef
+    val createModuleProviderForExistingModuleNative : M:nativeint -> nativeint
+    val createModuleProviderForExistingModule :
+      _M:ModuleRef -> ModuleProviderRef
+    val disposeModuleProviderNative : M:nativeint -> unit
+    val disposeModuleProvider : _M:ModuleProviderRef -> unit
     val createMemoryBufferWithContentsOfFileNative :
-      string * nativeint * nativeint -> bool
-    val createMemoryBufferWithSTDINNative : nativeint * nativeint -> bool
-    val disposeMemoryBufferNative : nativeint -> unit
-    val disposeMemoryBuffer : MemoryBufferRef -> unit
+      Path:string * OutMemBuf:nativeint * OutMessage:nativeint -> bool
+    val createMemoryBufferWithSTDINNative :
+      OutMemBuf:nativeint * OutMessage:nativeint -> bool
+    val disposeMemoryBufferNative : MemBuf:nativeint -> unit
+    val disposeMemoryBuffer : _MemBuf:MemoryBufferRef -> unit
     val getGlobalPassRegistryNative : unit -> nativeint
     val getGlobalPassRegistry : unit -> PassRegistryRef
     val createPassManagerNative : unit -> nativeint
     val createPassManager : unit -> PassManagerRef
-    val createFunctionPassManagerForModuleNative : nativeint -> nativeint
-    val createFunctionPassManagerForModule : ModuleRef -> PassManagerRef
-    val createFunctionPassManagerNative : nativeint -> nativeint
-    val createFunctionPassManager : ModuleProviderRef -> PassManagerRef
-    val runPassManagerNative : nativeint * nativeint -> bool
-    val runPassManager : PassManagerRef -> ModuleRef -> bool
-    val initializeFunctionPassManagerNative : nativeint -> bool
-    val initializeFunctionPassManager : PassManagerRef -> bool
-    val runFunctionPassManagerNative : nativeint * nativeint -> bool
-    val runFunctionPassManager : PassManagerRef -> ValueRef -> bool
-    val finalizeFunctionPassManagerNative : nativeint -> bool
-    val finalizeFunctionPassManager : PassManagerRef -> bool
-    val disposePassManagerNative : nativeint -> unit
-    val disposePassManager : PassManagerRef -> unit
+    val createFunctionPassManagerForModuleNative : M:nativeint -> nativeint
+    val createFunctionPassManagerForModule : _M:ModuleRef -> PassManagerRef
+    val createFunctionPassManagerNative : MP:nativeint -> nativeint
+    val createFunctionPassManager : _MP:ModuleProviderRef -> PassManagerRef
+    val runPassManagerNative : PM:nativeint * M:nativeint -> bool
+    val runPassManager : _PM:PassManagerRef -> _M:ModuleRef -> bool
+    val initializeFunctionPassManagerNative : FPM:nativeint -> bool
+    val initializeFunctionPassManager : _FPM:PassManagerRef -> bool
+    val runFunctionPassManagerNative : FPM:nativeint * F:nativeint -> bool
+    val runFunctionPassManager : _FPM:PassManagerRef -> _F:ValueRef -> bool
+    val finalizeFunctionPassManagerNative : FPM:nativeint -> bool
+    val finalizeFunctionPassManager : _FPM:PassManagerRef -> bool
+    val disposePassManagerNative : PM:nativeint -> unit
+    val disposePassManager : _PM:PassManagerRef -> unit
   end
 namespace LLVM.Generated
   module BitReader = begin
-    val parseBitcodeNative : nativeint * nativeint * nativeint -> bool
+    val parseBitcodeNative :
+      MemBuf:nativeint * OutModule:nativeint * OutMessage:nativeint -> bool
     val parseBitcodeInContextNative :
-      nativeint * nativeint * nativeint * nativeint -> bool
+      ContextRef:nativeint * MemBuf:nativeint * OutModule:nativeint *
+      OutMessage:nativeint -> bool
     val getBitcodeModuleInContextNative :
-      nativeint * nativeint * nativeint * nativeint -> bool
-    val getBitcodeModuleNative : nativeint * nativeint * nativeint -> bool
+      ContextRef:nativeint * MemBuf:nativeint * OutM:nativeint *
+      OutMessage:nativeint -> bool
+    val getBitcodeModuleNative :
+      MemBuf:nativeint * OutM:nativeint * OutMessage:nativeint -> bool
     val getBitcodeModuleProviderInContextNative :
-      nativeint * nativeint * nativeint * nativeint -> bool
+      ContextRef:nativeint * MemBuf:nativeint * OutMP:nativeint *
+      OutMessage:nativeint -> bool
     val getBitcodeModuleProviderNative :
-      nativeint * nativeint * nativeint -> bool
+      MemBuf:nativeint * OutMP:nativeint * OutMessage:nativeint -> bool
   end
 namespace LLVM.Generated
   module BitWriter = begin
-    val writeBitcodeToFileNative : nativeint * string -> int
-    val writeBitcodeToFile : Core.ModuleRef -> string -> int
-    val writeBitcodeToFDNative : nativeint * int * int * int -> int
-    val writeBitcodeToFD : Core.ModuleRef -> int -> int -> int -> int
-    val writeBitcodeToFileHandleNative : nativeint * int -> int
-    val writeBitcodeToFileHandle : Core.ModuleRef -> int -> int
+    val writeBitcodeToFileNative : M:nativeint * Path:string -> int
+    val writeBitcodeToFile : _M:Core.ModuleRef -> _Path:string -> int
+    val writeBitcodeToFDNative :
+      M:nativeint * FD:int * ShouldClose:int * Unbuffered:int -> int
+    val writeBitcodeToFD :
+      _M:Core.ModuleRef -> _FD:int -> _ShouldClose:int -> _Unbuffered:int -> int
+    val writeBitcodeToFileHandleNative : M:nativeint * Handle:int -> int
+    val writeBitcodeToFileHandle : _M:Core.ModuleRef -> _Handle:int -> int
   end
 namespace LLVM.Generated
   module Target = begin
@@ -1150,45 +1467,55 @@ namespace LLVM.Generated
         new : thePtr:nativeint -> StructLayoutRef
         member Ptr : nativeint
       end
-    val createTargetDataNative : string -> nativeint
-    val createTargetData : string -> TargetDataRef
-    val addTargetDataNative : nativeint * nativeint -> unit
-    val addTargetData : TargetDataRef -> Core.PassManagerRef -> unit
-    val addTargetLibraryInfoNative : nativeint * nativeint -> unit
+    val createTargetDataNative : StringRep:string -> nativeint
+    val createTargetData : _StringRep:string -> TargetDataRef
+    val addTargetDataNative : arg0:nativeint * arg1:nativeint -> unit
+    val addTargetData : _arg0:TargetDataRef -> _arg1:Core.PassManagerRef -> unit
+    val addTargetLibraryInfoNative : arg0:nativeint * arg1:nativeint -> unit
     val addTargetLibraryInfo :
-      TargetLibraryInfoRef -> Core.PassManagerRef -> unit
-    val copyStringRepOfTargetDataNative : nativeint -> nativeint
-    val copyStringRepOfTargetData : TargetDataRef -> string
-    val byteOrderNative : nativeint -> int
-    val byteOrder : TargetDataRef -> ByteOrdering
-    val pointerSizeNative : nativeint -> uint32
-    val pointerSize : TargetDataRef -> uint32
-    val pointerSizeForASNative : nativeint * uint32 -> uint32
-    val pointerSizeForAS : TargetDataRef -> uint32 -> uint32
-    val intPtrTypeNative : nativeint -> nativeint
-    val intPtrType : TargetDataRef -> Core.TypeRef
-    val intPtrTypeForASNative : nativeint * uint32 -> nativeint
-    val intPtrTypeForAS : TargetDataRef -> uint32 -> Core.TypeRef
-    val sizeOfTypeInBitsNative : nativeint * nativeint -> uint64
-    val sizeOfTypeInBits : TargetDataRef -> Core.TypeRef -> uint64
-    val storeSizeOfTypeNative : nativeint * nativeint -> uint64
-    val storeSizeOfType : TargetDataRef -> Core.TypeRef -> uint64
-    val aBISizeOfTypeNative : nativeint * nativeint -> uint64
-    val aBISizeOfType : TargetDataRef -> Core.TypeRef -> uint64
-    val aBIAlignmentOfTypeNative : nativeint * nativeint -> uint32
-    val aBIAlignmentOfType : TargetDataRef -> Core.TypeRef -> uint32
-    val callFrameAlignmentOfTypeNative : nativeint * nativeint -> uint32
-    val callFrameAlignmentOfType : TargetDataRef -> Core.TypeRef -> uint32
-    val preferredAlignmentOfTypeNative : nativeint * nativeint -> uint32
-    val preferredAlignmentOfType : TargetDataRef -> Core.TypeRef -> uint32
-    val preferredAlignmentOfGlobalNative : nativeint * nativeint -> uint32
-    val preferredAlignmentOfGlobal : TargetDataRef -> Core.ValueRef -> uint32
-    val elementAtOffsetNative : nativeint * nativeint * uint64 -> uint32
-    val elementAtOffset : TargetDataRef -> Core.TypeRef -> uint64 -> uint32
-    val offsetOfElementNative : nativeint * nativeint * uint32 -> uint64
-    val offsetOfElement : TargetDataRef -> Core.TypeRef -> uint32 -> uint64
-    val disposeTargetDataNative : nativeint -> unit
-    val disposeTargetData : TargetDataRef -> unit
+      _arg0:TargetLibraryInfoRef -> _arg1:Core.PassManagerRef -> unit
+    val copyStringRepOfTargetDataNative : arg0:nativeint -> nativeint
+    val copyStringRepOfTargetData : _arg0:TargetDataRef -> string
+    val byteOrderNative : arg0:nativeint -> int
+    val byteOrder : _arg0:TargetDataRef -> ByteOrdering
+    val pointerSizeNative : arg0:nativeint -> uint32
+    val pointerSize : _arg0:TargetDataRef -> uint32
+    val pointerSizeForASNative : arg0:nativeint * AS:uint32 -> uint32
+    val pointerSizeForAS : _arg0:TargetDataRef -> _AS:uint32 -> uint32
+    val intPtrTypeNative : arg0:nativeint -> nativeint
+    val intPtrType : _arg0:TargetDataRef -> Core.TypeRef
+    val intPtrTypeForASNative : arg0:nativeint * AS:uint32 -> nativeint
+    val intPtrTypeForAS : _arg0:TargetDataRef -> _AS:uint32 -> Core.TypeRef
+    val sizeOfTypeInBitsNative : arg0:nativeint * arg1:nativeint -> uint64
+    val sizeOfTypeInBits : _arg0:TargetDataRef -> _arg1:Core.TypeRef -> uint64
+    val storeSizeOfTypeNative : arg0:nativeint * arg1:nativeint -> uint64
+    val storeSizeOfType : _arg0:TargetDataRef -> _arg1:Core.TypeRef -> uint64
+    val aBISizeOfTypeNative : arg0:nativeint * arg1:nativeint -> uint64
+    val aBISizeOfType : _arg0:TargetDataRef -> _arg1:Core.TypeRef -> uint64
+    val aBIAlignmentOfTypeNative : arg0:nativeint * arg1:nativeint -> uint32
+    val aBIAlignmentOfType : _arg0:TargetDataRef -> _arg1:Core.TypeRef -> uint32
+    val callFrameAlignmentOfTypeNative :
+      arg0:nativeint * arg1:nativeint -> uint32
+    val callFrameAlignmentOfType :
+      _arg0:TargetDataRef -> _arg1:Core.TypeRef -> uint32
+    val preferredAlignmentOfTypeNative :
+      arg0:nativeint * arg1:nativeint -> uint32
+    val preferredAlignmentOfType :
+      _arg0:TargetDataRef -> _arg1:Core.TypeRef -> uint32
+    val preferredAlignmentOfGlobalNative :
+      arg0:nativeint * GlobalVar:nativeint -> uint32
+    val preferredAlignmentOfGlobal :
+      _arg0:TargetDataRef -> _GlobalVar:Core.ValueRef -> uint32
+    val elementAtOffsetNative :
+      arg0:nativeint * StructTy:nativeint * Offset:uint64 -> uint32
+    val elementAtOffset :
+      _arg0:TargetDataRef -> _StructTy:Core.TypeRef -> _Offset:uint64 -> uint32
+    val offsetOfElementNative :
+      arg0:nativeint * StructTy:nativeint * Element:uint32 -> uint64
+    val offsetOfElement :
+      _arg0:TargetDataRef -> _StructTy:Core.TypeRef -> _Element:uint32 -> uint64
+    val disposeTargetDataNative : arg0:nativeint -> unit
+    val disposeTargetData : _arg0:TargetDataRef -> unit
   end
 namespace LLVM.Generated
   module ExecutionEngine = begin
@@ -1208,58 +1535,72 @@ namespace LLVM.Generated
         new : thePtr:nativeint -> ExecutionEngineRef
         member Ptr : nativeint
       end
-    val createGenericValueOfIntNative : nativeint * uint64 * bool -> nativeint
+    val createGenericValueOfIntNative :
+      Ty:nativeint * N:uint64 * IsSigned:bool -> nativeint
     val createGenericValueOfInt :
-      Core.TypeRef -> uint64 -> bool -> GenericValueRef
-    val createGenericValueOfPointerNative : nativeint -> nativeint
-    val createGenericValueOfFloatNative : nativeint * double -> nativeint
-    val createGenericValueOfFloat : Core.TypeRef -> double -> GenericValueRef
-    val genericValueIntWidthNative : nativeint -> uint32
-    val genericValueIntWidth : GenericValueRef -> uint32
-    val genericValueToIntNative : nativeint * bool -> uint64
-    val genericValueToInt : GenericValueRef -> bool -> uint64
-    val genericValueToPointerNative : nativeint -> nativeint
-    val genericValueToFloatNative : nativeint * nativeint -> double
-    val genericValueToFloat : Core.TypeRef -> GenericValueRef -> double
-    val disposeGenericValueNative : nativeint -> unit
-    val disposeGenericValue : GenericValueRef -> unit
+      _Ty:Core.TypeRef -> _N:uint64 -> _IsSigned:bool -> GenericValueRef
+    val createGenericValueOfPointerNative : P:nativeint -> nativeint
+    val createGenericValueOfFloatNative : Ty:nativeint * N:double -> nativeint
+    val createGenericValueOfFloat :
+      _Ty:Core.TypeRef -> _N:double -> GenericValueRef
+    val genericValueIntWidthNative : GenValRef:nativeint -> uint32
+    val genericValueIntWidth : _GenValRef:GenericValueRef -> uint32
+    val genericValueToIntNative : GenVal:nativeint * IsSigned:bool -> uint64
+    val genericValueToInt : _GenVal:GenericValueRef -> _IsSigned:bool -> uint64
+    val genericValueToPointerNative : GenVal:nativeint -> nativeint
+    val genericValueToFloatNative : TyRef:nativeint * GenVal:nativeint -> double
+    val genericValueToFloat :
+      _TyRef:Core.TypeRef -> _GenVal:GenericValueRef -> double
+    val disposeGenericValueNative : GenVal:nativeint -> unit
+    val disposeGenericValue : _GenVal:GenericValueRef -> unit
     val createExecutionEngineForModuleNative :
-      nativeint * nativeint * nativeint -> bool
+      OutEE:nativeint * M:nativeint * OutError:nativeint -> bool
     val createInterpreterForModuleNative :
-      nativeint * nativeint * nativeint -> bool
+      OutInterp:nativeint * M:nativeint * OutError:nativeint -> bool
     val createJITCompilerForModuleNative :
-      nativeint * nativeint * uint32 * nativeint -> bool
-    val createExecutionEngineNative : nativeint * nativeint * nativeint -> bool
-    val createInterpreterNative : nativeint * nativeint * nativeint -> bool
+      OutJIT:nativeint * M:nativeint * OptLevel:uint32 * OutError:nativeint ->
+        bool
+    val createExecutionEngineNative :
+      OutEE:nativeint * MP:nativeint * OutError:nativeint -> bool
+    val createInterpreterNative :
+      OutInterp:nativeint * MP:nativeint * OutError:nativeint -> bool
     val createJITCompilerNative :
-      nativeint * nativeint * uint32 * nativeint -> bool
-    val disposeExecutionEngineNative : nativeint -> unit
-    val disposeExecutionEngine : ExecutionEngineRef -> unit
-    val runStaticConstructorsNative : nativeint -> unit
-    val runStaticConstructors : ExecutionEngineRef -> unit
-    val runStaticDestructorsNative : nativeint -> unit
-    val runStaticDestructors : ExecutionEngineRef -> unit
+      OutJIT:nativeint * MP:nativeint * OptLevel:uint32 * OutError:nativeint ->
+        bool
+    val disposeExecutionEngineNative : EE:nativeint -> unit
+    val disposeExecutionEngine : _EE:ExecutionEngineRef -> unit
+    val runStaticConstructorsNative : EE:nativeint -> unit
+    val runStaticConstructors : _EE:ExecutionEngineRef -> unit
+    val runStaticDestructorsNative : EE:nativeint -> unit
+    val runStaticDestructors : _EE:ExecutionEngineRef -> unit
     val runFunctionAsMainNative :
-      nativeint * nativeint * uint32 * nativeint * nativeint -> int
+      EE:nativeint * F:nativeint * ArgC:uint32 * ArgV:nativeint * EnvP:nativeint ->
+        int
     val runFunctionNative :
-      nativeint * nativeint * uint32 * nativeint -> nativeint
-    val freeMachineCodeForFunctionNative : nativeint * nativeint -> unit
-    val freeMachineCodeForFunction : ExecutionEngineRef -> Core.ValueRef -> unit
-    val addModuleNative : nativeint * nativeint -> unit
-    val addModule : ExecutionEngineRef -> Core.ModuleRef -> unit
-    val addModuleProviderNative : nativeint * nativeint -> unit
-    val addModuleProvider : ExecutionEngineRef -> Core.ModuleProviderRef -> unit
+      EE:nativeint * F:nativeint * NumArgs:uint32 * Args:nativeint -> nativeint
+    val freeMachineCodeForFunctionNative : EE:nativeint * F:nativeint -> unit
+    val freeMachineCodeForFunction :
+      _EE:ExecutionEngineRef -> _F:Core.ValueRef -> unit
+    val addModuleNative : EE:nativeint * M:nativeint -> unit
+    val addModule : _EE:ExecutionEngineRef -> _M:Core.ModuleRef -> unit
+    val addModuleProviderNative : EE:nativeint * MP:nativeint -> unit
+    val addModuleProvider :
+      _EE:ExecutionEngineRef -> _MP:Core.ModuleProviderRef -> unit
     val removeModuleNative :
-      nativeint * nativeint * nativeint * nativeint -> bool
+      EE:nativeint * M:nativeint * OutMod:nativeint * OutError:nativeint -> bool
     val removeModuleProviderNative :
-      nativeint * nativeint * nativeint * nativeint -> bool
-    val findFunctionNative : nativeint * string * nativeint -> bool
-    val recompileAndRelinkFunctionNative : nativeint * nativeint -> nativeint
-    val getExecutionEngineTargetDataNative : nativeint -> nativeint
+      EE:nativeint * MP:nativeint * OutMod:nativeint * OutError:nativeint ->
+        bool
+    val findFunctionNative :
+      EE:nativeint * Name:string * OutFn:nativeint -> bool
+    val recompileAndRelinkFunctionNative :
+      EE:nativeint * Fn:nativeint -> nativeint
+    val getExecutionEngineTargetDataNative : EE:nativeint -> nativeint
     val getExecutionEngineTargetData :
-      ExecutionEngineRef -> Target.TargetDataRef
-    val addGlobalMappingNative : nativeint * nativeint * nativeint -> unit
-    val getPointerToGlobalNative : nativeint * nativeint -> nativeint
+      _EE:ExecutionEngineRef -> Target.TargetDataRef
+    val addGlobalMappingNative :
+      EE:nativeint * Global:nativeint * Addr:nativeint -> unit
+    val getPointerToGlobalNative : EE:nativeint * Global:nativeint -> nativeint
   end
 namespace LLVM.Generated
   module Analysis = begin
@@ -1267,108 +1608,112 @@ namespace LLVM.Generated
       |  AbortProcessAction  =  0
       |  PrintMessageAction  =  1
       |  ReturnStatusAction  =  2
-    val verifyModuleNative : nativeint * int * nativeint -> bool
-    val verifyFunctionNative : nativeint * int -> bool
-    val verifyFunction : Core.ValueRef -> VerifierFailureAction -> bool
-    val viewFunctionCFGNative : nativeint -> unit
-    val viewFunctionCFG : Core.ValueRef -> unit
-    val viewFunctionCFGOnlyNative : nativeint -> unit
-    val viewFunctionCFGOnly : Core.ValueRef -> unit
+    val verifyModuleNative :
+      M:nativeint * Action:int * OutMessage:nativeint -> bool
+    val verifyFunctionNative : Fn:nativeint * Action:int -> bool
+    val verifyFunction :
+      _Fn:Core.ValueRef -> _Action:VerifierFailureAction -> bool
+    val viewFunctionCFGNative : Fn:nativeint -> unit
+    val viewFunctionCFG : _Fn:Core.ValueRef -> unit
+    val viewFunctionCFGOnlyNative : Fn:nativeint -> unit
+    val viewFunctionCFGOnly : _Fn:Core.ValueRef -> unit
   end
 namespace LLVM.Generated.Transforms
   module Scalar = begin
-    val addAggressiveDCEPassNative : nativeint -> unit
-    val addAggressiveDCEPass : Core.PassManagerRef -> unit
-    val addCFGSimplificationPassNative : nativeint -> unit
-    val addCFGSimplificationPass : Core.PassManagerRef -> unit
-    val addDeadStoreEliminationPassNative : nativeint -> unit
-    val addDeadStoreEliminationPass : Core.PassManagerRef -> unit
-    val addGVNPassNative : nativeint -> unit
-    val addGVNPass : Core.PassManagerRef -> unit
-    val addIndVarSimplifyPassNative : nativeint -> unit
-    val addIndVarSimplifyPass : Core.PassManagerRef -> unit
-    val addInstructionCombiningPassNative : nativeint -> unit
-    val addInstructionCombiningPass : Core.PassManagerRef -> unit
-    val addJumpThreadingPassNative : nativeint -> unit
-    val addJumpThreadingPass : Core.PassManagerRef -> unit
-    val addLICMPassNative : nativeint -> unit
-    val addLICMPass : Core.PassManagerRef -> unit
-    val addLoopDeletionPassNative : nativeint -> unit
-    val addLoopDeletionPass : Core.PassManagerRef -> unit
-    val addLoopIdiomPassNative : nativeint -> unit
-    val addLoopIdiomPass : Core.PassManagerRef -> unit
-    val addLoopRotatePassNative : nativeint -> unit
-    val addLoopRotatePass : Core.PassManagerRef -> unit
-    val addLoopUnrollPassNative : nativeint -> unit
-    val addLoopUnrollPass : Core.PassManagerRef -> unit
-    val addLoopUnswitchPassNative : nativeint -> unit
-    val addLoopUnswitchPass : Core.PassManagerRef -> unit
-    val addMemCpyOptPassNative : nativeint -> unit
-    val addMemCpyOptPass : Core.PassManagerRef -> unit
-    val addPromoteMemoryToRegisterPassNative : nativeint -> unit
-    val addPromoteMemoryToRegisterPass : Core.PassManagerRef -> unit
-    val addReassociatePassNative : nativeint -> unit
-    val addReassociatePass : Core.PassManagerRef -> unit
-    val addSCCPPassNative : nativeint -> unit
-    val addSCCPPass : Core.PassManagerRef -> unit
-    val addScalarReplAggregatesPassNative : nativeint -> unit
-    val addScalarReplAggregatesPass : Core.PassManagerRef -> unit
-    val addScalarReplAggregatesPassSSANative : nativeint -> unit
-    val addScalarReplAggregatesPassSSA : Core.PassManagerRef -> unit
-    val addScalarReplAggregatesPassWithThresholdNative : nativeint * int -> unit
+    val addAggressiveDCEPassNative : PM:nativeint -> unit
+    val addAggressiveDCEPass : _PM:Core.PassManagerRef -> unit
+    val addCFGSimplificationPassNative : PM:nativeint -> unit
+    val addCFGSimplificationPass : _PM:Core.PassManagerRef -> unit
+    val addDeadStoreEliminationPassNative : PM:nativeint -> unit
+    val addDeadStoreEliminationPass : _PM:Core.PassManagerRef -> unit
+    val addGVNPassNative : PM:nativeint -> unit
+    val addGVNPass : _PM:Core.PassManagerRef -> unit
+    val addIndVarSimplifyPassNative : PM:nativeint -> unit
+    val addIndVarSimplifyPass : _PM:Core.PassManagerRef -> unit
+    val addInstructionCombiningPassNative : PM:nativeint -> unit
+    val addInstructionCombiningPass : _PM:Core.PassManagerRef -> unit
+    val addJumpThreadingPassNative : PM:nativeint -> unit
+    val addJumpThreadingPass : _PM:Core.PassManagerRef -> unit
+    val addLICMPassNative : PM:nativeint -> unit
+    val addLICMPass : _PM:Core.PassManagerRef -> unit
+    val addLoopDeletionPassNative : PM:nativeint -> unit
+    val addLoopDeletionPass : _PM:Core.PassManagerRef -> unit
+    val addLoopIdiomPassNative : PM:nativeint -> unit
+    val addLoopIdiomPass : _PM:Core.PassManagerRef -> unit
+    val addLoopRotatePassNative : PM:nativeint -> unit
+    val addLoopRotatePass : _PM:Core.PassManagerRef -> unit
+    val addLoopUnrollPassNative : PM:nativeint -> unit
+    val addLoopUnrollPass : _PM:Core.PassManagerRef -> unit
+    val addLoopUnswitchPassNative : PM:nativeint -> unit
+    val addLoopUnswitchPass : _PM:Core.PassManagerRef -> unit
+    val addMemCpyOptPassNative : PM:nativeint -> unit
+    val addMemCpyOptPass : _PM:Core.PassManagerRef -> unit
+    val addPromoteMemoryToRegisterPassNative : PM:nativeint -> unit
+    val addPromoteMemoryToRegisterPass : _PM:Core.PassManagerRef -> unit
+    val addReassociatePassNative : PM:nativeint -> unit
+    val addReassociatePass : _PM:Core.PassManagerRef -> unit
+    val addSCCPPassNative : PM:nativeint -> unit
+    val addSCCPPass : _PM:Core.PassManagerRef -> unit
+    val addScalarReplAggregatesPassNative : PM:nativeint -> unit
+    val addScalarReplAggregatesPass : _PM:Core.PassManagerRef -> unit
+    val addScalarReplAggregatesPassSSANative : PM:nativeint -> unit
+    val addScalarReplAggregatesPassSSA : _PM:Core.PassManagerRef -> unit
+    val addScalarReplAggregatesPassWithThresholdNative :
+      PM:nativeint * Threshold:int -> unit
     val addScalarReplAggregatesPassWithThreshold :
-      Core.PassManagerRef -> int -> unit
-    val addSimplifyLibCallsPassNative : nativeint -> unit
-    val addSimplifyLibCallsPass : Core.PassManagerRef -> unit
-    val addTailCallEliminationPassNative : nativeint -> unit
-    val addTailCallEliminationPass : Core.PassManagerRef -> unit
-    val addConstantPropagationPassNative : nativeint -> unit
-    val addConstantPropagationPass : Core.PassManagerRef -> unit
-    val addDemoteMemoryToRegisterPassNative : nativeint -> unit
-    val addDemoteMemoryToRegisterPass : Core.PassManagerRef -> unit
-    val addVerifierPassNative : nativeint -> unit
-    val addVerifierPass : Core.PassManagerRef -> unit
-    val addCorrelatedValuePropagationPassNative : nativeint -> unit
-    val addCorrelatedValuePropagationPass : Core.PassManagerRef -> unit
-    val addEarlyCSEPassNative : nativeint -> unit
-    val addEarlyCSEPass : Core.PassManagerRef -> unit
-    val addLowerExpectIntrinsicPassNative : nativeint -> unit
-    val addLowerExpectIntrinsicPass : Core.PassManagerRef -> unit
-    val addTypeBasedAliasAnalysisPassNative : nativeint -> unit
-    val addTypeBasedAliasAnalysisPass : Core.PassManagerRef -> unit
-    val addBasicAliasAnalysisPassNative : nativeint -> unit
-    val addBasicAliasAnalysisPass : Core.PassManagerRef -> unit
+      _PM:Core.PassManagerRef -> _Threshold:int -> unit
+    val addSimplifyLibCallsPassNative : PM:nativeint -> unit
+    val addSimplifyLibCallsPass : _PM:Core.PassManagerRef -> unit
+    val addTailCallEliminationPassNative : PM:nativeint -> unit
+    val addTailCallEliminationPass : _PM:Core.PassManagerRef -> unit
+    val addConstantPropagationPassNative : PM:nativeint -> unit
+    val addConstantPropagationPass : _PM:Core.PassManagerRef -> unit
+    val addDemoteMemoryToRegisterPassNative : PM:nativeint -> unit
+    val addDemoteMemoryToRegisterPass : _PM:Core.PassManagerRef -> unit
+    val addVerifierPassNative : PM:nativeint -> unit
+    val addVerifierPass : _PM:Core.PassManagerRef -> unit
+    val addCorrelatedValuePropagationPassNative : PM:nativeint -> unit
+    val addCorrelatedValuePropagationPass : _PM:Core.PassManagerRef -> unit
+    val addEarlyCSEPassNative : PM:nativeint -> unit
+    val addEarlyCSEPass : _PM:Core.PassManagerRef -> unit
+    val addLowerExpectIntrinsicPassNative : PM:nativeint -> unit
+    val addLowerExpectIntrinsicPass : _PM:Core.PassManagerRef -> unit
+    val addTypeBasedAliasAnalysisPassNative : PM:nativeint -> unit
+    val addTypeBasedAliasAnalysisPass : _PM:Core.PassManagerRef -> unit
+    val addBasicAliasAnalysisPassNative : PM:nativeint -> unit
+    val addBasicAliasAnalysisPass : _PM:Core.PassManagerRef -> unit
   end
 namespace LLVM.Generated.Transforms
   module IPO = begin
-    val addArgumentPromotionPassNative : nativeint -> unit
-    val addArgumentPromotionPass : Core.PassManagerRef -> unit
-    val addConstantMergePassNative : nativeint -> unit
-    val addConstantMergePass : Core.PassManagerRef -> unit
-    val addDeadArgEliminationPassNative : nativeint -> unit
-    val addDeadArgEliminationPass : Core.PassManagerRef -> unit
-    val addFunctionAttrsPassNative : nativeint -> unit
-    val addFunctionAttrsPass : Core.PassManagerRef -> unit
-    val addFunctionInliningPassNative : nativeint -> unit
-    val addFunctionInliningPass : Core.PassManagerRef -> unit
-    val addAlwaysInlinerPassNative : nativeint -> unit
-    val addAlwaysInlinerPass : Core.PassManagerRef -> unit
-    val addGlobalDCEPassNative : nativeint -> unit
-    val addGlobalDCEPass : Core.PassManagerRef -> unit
-    val addGlobalOptimizerPassNative : nativeint -> unit
-    val addGlobalOptimizerPass : Core.PassManagerRef -> unit
-    val addIPConstantPropagationPassNative : nativeint -> unit
-    val addIPConstantPropagationPass : Core.PassManagerRef -> unit
-    val addPruneEHPassNative : nativeint -> unit
-    val addPruneEHPass : Core.PassManagerRef -> unit
-    val addIPSCCPPassNative : nativeint -> unit
-    val addIPSCCPPass : Core.PassManagerRef -> unit
-    val addInternalizePassNative : nativeint * uint32 -> unit
-    val addInternalizePass : Core.PassManagerRef -> uint32 -> unit
-    val addStripDeadPrototypesPassNative : nativeint -> unit
-    val addStripDeadPrototypesPass : Core.PassManagerRef -> unit
-    val addStripSymbolsPassNative : nativeint -> unit
-    val addStripSymbolsPass : Core.PassManagerRef -> unit
+    val addArgumentPromotionPassNative : PM:nativeint -> unit
+    val addArgumentPromotionPass : _PM:Core.PassManagerRef -> unit
+    val addConstantMergePassNative : PM:nativeint -> unit
+    val addConstantMergePass : _PM:Core.PassManagerRef -> unit
+    val addDeadArgEliminationPassNative : PM:nativeint -> unit
+    val addDeadArgEliminationPass : _PM:Core.PassManagerRef -> unit
+    val addFunctionAttrsPassNative : PM:nativeint -> unit
+    val addFunctionAttrsPass : _PM:Core.PassManagerRef -> unit
+    val addFunctionInliningPassNative : PM:nativeint -> unit
+    val addFunctionInliningPass : _PM:Core.PassManagerRef -> unit
+    val addAlwaysInlinerPassNative : PM:nativeint -> unit
+    val addAlwaysInlinerPass : _PM:Core.PassManagerRef -> unit
+    val addGlobalDCEPassNative : PM:nativeint -> unit
+    val addGlobalDCEPass : _PM:Core.PassManagerRef -> unit
+    val addGlobalOptimizerPassNative : PM:nativeint -> unit
+    val addGlobalOptimizerPass : _PM:Core.PassManagerRef -> unit
+    val addIPConstantPropagationPassNative : PM:nativeint -> unit
+    val addIPConstantPropagationPass : _PM:Core.PassManagerRef -> unit
+    val addPruneEHPassNative : PM:nativeint -> unit
+    val addPruneEHPass : _PM:Core.PassManagerRef -> unit
+    val addIPSCCPPassNative : PM:nativeint -> unit
+    val addIPSCCPPass : _PM:Core.PassManagerRef -> unit
+    val addInternalizePassNative : arg0:nativeint * AllButMain:uint32 -> unit
+    val addInternalizePass :
+      _arg0:Core.PassManagerRef -> _AllButMain:uint32 -> unit
+    val addStripDeadPrototypesPassNative : PM:nativeint -> unit
+    val addStripDeadPrototypesPass : _PM:Core.PassManagerRef -> unit
+    val addStripSymbolsPassNative : PM:nativeint -> unit
+    val addStripSymbolsPass : _PM:Core.PassManagerRef -> unit
   end
 
 namespace LLVM
@@ -1383,111 +1728,126 @@ namespace LLVM
         new : bb:Generated.Core.BasicBlockRef -> Builder
       end
     val varArgFunctionType :
-      Generated.Core.TypeRef ->
-        Generated.Core.TypeRef array -> Generated.Core.TypeRef
+      retTy:Generated.Core.TypeRef ->
+        paramTys:Generated.Core.TypeRef array -> Generated.Core.TypeRef
     val functionType :
-      Generated.Core.TypeRef ->
-        Generated.Core.TypeRef array -> Generated.Core.TypeRef
+      retTy:Generated.Core.TypeRef ->
+        paramTys:Generated.Core.TypeRef array -> Generated.Core.TypeRef
     val getBasicBlocks :
-      Generated.Core.ValueRef -> Generated.Core.BasicBlockRef list
+      f:Generated.Core.ValueRef -> Generated.Core.BasicBlockRef list
     val buildCall :
-      Generated.Core.BuilderRef ->
-        Generated.Core.ValueRef ->
-          Generated.Core.ValueRef array -> string -> Generated.Core.ValueRef
+      bld:Generated.Core.BuilderRef ->
+        func:Generated.Core.ValueRef ->
+          args:Generated.Core.ValueRef array ->
+            name:string -> Generated.Core.ValueRef
     val addIncoming :
-      Generated.Core.ValueRef ->
-        (Generated.Core.ValueRef * Generated.Core.BasicBlockRef) array -> unit
+      phi:Generated.Core.ValueRef ->
+        incoming:(Generated.Core.ValueRef * Generated.Core.BasicBlockRef) array ->
+          unit
     val getNamedFunction :
-      Generated.Core.ModuleRef -> string -> Generated.Core.ValueRef
-    val optValueRef : Generated.Core.ValueRef -> Generated.Core.ValueRef option
+      modRef:Generated.Core.ModuleRef -> name:string -> Generated.Core.ValueRef
+    val optValueRef :
+      vr:Generated.Core.ValueRef -> Generated.Core.ValueRef option
     val tryGetNamedFunction :
-      Generated.Core.ModuleRef -> string -> Generated.Core.ValueRef option
-    val getParams : Generated.Core.ValueRef -> Generated.Core.ValueRef []
-    val getParamTypes : Generated.Core.TypeRef -> Generated.Core.TypeRef []
+      modRef:Generated.Core.ModuleRef ->
+        name:string -> Generated.Core.ValueRef option
+    val getParams : func:Generated.Core.ValueRef -> Generated.Core.ValueRef []
+    val getParamTypes :
+      funcTy:Generated.Core.TypeRef -> Generated.Core.TypeRef []
     val buildSwitchWithCases :
-      Generated.Core.BuilderRef ->
-        Generated.Core.ValueRef ->
-          (Generated.Core.ValueRef * Generated.Core.BasicBlockRef) array ->
-            Generated.Core.BasicBlockRef -> unit
+      bldr:Generated.Core.BuilderRef ->
+        testVal:Generated.Core.ValueRef ->
+          cases:(Generated.Core.ValueRef * Generated.Core.BasicBlockRef) array ->
+            defaultCase:Generated.Core.BasicBlockRef -> unit
     val structTypeInContext :
-      Generated.Core.ContextRef ->
-        Generated.Core.TypeRef array -> bool -> Generated.Core.TypeRef
+      ctxt:Generated.Core.ContextRef ->
+        elemTys:Generated.Core.TypeRef array ->
+          packed:bool -> Generated.Core.TypeRef
     val structType :
-      Generated.Core.TypeRef array -> bool -> Generated.Core.TypeRef
+      elemTys:Generated.Core.TypeRef array ->
+        packed:bool -> Generated.Core.TypeRef
     val buildGEP :
-      Generated.Core.BuilderRef ->
-        Generated.Core.ValueRef ->
-          Generated.Core.ValueRef array -> string -> Generated.Core.ValueRef
+      bldr:Generated.Core.BuilderRef ->
+        ptr:Generated.Core.ValueRef ->
+          indices:Generated.Core.ValueRef array ->
+            name:string -> Generated.Core.ValueRef
     val structSetBody :
-      Generated.Core.TypeRef -> Generated.Core.TypeRef array -> bool -> unit
+      structTy:Generated.Core.TypeRef ->
+        elemTys:Generated.Core.TypeRef array -> packed:bool -> unit
     val getStructElementTypes :
-      Generated.Core.TypeRef -> Generated.Core.TypeRef []
+      structTy:Generated.Core.TypeRef -> Generated.Core.TypeRef []
     val createMemoryBufferWithContentsOfFile :
-      string -> Generated.Core.MemoryBufferRef
-    val mdNode : Generated.Core.ValueRef array -> Generated.Core.ValueRef
+      path:string -> Generated.Core.MemoryBufferRef
+    val mdNode : vals:Generated.Core.ValueRef array -> Generated.Core.ValueRef
     val mdNodeInContext :
-      Generated.Core.ContextRef ->
-        Generated.Core.ValueRef array -> Generated.Core.ValueRef
-    val constInt1 : bool -> Generated.Core.ValueRef
-    val constUInt8 : uint8 -> Generated.Core.ValueRef
-    val constInt8 : int8 -> Generated.Core.ValueRef
-    val constUInt16 : uint16 -> Generated.Core.ValueRef
-    val constInt16 : int16 -> Generated.Core.ValueRef
-    val constUInt32 : uint32 -> Generated.Core.ValueRef
-    val constInt32 : int32 -> Generated.Core.ValueRef
-    val constUInt64 : uint64 -> Generated.Core.ValueRef
-    val constInt64 : int64 -> Generated.Core.ValueRef
-    val constFloat : float32 -> Generated.Core.ValueRef
-    val constDouble : double -> Generated.Core.ValueRef
+      ctxt:Generated.Core.ContextRef ->
+        vals:Generated.Core.ValueRef array -> Generated.Core.ValueRef
+    val constInt1 : b:bool -> Generated.Core.ValueRef
+    val constUInt8 : i:uint8 -> Generated.Core.ValueRef
+    val constInt8 : i:int8 -> Generated.Core.ValueRef
+    val constUInt16 : i:uint16 -> Generated.Core.ValueRef
+    val constInt16 : i:int16 -> Generated.Core.ValueRef
+    val constUInt32 : i:uint32 -> Generated.Core.ValueRef
+    val constInt32 : i:int32 -> Generated.Core.ValueRef
+    val constUInt64 : i:uint64 -> Generated.Core.ValueRef
+    val constInt64 : i:int64 -> Generated.Core.ValueRef
+    val constFloat : f:float32 -> Generated.Core.ValueRef
+    val constDouble : d:double -> Generated.Core.ValueRef
     val constArray :
-      Generated.Core.TypeRef ->
-        Generated.Core.ValueRef array -> Generated.Core.ValueRef
+      elemTy:Generated.Core.TypeRef ->
+        constVals:Generated.Core.ValueRef array -> Generated.Core.ValueRef
     val constStruct :
-      Generated.Core.ValueRef array -> bool -> Generated.Core.ValueRef
+      constVals:Generated.Core.ValueRef array ->
+        packed:bool -> Generated.Core.ValueRef
     val constStructInContext :
-      Generated.Core.ContextRef ->
-        Generated.Core.ValueRef array -> bool -> Generated.Core.ValueRef
+      c:Generated.Core.ContextRef ->
+        constVals:Generated.Core.ValueRef array ->
+          packed:bool -> Generated.Core.ValueRef
     val constNamedStruct :
-      Generated.Core.TypeRef ->
-        Generated.Core.ValueRef array -> Generated.Core.ValueRef
+      structTy:Generated.Core.TypeRef ->
+        constVals:Generated.Core.ValueRef array -> Generated.Core.ValueRef
   end
 
 namespace LLVM
   module BitReader = begin
     val parseBitcode :
-      Generated.Core.MemoryBufferRef -> Generated.Core.ModuleRef
+      memBuf:Generated.Core.MemoryBufferRef -> Generated.Core.ModuleRef
   end
 
 namespace LLVM
   module ExecutionEngine = begin
     val runFunction :
-      Generated.ExecutionEngine.ExecutionEngineRef ->
-        Generated.Core.ValueRef ->
-          Generated.ExecutionEngine.GenericValueRef array ->
+      ee:Generated.ExecutionEngine.ExecutionEngineRef ->
+        func:Generated.Core.ValueRef ->
+          args:Generated.ExecutionEngine.GenericValueRef array ->
             Generated.ExecutionEngine.GenericValueRef
     val private createEngineForModuleFromNativeFunc :
-      (nativeint * nativeint * nativeint -> bool) ->
-        Generated.Core.ModuleRef -> Generated.ExecutionEngine.ExecutionEngineRef
+      nativeFunc:(nativeint * nativeint * nativeint -> bool) ->
+        moduleRef:Generated.Core.ModuleRef ->
+          Generated.ExecutionEngine.ExecutionEngineRef
     val createExecutionEngineForModule :
-      Generated.Core.ModuleRef -> Generated.ExecutionEngine.ExecutionEngineRef
+      modRef:Generated.Core.ModuleRef ->
+        Generated.ExecutionEngine.ExecutionEngineRef
     val createInterpreterForModule :
-      Generated.Core.ModuleRef -> Generated.ExecutionEngine.ExecutionEngineRef
+      modRef:Generated.Core.ModuleRef ->
+        Generated.ExecutionEngine.ExecutionEngineRef
     val createJITCompilerForModule :
-      Generated.Core.ModuleRef ->
-        uint32 -> Generated.ExecutionEngine.ExecutionEngineRef
+      modRef:Generated.Core.ModuleRef ->
+        optLvl:uint32 -> Generated.ExecutionEngine.ExecutionEngineRef
   end
 
 namespace LLVM
   module Extra = begin
     val private typeToStringBuilder :
-      Generated.Core.ModuleRef ->
-        Generated.Core.TypeRef -> System.Text.StringBuilder
+      modRef:Generated.Core.ModuleRef ->
+        tyRef:Generated.Core.TypeRef -> System.Text.StringBuilder
     val typeToString :
-      Generated.Core.ModuleRef -> Generated.Core.TypeRef -> string
+      modRef:Generated.Core.ModuleRef -> tyRef:Generated.Core.TypeRef -> string
     val buildCopy :
-      Generated.Core.ModuleRef ->
-        Generated.Core.BuilderRef ->
-          Generated.Core.ValueRef -> Generated.Core.ValueRef -> bool -> unit
+      moduleRef:Generated.Core.ModuleRef ->
+        bldr:Generated.Core.BuilderRef ->
+          dest:Generated.Core.ValueRef ->
+            src:Generated.Core.ValueRef -> isVolatile:bool -> unit
   end
 
 namespace LLVM

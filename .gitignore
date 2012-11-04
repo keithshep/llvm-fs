@@ -2,3 +2,15 @@ bin/
 *.dll
 *.exe
 obj/
+Backup/
+UpgradeLog.*
+_UpgradeReport_Files/
+llvm-fs.sln
+llvm-fs.suo
+llvm-fs.v11.suo
+bindinggen/Lexer.fs
+bindinggen/Parser.fs
+bindinggen/Parser.fsi
+bindinggen/bindinggen.sln
+bindinggen/bindinggen.suo
+
