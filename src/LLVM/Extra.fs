@@ -60,12 +60,14 @@ let buildCopy
         (bldr : BuilderRef)
         (dest : ValueRef)
         (src : ValueRef)
-        (isVolatile : bool) =
+        (isVolatile : bool)
+        : unit =
 
     let destTy = typeOf dest
     let srcTy = typeOf src
     match getTypeKind destTy, getTypeKind srcTy with
     | TypeKind.PointerTypeKind, TypeKind.PointerTypeKind ->
+        // we must declare the memcpy intrinsic as:
         // declare void @llvm.memcpy.p0i8.p0i8.i64(
         //    i8* <dest>, i8* <src>, i64 <len>, i32 <align>, i1 <isvolatile>)
         let bytePtr = pointerType (int8Type()) 0u
@@ -73,12 +75,13 @@ let buildCopy
         let memcpy = addFunction moduleRef "llvm.memcpy.p0i8.p0i8.i64" memcpyFuncTy
         removeFunctionAttr memcpy Attribute.NoUnwindAttribute
 
+        // how many bytes need to be copied from source to dest
         let numBytes = sizeOf (getElementType srcTy)
 
+        // both source and dest need to be cast to i8*
         let destArg = buildBitCast bldr dest bytePtr "dest"
         let srcArg = buildBitCast bldr src bytePtr "src"
-        let alignArg = constInt (int32Type()) 1uL false
-        let isVolArg = constInt (int1Type()) (if isVolatile then 1uL else 0uL) false
-        buildCall bldr memcpy [|destArg; srcArg; numBytes; alignArg; isVolArg|] "" |> ignore
+
+        buildCall bldr memcpy [|destArg; srcArg; numBytes; constInt32 1; constInt1 isVolatile|] "" |> ignore
     | destTK, srcTK ->
         failwithf "unexpected types in buildCopy (dest=%A, src=%A)" destTK srcTK

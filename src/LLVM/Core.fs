@@ -143,6 +143,8 @@ let mdNodeInContext (ctxt:ContextRef) (vals:ValueRef array) : ValueRef =
     use valPtrs = new NativePtrs([|for v in vals -> v.Ptr|])
     new ValueRef(mDNodeInContextNative(ctxt.Ptr, valPtrs.Ptrs, uint32 vals.Length))
 
+let constInt1 (b:bool) : ValueRef =
+    constInt (int1Type()) (if b then 1uL else 0uL) false
 let constUInt8 (i:uint8) : ValueRef =
     constInt (int8Type()) (uint64 i) false
 let constInt8 (i:int8) : ValueRef =
