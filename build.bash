@@ -36,3 +36,7 @@ fsc --nologo --debug --sig:LLVMFSharp.fsi --target:library --out:LLVMFSharp.dll 
 #dmcs -out:CSSimpleTest2.exe -r:LLVMFSharp.dll test/CSSimpleTest2.cs
 #mono CSSimpleTest2.exe
 
+echo "metadata test"
+fsc --nologo -r LLVMFSharp.dll test/metadatatest.fs
+mono metadatatest.exe
+
