@@ -1744,6 +1744,11 @@ namespace LLVM
       phi:Generated.Core.ValueRef ->
         incoming:(Generated.Core.ValueRef * Generated.Core.BasicBlockRef) array ->
           unit
+    val buildPhiWithIncoming :
+      bldr:Generated.Core.BuilderRef ->
+        ty:Generated.Core.TypeRef ->
+          incoming:(Generated.Core.ValueRef * Generated.Core.BasicBlockRef) array ->
+            name:string -> Generated.Core.ValueRef
     val getNamedFunction :
       modRef:Generated.Core.ModuleRef -> name:string -> Generated.Core.ValueRef
     val optValueRef :
@@ -1856,5 +1861,54 @@ namespace LLVM
     val initializeX86TargetNative : unit -> unit
     val initializeX86TargetMCNative : unit -> unit
     val initializeX86Target : unit -> unit
+  end
+
+namespace LLVM
+  module Quote = begin
+    type Def =
+      {funVar: Quotations.Var;
+       funParams: Quotations.Var list;
+       body: Quotations.Expr;}
+    type LetDef =
+      | LetDef of Def
+      | LetRecDefs of Def list
+    val lambdas : expr:Quotations.Expr -> Quotations.Var list * Quotations.Expr
+    val allLetFuncDefs : expr:Quotations.Expr -> LetDef list * Quotations.Expr
+    val uInt32Ty : System.Type
+    val int32Ty : System.Type
+    val uInt16Ty : System.Type
+    val int16Ty : System.Type
+    val uInt8Ty : System.Type
+    val int8Ty : System.Type
+    val ( |UnitTy|_| ) : ty:System.Type -> unit option
+    val ( |BoolTy|_| ) : ty:System.Type -> unit option
+    val ( |SingleTy|_| ) : ty:System.Type -> unit option
+    val ( |DoubleTy|_| ) : ty:System.Type -> unit option
+    val ( |Int8Ty|_| ) : ty:System.Type -> unit option
+    val ( |UInt8Ty|_| ) : ty:System.Type -> unit option
+    val ( |Int16Ty|_| ) : ty:System.Type -> unit option
+    val ( |UInt16Ty|_| ) : ty:System.Type -> unit option
+    val ( |Int32Ty|_| ) : ty:System.Type -> unit option
+    val ( |UInt32Ty|_| ) : ty:System.Type -> unit option
+    val ( |Int64Ty|_| ) : ty:System.Type -> unit option
+    val ( |UInt64Ty|_| ) : ty:System.Type -> unit option
+    val ( |AnySIntTy|_| ) : ty:System.Type -> unit option
+    val ( |AnyUIntTy|_| ) : ty:System.Type -> unit option
+    val ( |AnyIntTy|_| ) : ty:System.Type -> unit option
+    val ( |AnyFloatTy|_| ) : ty:System.Type -> unit option
+    val llvmTyOf : ty:System.Type -> Generated.Core.TypeRef
+    val llvmTyOfVar : var:Quotations.Var -> Generated.Core.TypeRef
+    val llvmTyOfExpr : expr:Quotations.Expr -> Generated.Core.TypeRef
+    val isUnitExpr : expr:Quotations.Expr -> bool
+    val declareFunction :
+      moduleRef:Generated.Core.ModuleRef -> def:Def -> Generated.Core.ValueRef
+    val ( |FullAppl|_| ) :
+      expr:Quotations.Expr -> (Quotations.Expr * Quotations.Expr list) option
+    val implementFunction :
+      valMap:Map<string,Generated.Core.ValueRef> ->
+        fnVal:Generated.Core.ValueRef -> fnDef:Def -> unit
+    val compileQuote :
+      moduleRef:Generated.Core.ModuleRef -> expr:Quotations.Expr -> unit
+    val testQuote : Quotations.Expr<unit>
   end
 

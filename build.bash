@@ -13,7 +13,8 @@ fsc --nologo --debug --sig:LLVMFSharp.fsi --target:library --out:LLVMFSharp.dll 
     src/LLVM/BitReader.fs \
     src/LLVM/ExecutionEngine.fs \
     src/LLVM/Extra.fs \
-    src/LLVM/Target.fs
+    src/LLVM/Target.fs \
+    src/LLVM/Quote.fs
 
 # uncomment the following to build and run the tests
 
@@ -35,8 +36,12 @@ fsc --nologo --debug --sig:LLVMFSharp.fsi --target:library --out:LLVMFSharp.dll 
 #echo "test that the API works with C#"
 #dmcs -out:CSSimpleTest2.exe -r:LLVMFSharp.dll test/CSSimpleTest2.cs
 #mono CSSimpleTest2.exe
+#
+#echo "metadata test"
+#fsc --nologo -r LLVMFSharp.dll test/metadatatest.fs
+#mono metadatatest.exe
 
-echo "metadata test"
-fsc --nologo -r LLVMFSharp.dll test/metadatatest.fs
-mono metadatatest.exe
+echo "quote test"
+fsc --nologo -r LLVMFSharp.dll test/quotetest.fs
+mono quotetest.exe
 
