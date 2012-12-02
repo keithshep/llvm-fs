@@ -7,6 +7,25 @@ open Microsoft.FSharp.Quotations.DerivedPatterns
 module LGC = LLVM.Generated.Core
 module LC = LLVM.Core
 
+let private onlyForQuotations() =
+    failwith "this function is only meant to be used within a quotation"
+
+let private typesGenEq (ty1:System.Type) (ty2:System.Type) =
+    let genTy (ty:System.Type) =
+        if ty.IsGenericType then
+            ty.GetGenericTypeDefinition()
+        else
+            ty
+
+    genTy ty1 = genTy ty2
+
+type [<AbstractClass>] RawArray<'a> =
+    abstract Item : int -> 'a with get, set
+    static member HeapAlloc (size:int) : RawArray<'a> = onlyForQuotations()
+    static member StackAlloc (size:int) : RawArray<'a> = onlyForQuotations()
+
+let free (heapAllocated:'a) = onlyForQuotations()
+
 type Def = {
     funVar : Var
     funParams : Var list
@@ -97,8 +116,33 @@ let (|AnyFloatTy|_|) (ty:System.Type) =
     | _ -> None
 
 let (|ArrayTy|_|) (ty:System.Type) =
-    if ty.IsArray then
-        Some <| ArrayTy (ty.GetElementType())
+    if typesGenEq ty typeof<RawArray<_>> then
+        Some <| ArrayTy (ty.GetGenericArguments().[0])
+    else
+        None
+
+let (|TupleTy|_|) (ty:System.Type) =
+    let sysTupTys = [|
+        typeof<System.Tuple<_>>
+        typeof<System.Tuple<_, _>>
+        typeof<System.Tuple<_, _, _>>
+        typeof<System.Tuple<_, _, _, _>>
+        typeof<System.Tuple<_, _, _, _, _>>
+        typeof<System.Tuple<_, _, _, _, _, _>>
+        typeof<System.Tuple<_, _, _, _, _, _, _>>
+        typeof<System.Tuple<_, _, _, _, _, _, _, _>>
+    |]
+
+    let rec anyMatch (i:int) =
+        if i >= sysTupTys.Length then
+            false
+        elif typesGenEq ty sysTupTys.[i] then
+            true
+        else
+            anyMatch (i + 1)
+
+    if anyMatch 0 then
+        Some (TupleTy (ty.GetGenericArguments()))
     else
         None
 
@@ -108,9 +152,9 @@ let rec arrayLLVMTyOf (elemTy:System.Type) (size:uint32) =
 and allocableLLVMTyOf (ty:System.Type) : LGC.TypeRef =
     match ty with
     | ArrayTy elemTy ->
-        // TODO length should be nativeint rather than int32
-        let rawArrTy = LGC.arrayType (llvmTyOf elemTy) 0u
-        LC.structType [|LGC.int32Type(); rawArrTy|] false
+        LGC.arrayType (llvmTyOf elemTy) 0u
+    | TupleTy elemTys ->
+        LC.structType (Array.map llvmTyOf elemTys) false
     | _ ->
         failwithf "No support for type %A" ty
 and llvmTyOf (ty:System.Type) : LGC.TypeRef =
@@ -123,6 +167,14 @@ and llvmTyOf (ty:System.Type) : LGC.TypeRef =
     | _ -> LGC.pointerType (allocableLLVMTyOf ty) 0u
 let llvmTyOfVar (var:Var) : LGC.TypeRef = llvmTyOf var.Type
 let llvmTyOfExpr (expr:Expr) : LGC.TypeRef = llvmTyOf expr.Type
+
+(*
+// this can be used for dynamically sized arrays
+let buildBitcastMalloc (bldr:LC.Builder) (ty:LGC.TypeRef) (bytesVal:LGC.ValueRef) =
+    let mallocVal = LGC.buildArrayMalloc bldr (LGC.int8Type()) bytesVal ""
+    LGC.buildBitCast bldr mallocVal ty ""
+*)
+
 let isUnitExpr (expr:Expr) : bool = expr.Type = typeof<unit>
 
 let llvmFunTyOf (def:Def) : LGC.TypeRef =
@@ -170,7 +222,30 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
             valMap := (!valMap).Add(p.Name, LGC.getParam fnVal (uint32 i))
     )
 
-    let rec implementExpr
+    let rec implementExprs
+            (bb:LGC.BasicBlockRef)
+            (valMap:Map<string, LGC.ValueRef>)
+            (exprs:Expr list)
+            : list<LGC.ValueRef> * LGC.BasicBlockRef =
+        let bb = ref bb
+        let argVals = [
+            for expr in exprs ->
+                let xVal, newBB = implementSomeExpr !bb valMap expr
+                bb := newBB
+                xVal
+        ]
+
+        argVals, !bb
+    and implementSomeExpr
+            (bb:LGC.BasicBlockRef)
+            (valMap:Map<string, LGC.ValueRef>)
+            (expr:Expr)
+            : LGC.ValueRef * LGC.BasicBlockRef =
+        match implementExpr bb valMap expr with
+        | None, _ -> failwith "internal error: expression unexpectedly evaluated as unit"
+        | Some exprVal, bb ->
+            exprVal, bb
+    and implementExpr
             (bb:LGC.BasicBlockRef)
             (valMap:Map<string, LGC.ValueRef>)
             (expr:Expr)
@@ -189,13 +264,10 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
                 failwithf "error in function %s: expression type not supported %A" fnDef.funVar.Name expr
 
         let implBinOp llvmBinOp lhsExpr rhsExpr : LGC.ValueRef option * LGC.BasicBlockRef =
-            let lhsVal, bb = implementExpr bb valMap lhsExpr
-            let rhsVal, bb = implementExpr bb valMap rhsExpr
+            let lhsVal, bb = implementSomeExpr bb valMap lhsExpr
+            let rhsVal, bb = implementSomeExpr bb valMap rhsExpr
+            let eqVal = llvmBinOp lhsVal rhsVal
 
-            let eqVal =
-                match lhsVal, rhsVal with
-                | Some lhsVal, Some rhsVal -> llvmBinOp lhsVal rhsVal
-                | _ -> failwith "internal error: bad args for bin op"
             Some eqVal, bb
 
         match expr with
@@ -430,55 +502,98 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
                     failwith "internal error: bad args for (>)"
             implBinOp binOp lhsExpr rhsExpr
         | SpecificCall <@@ ignore @@> (_, _, [exprToIgnore]) ->
-            let _, bldr = implementExpr bb valMap exprToIgnore
+            let _, bb = implementExpr bb valMap exprToIgnore
             None, bb
-        | Call (_instExpr, methInfo, paramExprs) ->
-            match methInfo.DeclaringType.FullName, methInfo.Name, paramExprs with
-            | "Microsoft.FSharp.Core.LanguagePrimitives+IntrinsicFunctions", "GetArray", [arrExpr; iExpr] ->
-                match implementExpr bb valMap arrExpr with
-                | None, _ -> failwith "internal error: array param of GetArray evaluated as unit"
+        | SpecificCall <@@ free @@> (_, _, [exprToFree]) ->
+            match implementExpr bb valMap exprToFree with
+            | None, _ -> failwith "internal error: dealloc target evaluated as unit"
+            | Some valToFree, bb ->
+                use bldr = new LC.Builder(bb)
+                LGC.buildFree bldr valToFree |> ignore
+                None, bb
+        | Call (instExpr, methInfo, argExprs) ->
+            let decTy = methInfo.DeclaringType
+            if typesGenEq decTy typeof<RawArray<_>> then
+                match methInfo.Name, argExprs with
+                | "HeapAlloc", [sizeExpr] ->
+                    match implementExpr bb valMap sizeExpr with
+                    | None, _ -> failwith "internal error: array size parameter evaluated as unit"
+                    | Some sizeVal, bb ->
+                        use bldr = new LC.Builder(bb)
+                        let llvmElemTy = llvmTyOf (decTy.GetGenericArguments().[0])
+                        let arr = LGC.buildArrayMalloc bldr llvmElemTy sizeVal "arr"
+                        let arr = LGC.buildBitCast bldr arr (llvmTyOf expr.Type) "arr"
+                        Some arr, bb
+                | _ ->
+                    noImpl()
+            else
+                noImpl()
+        | PropertyGet (Some instExpr, prop, indexArgExprs) ->
+            match instExpr.Type, prop.Name, indexArgExprs with
+            | ArrayTy _, "Item", [iExpr] ->
+                match implementExpr bb valMap instExpr with
+                | None, _ -> failwith "internal error: RawArray instance evaluated as unit"
                 | Some arrVal, bb ->
                     match implementExpr bb valMap iExpr with
-                    | None, _ -> failwith "internal error: index param of GetArray evaluated as unit"
+                    | None, _ -> failwith "internal error: index param of RawArray.Item evaluated as unit"
                     | Some iVal, bb ->
                         use bldr = new LC.Builder(bb)
 
-                        let rawArrAddr = LGC.buildStructGEP bldr arrVal 1u "rawArrAddr"
-                        let itemAddr = LC.buildGEP bldr rawArrAddr [|LC.constInt32 0; iVal|] "itemAddr"
+                        let itemAddr = LC.buildGEP bldr arrVal [|LC.constInt32 0; iVal|] "itemAddr"
                         let itemVal = LGC.buildLoad bldr itemAddr "itemVal"
                         Some itemVal, bb
             | _ ->
                 noImpl()
-        | PropertyGet (Some instExpr, prop, []) ->
-            if instExpr.Type.IsArray && prop.Name = "Length" then
+        | PropertySet (Some instExpr, prop, indexArgExprs, valExpr) ->
+            match instExpr.Type, prop.Name, indexArgExprs with
+            | ArrayTy _, "Item", [iExpr] ->
                 match implementExpr bb valMap instExpr with
-                | None, _ -> failwith "internal error: array object evaluated as unit"
+                | None, _ -> failwith "internal error: RawArray instance evaluated as unit"
                 | Some arrVal, bb ->
-                    use bldr = new LC.Builder(bb)
-                    let lenAddr = LGC.buildStructGEP bldr arrVal 0u "lenAddr"
-                    let lenVal = LGC.buildLoad bldr lenAddr "lenVal"
-                    Some lenVal, bb
-            else
+                    match implementExpr bb valMap valExpr with
+                    | None, _ -> failwith "internal error: value param of RawArray.Item evaluated as unit"
+                    | Some valVal, bb ->
+                        match implementExpr bb valMap iExpr with
+                        | None, _ -> failwith "internal error: index param of RawArray.Item evaluated as unit"
+                        | Some iVal, bb ->
+                            use bldr = new LC.Builder(bb)
+
+                            let itemAddr = LC.buildGEP bldr arrVal [|LC.constInt32 0; iVal|] "itemAddr"
+                            LGC.buildStore bldr valVal itemAddr |> ignore
+                            None, bb
+            | _ ->
                 noImpl()
         | FullAppl (Var f, xs) ->
-            let bb = ref bb
-            let argVals = [|
-                for x in xs do
-                    let xVal, newBB = implementExpr !bb valMap x
-                    bb := newBB
-                    match xVal with
-                    | None -> failwith "internal error: found unit function arg"
-                    | Some xVal -> yield xVal
-            |]
-            use bldr = new LC.Builder(!bb)
-            let callVal = LC.buildCall bldr valMap.[f.Name] argVals (f.Name + "Result")
+            let argVals, bb = implementExprs bb valMap xs
+            use bldr = new LC.Builder(bb)
+            let callVal = LC.buildCall bldr valMap.[f.Name] (Array.ofList argVals) (f.Name + "Result")
 
-            Some callVal, !bb
+            Some callVal, bb
+        | NewTuple exprs ->
+            let llvmTupleTy = allocableLLVMTyOf expr.Type
+            let tupVals, bb = implementExprs bb valMap exprs
+            use bldr = new LC.Builder(bb)
+            let tupleVal = LGC.buildMalloc bldr llvmTupleTy "tuple"
+
+            tupVals |> List.iteri (
+                fun i currVal ->
+                    let tupItemAddr = LGC.buildStructGEP bldr tupleVal (uint32 i) ""
+                    LGC.buildStore bldr currVal tupItemAddr |> ignore
+            )
+
+            Some tupleVal, bb
+        | TupleGet (tupExpr, i) ->
+            let tupVal, bb = implementSomeExpr bb valMap tupExpr
+            use bldr = new LC.Builder(bb)
+            let tupItemAddr = LGC.buildStructGEP bldr tupVal (uint32 i) ""
+            let itemVal = LGC.buildLoad bldr tupItemAddr ("tupleItem" + string i)
+
+            Some itemVal, bb
+        (*
         | NewArray (elemTy, itemExprs) ->
-            (*let llvmTy = arrayLLVMTyOf elemTy (uint32 itemExprs.Length)
+            let llvmTy = arrayLLVMTyOf elemTy (uint32 itemExprs.Length)
             let arrSizeVal = LGC.sizeOf llvmTy
-            LGC.buildar*)
-            noImpl()
+        *)
         | _ ->
             noImpl()
 
@@ -549,22 +664,112 @@ let testQuote =
             sum
 
         // simple array with for loop
-        let sum (xs:int array) =
+        let sum (xs:RawArray<int>) (size:int) =
             let mutable sum = 0
-            for i = 0 to xs.Length - 1 do
+            for i = 0 to size - 1 do
                 sum <- sum + xs.[i]
             sum
 
         // simple array with while loop
-        let sum' (xs:int array) =
+        let sum' (xs:RawArray<int>) (size:int) =
             let mutable sum = 0
             let mutable i = 0
-            while i < xs.Length do
+            while i < size do
                 sum <- sum + xs.[i]
             sum
 
         let sum375() =
-            sum [|3; 7; 5|]
+            let size = 3
+            let arr = RawArray<int>.HeapAlloc size
+            arr.[0] <- 3
+            arr.[1] <- 7
+            arr.[2] <- 5
+            let result = sum arr size
+            free arr
+            result
+
+        let sum869() =
+            let size = 3
+            let tup = (8, 6, 9)
+            let x, y, z = tup
+            free tup
+            let arr = RawArray<int>.HeapAlloc size
+            arr.[0] <- x
+            arr.[1] <- y
+            arr.[2] <- z
+            let result = sum arr size
+            free arr
+            result
 
         ()
     @>
+
+(*
+type Vec3D = double * double * double
+
+let rayTraceMinimal =
+    <@
+        // adapted from http://www.ffconsultancy.com/languages/ray_tracer/benchmark.html
+        //let zero = 0., 0., 0.
+        let ( *| ) s (rx, ry, rz) : Vec3D = s * rx, s * ry, s * rz
+        let ( +| ) (ax, ay, az) (bx, by, bz) : Vec3D = ax + bx, ay + by, az + bz
+        let ( -| ) (ax, ay, az) (bx, by, bz) : Vec3D = ax - bx, ay - by, az - bz
+        let dot (ax, ay, az) (bx, by, bz) : double = ax * bx + ay * by + az * bz
+        let unitise r : Vec3D = 1. / sqrt (dot r r) *| r
+
+        let rec intersect o d (l, _ as hit) (c, r, s) : double * Vec3D =
+            let v = c -| o
+            let b = dot v d
+            let disc = sqrt(b * b - dot v v + r * r)
+            let t1 = b - disc
+            let t2 = b + disc
+            let l' =
+                if t2>0. then
+                    if t1>0. then t1 else t2
+                else
+                    infinity
+            if l' >= l then
+                hit
+            else
+                match s with
+                | [] -> l', unitise (o +| l' *| d -| c)
+                | ss -> List.fold_left (intersect o d) hit ss
+
+        let light = unitise (1., 3., -2.)
+        let ss = 4
+
+        let rec create level c r =
+            let obj = c, r, []
+            if level = 1 then
+                obj
+            else
+                let a = 3. * r / sqrt 12.
+                let aux x' z' = create (level - 1) (c +| (x', a, z')) (0.5 * r)
+                c, 3.*r, [obj; aux (-a) (-a); aux a (-a); aux (-a) a; aux a a]
+
+        let level, n =
+            try int_of_string Sys.argv.[1], int_of_string Sys.argv.[2] with _ -> 9, 512
+
+        let scene = create level (0., -1., 4.) 1.
+
+        let rec ray_trace dir =
+            let l, n = intersect zero dir (infinity, zero) scene in
+            let g = dot n light in
+            if g <= 0. then 0. else
+            let p = l *| dir +| sqrt epsilon_float *| n in
+            if fst(intersect p light (infinity, zero) scene) < infinity then 0. else g
+
+        let aux x d = float x - float n / 2. + float d / float ss
+        Printf.printf "P5\n%d %d\n255\n%!" n n;
+        for y = n - 1 downto 0 do
+            for x = 0 to n - 1 do
+            let g = ref 0. in
+            for d = 0 to ss*ss - 1 do
+                g := !g + ray_trace(unitise(aux x (d % ss), aux y (d/ss), float n))
+            done;
+            let g = 0.5 + 255. * !g / float(ss*ss) in
+            print_char(char_of_int(int_of_float g))
+            done;
+        done
+    @>
+*)
