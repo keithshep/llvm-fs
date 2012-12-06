@@ -1482,6 +1482,107 @@ namespace LLVM
         uint32 -> Generated.ExecutionEngine.ExecutionEngineRef
   end
 
+namespace LLVM.Intrinsic
+  module private Common = begin
+    val addOrGetNamedFunction :
+      Generated.Core.ModuleRef ->
+        string -> Lazy<Generated.Core.TypeRef> -> Generated.Core.ValueRef
+    val buildSingleArgFloatFun :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          string -> Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildSingleArgDoubleFun :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          string -> Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+  end
+  module StdCLib = begin
+    val buildSqrtF32 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildSqrtF64 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildPowiF32 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef ->
+            Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildPowiF64 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef ->
+            Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildSinF32 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildSinF64 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildCosF32 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildCosF64 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildPowF32 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef ->
+            Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildPowF64 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef ->
+            Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildExpF32 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildExpF64 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildExp2F32 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildExp2F64 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildlogF32 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildLogF64 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildLog10F32 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildLog10F64 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildLog2F32 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+    val buildLog2F64 :
+      Generated.Core.ModuleRef ->
+        Generated.Core.BuilderRef ->
+          Generated.Core.ValueRef -> string -> Generated.Core.ValueRef
+  end
+
 namespace LLVM
   module Extra = begin
     val private typeToStringBuilder :
@@ -1549,7 +1650,6 @@ namespace LLVM
     val ( |AnyFloatTy|_| ) : System.Type -> unit option
     val ( |ArrayTy|_| ) : System.Type -> System.Type option
     val ( |TupleTy|_| ) : System.Type -> System.Type [] option
-    val arrayLLVMTyOf : System.Type -> uint32 -> Generated.Core.TypeRef
     val allocableLLVMTyOf : System.Type -> Generated.Core.TypeRef
     val llvmTyOf : System.Type -> Generated.Core.TypeRef
     val llvmTyOfVar : Quotations.Var -> Generated.Core.TypeRef

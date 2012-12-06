@@ -146,17 +146,10 @@ let (|TupleTy|_|) (ty:System.Type) =
     else
         None
 
-let rec arrayLLVMTyOf (elemTy:System.Type) (size:uint32) =
-    let rawArrTy = LGC.arrayType (llvmTyOf elemTy) size
-    LC.structType [|LGC.int32Type(); rawArrTy|] false
-and allocableLLVMTyOf (ty:System.Type) : LGC.TypeRef =
+let rec allocableLLVMTyOf (ty:System.Type) : LGC.TypeRef =
     match ty with
-    | ArrayTy elemTy ->
-        LGC.arrayType (llvmTyOf elemTy) 0u
-    | TupleTy elemTys ->
-        LC.structType (Array.map llvmTyOf elemTys) false
-    | _ ->
-        failwithf "No support for type %A" ty
+    | TupleTy elemTys -> LC.structType (Array.map llvmTyOf elemTys) false
+    | _ -> failwithf "No support for type %A" ty
 and llvmTyOf (ty:System.Type) : LGC.TypeRef =
     match ty with
     | Int32Ty | UInt32Ty -> LGC.int32Type()
@@ -164,6 +157,7 @@ and llvmTyOf (ty:System.Type) : LGC.TypeRef =
     | Int8Ty | UInt8Ty -> LGC.int8Type()
     | BoolTy -> LGC.int1Type()
     | UnitTy -> LGC.voidType()
+    | ArrayTy elemTy -> LGC.pointerType (llvmTyOf elemTy) 0u
     | _ -> LGC.pointerType (allocableLLVMTyOf ty) 0u
 let llvmTyOfVar (var:Var) : LGC.TypeRef = llvmTyOf var.Type
 let llvmTyOfExpr (expr:Expr) : LGC.TypeRef = llvmTyOf expr.Type
@@ -348,32 +342,36 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
             | Some startVal, bb ->
                 // create the iterator value
                 LGC.setValueName startVal iVar.Name
-                let alloca = LGC.buildAlloca entryBldr (llvmTyOfVar iVar) iVar.Name
+                let iAlloca = LGC.buildAlloca entryBldr (llvmTyOfVar iVar) iVar.Name
                 use bldr = new LC.Builder(bb)
-                LGC.buildStore bldr startVal alloca |> ignore
+                LGC.buildStore bldr startVal iAlloca |> ignore
 
                 // create the end value
                 match implementExpr bb valMap endExpr with
                 | None, _ -> failwith "internal error: for loop limit expression evaluated to unit"
                 | Some endVal, bb ->
 
-                    // create the body of the loop
-                    let forBB = LGC.appendBasicBlock fnVal "for"
+                    // the for loop test block
+                    let forTestBB = LGC.appendBasicBlock fnVal "forTest"
                     use bldr = new LC.Builder(bb)
-                    LGC.buildBr bldr forBB |> ignore
+                    LGC.buildBr bldr forTestBB |> ignore
+                    use forTestBldr = new LC.Builder(forTestBB)
+                    let currVal = LGC.buildLoad forTestBldr iAlloca iVar.Name
+                    let forBB = LGC.appendBasicBlock fnVal "forBody"
+                    let loopBreakBB = LGC.appendBasicBlock fnVal "loopExit"
+                    let contLoopVal = LGC.buildICmp forTestBldr LGC.IntPredicate.IntSLE currVal endVal "contLoop"
+                    LGC.buildCondBr forTestBldr contLoopVal forBB loopBreakBB |> ignore
+
+                    // create the body of the loop
                     use forBldr = new LC.Builder(forBB)
-                    let currVal = LGC.buildLoad forBldr alloca iVar.Name
                     let valMap = valMap.Add(iVar.Name, currVal)
                     let _, forBB = implementExpr forBB valMap bodyExpr
 
-                    // increment the var and see if we need to loop again
+                    // increment the var and break to for test block
                     use forBldr = new LC.Builder(forBB)
                     let incVal = LGC.buildAdd forBldr currVal (LC.constInt32 1) (iVar.Name + "Incr")
-                    LGC.buildStore bldr incVal alloca |> ignore
-                    let contLoopVal = LGC.buildICmp forBldr LGC.IntPredicate.IntSLE currVal endVal "contLoop"
-
-                    let loopBreakBB = LGC.appendBasicBlock fnVal "loopExit"
-                    LGC.buildCondBr forBldr contLoopVal forBB loopBreakBB |> ignore
+                    LGC.buildStore forBldr incVal iAlloca |> ignore
+                    LGC.buildBr forBldr forTestBB |> ignore
 
                     None, loopBreakBB
         | Var v ->
@@ -522,7 +520,6 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
                         use bldr = new LC.Builder(bb)
                         let llvmElemTy = llvmTyOf (decTy.GetGenericArguments().[0])
                         let arr = LGC.buildArrayMalloc bldr llvmElemTy sizeVal "arr"
-                        let arr = LGC.buildBitCast bldr arr (llvmTyOf expr.Type) "arr"
                         Some arr, bb
                 | _ ->
                     noImpl()
@@ -539,7 +536,7 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
                     | Some iVal, bb ->
                         use bldr = new LC.Builder(bb)
 
-                        let itemAddr = LC.buildGEP bldr arrVal [|LC.constInt32 0; iVal|] "itemAddr"
+                        let itemAddr = LC.buildGEP bldr arrVal [|iVal|] "itemAddr"
                         let itemVal = LGC.buildLoad bldr itemAddr "itemVal"
                         Some itemVal, bb
             | _ ->
@@ -558,7 +555,7 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
                         | Some iVal, bb ->
                             use bldr = new LC.Builder(bb)
 
-                            let itemAddr = LC.buildGEP bldr arrVal [|LC.constInt32 0; iVal|] "itemAddr"
+                            let itemAddr = LC.buildGEP bldr arrVal [|iVal|] "itemAddr"
                             LGC.buildStore bldr valVal itemAddr |> ignore
                             None, bb
             | _ ->
@@ -633,14 +630,6 @@ let testQuote =
     <@
         // let's start with some super-simple functions
         let isEven x = x % 2 = 0
-        let addAndIgnore x y = ignore (x + y)
-
-        // if/else expression
-        let addOrSub x y =
-            if x > y then
-                x - y
-            else
-                x + y
 
         // simple recursion
         let rec fib = function
@@ -657,119 +646,61 @@ let testQuote =
             | n  -> mutRecIsEven (n - 1u)
 
         // for loop with a mutable
-        let fac x =
+        let fac x : int =
             let mutable sum = 1
             for i = 2 to x do
                 sum <- sum * i
             sum
 
         // simple array with for loop
-        let sum (xs:RawArray<int>) (size:int) =
+        let sum (xs:RawArray<int>) (size:int) : int =
             let mutable sum = 0
             for i = 0 to size - 1 do
                 sum <- sum + xs.[i]
             sum
 
         // simple array with while loop
-        let sum' (xs:RawArray<int>) (size:int) =
+        let sumUsingWhile (xs:RawArray<int>) (size:int) : int =
             let mutable sum = 0
             let mutable i = 0
             while i < size do
                 sum <- sum + xs.[i]
+                i <- i + 1
             sum
 
-        let sum375() =
-            let size = 3
-            let arr = RawArray<int>.HeapAlloc size
-            arr.[0] <- 3
-            arr.[1] <- 7
-            arr.[2] <- 5
-            let result = sum arr size
-            free arr
-            result
+        let sum869() : int =
 
-        let sum869() =
-            let size = 3
+            // some pointless tuple code
             let tup = (8, 6, 9)
             let x, y, z = tup
             free tup
+
+            // build the array and call sum
+            let size = 3
             let arr = RawArray<int>.HeapAlloc size
             arr.[0] <- x
             arr.[1] <- y
             arr.[2] <- z
             let result = sum arr size
             free arr
+
             result
+
+        let makeArr() : RawArray<int> =
+
+            // some pointless tuple code
+            let tup = (8, 6, 9)
+            let x, y, z = tup
+            free tup
+
+            // build the array and call sum
+            let size = 3
+            let arr = RawArray<int>.HeapAlloc size
+            arr.[0] <- x
+            arr.[1] <- y
+            arr.[2] <- z
+            arr
 
         ()
     @>
 
-(*
-type Vec3D = double * double * double
-
-let rayTraceMinimal =
-    <@
-        // adapted from http://www.ffconsultancy.com/languages/ray_tracer/benchmark.html
-        //let zero = 0., 0., 0.
-        let ( *| ) s (rx, ry, rz) : Vec3D = s * rx, s * ry, s * rz
-        let ( +| ) (ax, ay, az) (bx, by, bz) : Vec3D = ax + bx, ay + by, az + bz
-        let ( -| ) (ax, ay, az) (bx, by, bz) : Vec3D = ax - bx, ay - by, az - bz
-        let dot (ax, ay, az) (bx, by, bz) : double = ax * bx + ay * by + az * bz
-        let unitise r : Vec3D = 1. / sqrt (dot r r) *| r
-
-        let rec intersect o d (l, _ as hit) (c, r, s) : double * Vec3D =
-            let v = c -| o
-            let b = dot v d
-            let disc = sqrt(b * b - dot v v + r * r)
-            let t1 = b - disc
-            let t2 = b + disc
-            let l' =
-                if t2>0. then
-                    if t1>0. then t1 else t2
-                else
-                    infinity
-            if l' >= l then
-                hit
-            else
-                match s with
-                | [] -> l', unitise (o +| l' *| d -| c)
-                | ss -> List.fold_left (intersect o d) hit ss
-
-        let light = unitise (1., 3., -2.)
-        let ss = 4
-
-        let rec create level c r =
-            let obj = c, r, []
-            if level = 1 then
-                obj
-            else
-                let a = 3. * r / sqrt 12.
-                let aux x' z' = create (level - 1) (c +| (x', a, z')) (0.5 * r)
-                c, 3.*r, [obj; aux (-a) (-a); aux a (-a); aux (-a) a; aux a a]
-
-        let level, n =
-            try int_of_string Sys.argv.[1], int_of_string Sys.argv.[2] with _ -> 9, 512
-
-        let scene = create level (0., -1., 4.) 1.
-
-        let rec ray_trace dir =
-            let l, n = intersect zero dir (infinity, zero) scene in
-            let g = dot n light in
-            if g <= 0. then 0. else
-            let p = l *| dir +| sqrt epsilon_float *| n in
-            if fst(intersect p light (infinity, zero) scene) < infinity then 0. else g
-
-        let aux x d = float x - float n / 2. + float d / float ss
-        Printf.printf "P5\n%d %d\n255\n%!" n n;
-        for y = n - 1 downto 0 do
-            for x = 0 to n - 1 do
-            let g = ref 0. in
-            for d = 0 to ss*ss - 1 do
-                g := !g + ray_trace(unitise(aux x (d % ss), aux y (d/ss), float n))
-            done;
-            let g = 0.5 + 255. * !g / float(ss*ss) in
-            print_char(char_of_int(int_of_float g))
-            done;
-        done
-    @>
-*)
