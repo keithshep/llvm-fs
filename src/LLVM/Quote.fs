@@ -1,3 +1,5 @@
+// TODO don't allow let bound unit vals
+
 module LLVM.Quote
 
 open Microsoft.FSharp.Quotations
@@ -6,6 +8,7 @@ open Microsoft.FSharp.Quotations.DerivedPatterns
 
 module LGC = LLVM.Generated.Core
 module LC = LLVM.Core
+module StdC = LLVM.Intrinsic.StdCLib
 
 let private onlyForQuotations() =
     failwith "this function is only meant to be used within a quotation"
@@ -21,10 +24,10 @@ let private typesGenEq (ty1:System.Type) (ty2:System.Type) =
 
 type [<AbstractClass>] RawArray<'a> =
     abstract Item : int -> 'a with get, set
-    static member HeapAlloc (size:int) : RawArray<'a> = onlyForQuotations()
-    static member StackAlloc (size:int) : RawArray<'a> = onlyForQuotations()
 
-let free (heapAllocated:'a) = onlyForQuotations()
+let heapAllocRawArray (size:int) : RawArray<'a> = onlyForQuotations()
+let stackAllocRawArray (size:int) : RawArray<'a> = onlyForQuotations()
+let free (heapAllocated:'a) : unit = onlyForQuotations()
 
 type Def = {
     funVar : Var
@@ -152,6 +155,9 @@ let rec allocableLLVMTyOf (ty:System.Type) : LGC.TypeRef =
     | _ -> failwithf "No support for type %A" ty
 and llvmTyOf (ty:System.Type) : LGC.TypeRef =
     match ty with
+    | DoubleTy -> LGC.doubleType()
+    | SingleTy -> LGC.floatType()
+    | Int64Ty | UInt64Ty -> LGC.int64Type()
     | Int32Ty | UInt32Ty -> LGC.int32Type()
     | Int16Ty | UInt16Ty -> LGC.int16Type()
     | Int8Ty | UInt8Ty -> LGC.int8Type()
@@ -161,13 +167,6 @@ and llvmTyOf (ty:System.Type) : LGC.TypeRef =
     | _ -> LGC.pointerType (allocableLLVMTyOf ty) 0u
 let llvmTyOfVar (var:Var) : LGC.TypeRef = llvmTyOf var.Type
 let llvmTyOfExpr (expr:Expr) : LGC.TypeRef = llvmTyOf expr.Type
-
-(*
-// this can be used for dynamically sized arrays
-let buildBitcastMalloc (bldr:LC.Builder) (ty:LGC.TypeRef) (bytesVal:LGC.ValueRef) =
-    let mallocVal = LGC.buildArrayMalloc bldr (LGC.int8Type()) bytesVal ""
-    LGC.buildBitCast bldr mallocVal ty ""
-*)
 
 let isUnitExpr (expr:Expr) : bool = expr.Type = typeof<unit>
 
@@ -186,7 +185,13 @@ let llvmFunTyOf (def:Def) : LGC.TypeRef =
         LC.functionType llvmRetTy llvmParamTys
 
 let declareFunction (moduleRef:LGC.ModuleRef) (def:Def) : LGC.ValueRef =
-    LGC.addFunction moduleRef def.funVar.Name (llvmFunTyOf def)
+    let fn = LGC.addFunction moduleRef def.funVar.Name (llvmFunTyOf def)
+    def.funParams |> List.iteri (
+        fun i p ->
+            if p.Type <> typeof<unit> then
+                LGC.setValueName (LGC.getParam fn (uint32 i)) p.Name
+    )
+    fn
 
 let (|FullAppl|_|) (expr:Expr) =
     let rec go expr =
@@ -260,9 +265,9 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
         let implBinOp llvmBinOp lhsExpr rhsExpr : LGC.ValueRef option * LGC.BasicBlockRef =
             let lhsVal, bb = implementSomeExpr bb valMap lhsExpr
             let rhsVal, bb = implementSomeExpr bb valMap rhsExpr
-            let eqVal = llvmBinOp lhsVal rhsVal
+            let resultVal = llvmBinOp lhsVal rhsVal
 
-            Some eqVal, bb
+            Some resultVal, bb
 
         match expr with
         | Sequential (expr1, expr2) ->
@@ -392,17 +397,34 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
                 LGC.buildStore bldr valToSet valMap.[v.Name] |> ignore
                 None, bb
         | Value (v, ty) ->
-            let valVal =
-                match v with
-                | :? bool as v -> LC.constInt1 v
-                | :? int8 as v -> LC.constInt8 v
-                | :? uint8 as v -> LC.constUInt8 v
-                | :? int16 as v -> LC.constInt16 v
-                | :? uint16 as v -> LC.constUInt16 v
-                | :? int32 as v -> LC.constInt32 v
-                | :? uint32 as v -> LC.constUInt32 v
-                | _ -> failwithf "error in function %s: type %A not supported" fnDef.funVar.Name ty
-            Some valVal, bb
+            match v with
+            | :? unit ->
+                None, bb
+            | _ ->
+                let valVal =
+                    match v with
+                    | :? bool as v -> LC.constInt1 v
+                    | :? int8 as v -> LC.constInt8 v
+                    | :? uint8 as v -> LC.constUInt8 v
+                    | :? int16 as v -> LC.constInt16 v
+                    | :? uint16 as v -> LC.constUInt16 v
+                    | :? int32 as v -> LC.constInt32 v
+                    | :? uint32 as v -> LC.constUInt32 v
+                    | :? int64 as v -> LC.constInt64 v
+                    | :? uint64 as v -> LC.constUInt64 v
+                    | :? single as v -> LC.constFloat v
+                    | :? double as v -> LC.constDouble v
+                    | _ -> failwithf "error in function %s: type %A not supported" fnDef.funVar.Name ty
+                Some valVal, bb
+        | SpecificCall <@@ op_UnaryNegation @@> (_, _, [exprToNegate]) ->
+            let valToNeg, bb = implementSomeExpr bb valMap exprToNegate
+            let bldr = new LC.Builder(bb)
+            let negVal =
+                match exprToNegate.Type with
+                | AnyIntTy -> LGC.buildNeg bldr valToNeg "tempNeg"
+                | AnyFloatTy -> LGC.buildFNeg bldr valToNeg "tempFNeg"
+                | _ -> failwith "internal error: bad args for unary (-)"
+            Some negVal, bb
         | SpecificCall <@@ (-) @@> (_, _, [lhsExpr; rhsExpr]) ->
             use bldr = new LC.Builder(bb)
             let binOp =
@@ -414,6 +436,11 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
                 | _ ->
                     failwith "internal error: bad args for (-)"
             implBinOp binOp lhsExpr rhsExpr
+        | SpecificCall <@@ not @@> (_, _, [exprToNot]) ->
+            let valToNot, bb = implementSomeExpr bb valMap exprToNot
+            let bldr = new LC.Builder(bb)
+            let notVal = LGC.buildNot bldr valToNot "notVal"
+            Some notVal, bb
         | SpecificCall <@@ (=) @@> (_, _, [lhsExpr; rhsExpr]) ->
             use bldr = new LC.Builder(bb)
             let binOp =
@@ -422,6 +449,17 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
                     fun lhs rhs -> LGC.buildICmp bldr LGC.IntPredicate.IntEQ lhs rhs "tempEq"
                 | AnyFloatTy, AnyFloatTy ->
                     fun lhs rhs -> LGC.buildFCmp bldr LGC.RealPredicate.RealOEQ lhs rhs "tempFEq"
+                | _ ->
+                    failwith "internal error: bad args for (=)"
+            implBinOp binOp lhsExpr rhsExpr
+        | SpecificCall <@@ (<>) @@> (_, _, [lhsExpr; rhsExpr]) ->
+            use bldr = new LC.Builder(bb)
+            let binOp =
+                match lhsExpr.Type, rhsExpr.Type with
+                | AnyIntTy, AnyIntTy ->
+                    fun lhs rhs -> LGC.buildICmp bldr LGC.IntPredicate.IntNE lhs rhs "tempNEq"
+                | AnyFloatTy, AnyFloatTy ->
+                    fun lhs rhs -> LGC.buildFCmp bldr LGC.RealPredicate.RealONE lhs rhs "tempFNEq"
                 | _ ->
                     failwith "internal error: bad args for (=)"
             implBinOp binOp lhsExpr rhsExpr
@@ -438,6 +476,19 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
                 | _ ->
                     failwith "internal error: bad args for (>)"
             implBinOp binOp lhsExpr rhsExpr
+        | SpecificCall <@@ (>=) @@> (_, _, [lhsExpr; rhsExpr]) ->
+            use bldr = new LC.Builder(bb)
+            let binOp =
+                match lhsExpr.Type, rhsExpr.Type with
+                | AnySIntTy, AnySIntTy ->
+                    fun lhs rhs -> LGC.buildICmp bldr LGC.IntPredicate.IntSGE lhs rhs "tempSGE"
+                | AnyUIntTy, AnyUIntTy ->
+                    fun lhs rhs -> LGC.buildICmp bldr LGC.IntPredicate.IntUGE lhs rhs "tempUGE"
+                | AnyFloatTy, AnyFloatTy ->
+                    fun lhs rhs -> LGC.buildFCmp bldr LGC.RealPredicate.RealOGE lhs rhs "tempFGE"
+                | _ ->
+                    failwith "internal error: bad args for (>=)"
+            implBinOp binOp lhsExpr rhsExpr
         | SpecificCall <@@ (<) @@> (_, _, [lhsExpr; rhsExpr]) ->
             use bldr = new LC.Builder(bb)
             let binOp =
@@ -450,6 +501,19 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
                     fun lhs rhs -> LGC.buildFCmp bldr LGC.RealPredicate.RealOLT lhs rhs "tempFLT"
                 | _ ->
                     failwith "internal error: bad args for (<)"
+            implBinOp binOp lhsExpr rhsExpr
+        | SpecificCall <@@ (<=) @@> (_, _, [lhsExpr; rhsExpr]) ->
+            use bldr = new LC.Builder(bb)
+            let binOp =
+                match lhsExpr.Type, rhsExpr.Type with
+                | AnySIntTy, AnySIntTy ->
+                    fun lhs rhs -> LGC.buildICmp bldr LGC.IntPredicate.IntSLE lhs rhs "tempSLE"
+                | AnyUIntTy, AnyUIntTy ->
+                    fun lhs rhs -> LGC.buildICmp bldr LGC.IntPredicate.IntULE lhs rhs "tempULE"
+                | AnyFloatTy, AnyFloatTy ->
+                    fun lhs rhs -> LGC.buildFCmp bldr LGC.RealPredicate.RealOLE lhs rhs "tempFLE"
+                | _ ->
+                    failwith "internal error: bad args for (<=)"
             implBinOp binOp lhsExpr rhsExpr
         | SpecificCall <@@ (+) @@> (_, _, [lhsExpr; rhsExpr]) ->
             use bldr = new LC.Builder(bb)
@@ -509,22 +573,22 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
                 use bldr = new LC.Builder(bb)
                 LGC.buildFree bldr valToFree |> ignore
                 None, bb
-        | Call (instExpr, methInfo, argExprs) ->
-            let decTy = methInfo.DeclaringType
-            if typesGenEq decTy typeof<RawArray<_>> then
-                match methInfo.Name, argExprs with
-                | "HeapAlloc", [sizeExpr] ->
-                    match implementExpr bb valMap sizeExpr with
-                    | None, _ -> failwith "internal error: array size parameter evaluated as unit"
-                    | Some sizeVal, bb ->
-                        use bldr = new LC.Builder(bb)
-                        let llvmElemTy = llvmTyOf (decTy.GetGenericArguments().[0])
-                        let arr = LGC.buildArrayMalloc bldr llvmElemTy sizeVal "arr"
-                        Some arr, bb
-                | _ ->
-                    noImpl()
-            else
-                noImpl()
+        | SpecificCall <@@ heapAllocRawArray @@> (_, _, [sizeExpr]) ->
+            match implementExpr bb valMap sizeExpr with
+            | None, _ -> failwith "internal error: array size parameter evaluated as unit"
+            | Some sizeVal, bb ->
+                use bldr = new LC.Builder(bb)
+                let llvmElemTy = llvmTyOf (expr.Type.GetGenericArguments().[0])
+                let arr = LGC.buildArrayMalloc bldr llvmElemTy sizeVal "arr"
+                Some arr, bb
+        | SpecificCall <@@ stackAllocRawArray @@> (_, _, [sizeExpr]) ->
+            match implementExpr bb valMap sizeExpr with
+            | None, _ -> failwith "internal error: array size parameter evaluated as unit"
+            | Some sizeVal, bb ->
+                use bldr = new LC.Builder(bb)
+                let llvmElemTy = llvmTyOf (expr.Type.GetGenericArguments().[0])
+                let arr = LGC.buildArrayAlloca bldr llvmElemTy sizeVal "arr"
+                Some arr, bb
         | PropertyGet (Some instExpr, prop, indexArgExprs) ->
             match instExpr.Type, prop.Name, indexArgExprs with
             | ArrayTy _, "Item", [iExpr] ->
@@ -563,9 +627,13 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
         | FullAppl (Var f, xs) ->
             let argVals, bb = implementExprs bb valMap xs
             use bldr = new LC.Builder(bb)
-            let callVal = LC.buildCall bldr valMap.[f.Name] (Array.ofList argVals) (f.Name + "Result")
 
-            Some callVal, bb
+            if expr.Type = typeof<unit> then
+                LC.buildCall bldr valMap.[f.Name] (Array.ofList argVals) "" |> ignore
+                None, bb
+            else
+                let callVal = LC.buildCall bldr valMap.[f.Name] (Array.ofList argVals) (f.Name + "Result")
+                Some callVal, bb
         | NewTuple exprs ->
             let llvmTupleTy = allocableLLVMTyOf expr.Type
             let tupVals, bb = implementExprs bb valMap exprs
@@ -586,11 +654,6 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
             let itemVal = LGC.buildLoad bldr tupItemAddr ("tupleItem" + string i)
 
             Some itemVal, bb
-        (*
-        | NewArray (elemTy, itemExprs) ->
-            let llvmTy = arrayLLVMTyOf elemTy (uint32 itemExprs.Length)
-            let arrSizeVal = LGC.sizeOf llvmTy
-        *)
         | _ ->
             noImpl()
 
@@ -609,8 +672,8 @@ let compileQuote (moduleRef:LGC.ModuleRef) (expr:Expr) =
     let funcDefs, endExpr = allLetFuncDefs expr
     let mutable varMap = Map.empty
     for fd in funcDefs do
-        printfn "@@@@ FUNCTION GROUP @@@@"
-        printfn "%A" fd
+        //printfn "@@@@ FUNCTION GROUP @@@@"
+        //printfn "%A" fd
 
         match fd with
         | LetDef def ->
@@ -625,82 +688,3 @@ let compileQuote (moduleRef:LGC.ModuleRef) (expr:Expr) =
                 varMap <- varMap.Add(def.funVar.Name, fn)
             for def in defs do
                 implementFunction moduleRef varMap varMap.[def.funVar.Name] def
-
-let testQuote =
-    <@
-        // let's start with some super-simple functions
-        let isEven x = x % 2 = 0
-
-        // simple recursion
-        let rec fib = function
-            | 0 -> 0
-            | 1 -> 1
-            | n -> fib (n - 1) + fib (n - 2)
-
-        // mutually recursive function def
-        let rec mutRecIsEven = function
-            | 0u -> true
-            | n  -> mutRecIsOdd (n - 1u)
-        and mutRecIsOdd = function
-            | 0u -> false
-            | n  -> mutRecIsEven (n - 1u)
-
-        // for loop with a mutable
-        let fac x : int =
-            let mutable sum = 1
-            for i = 2 to x do
-                sum <- sum * i
-            sum
-
-        // simple array with for loop
-        let sum (xs:RawArray<int>) (size:int) : int =
-            let mutable sum = 0
-            for i = 0 to size - 1 do
-                sum <- sum + xs.[i]
-            sum
-
-        // simple array with while loop
-        let sumUsingWhile (xs:RawArray<int>) (size:int) : int =
-            let mutable sum = 0
-            let mutable i = 0
-            while i < size do
-                sum <- sum + xs.[i]
-                i <- i + 1
-            sum
-
-        let sum869() : int =
-
-            // some pointless tuple code
-            let tup = (8, 6, 9)
-            let x, y, z = tup
-            free tup
-
-            // build the array and call sum
-            let size = 3
-            let arr = RawArray<int>.HeapAlloc size
-            arr.[0] <- x
-            arr.[1] <- y
-            arr.[2] <- z
-            let result = sum arr size
-            free arr
-
-            result
-
-        let makeArr() : RawArray<int> =
-
-            // some pointless tuple code
-            let tup = (8, 6, 9)
-            let x, y, z = tup
-            free tup
-
-            // build the array and call sum
-            let size = 3
-            let arr = RawArray<int>.HeapAlloc size
-            arr.[0] <- x
-            arr.[1] <- y
-            arr.[2] <- z
-            arr
-
-        ()
-    @>
-

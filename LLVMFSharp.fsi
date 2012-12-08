@@ -1613,10 +1613,10 @@ namespace LLVM
       class
         abstract member Item : int -> 'a with get
         abstract member Item : int -> 'a with set
-        static member HeapAlloc : size:int -> RawArray<'a>
-        static member StackAlloc : size:int -> RawArray<'a>
       end
-    val free : 'a -> 'a0
+    val heapAllocRawArray : int -> RawArray<'a>
+    val stackAllocRawArray : int -> RawArray<'a>
+    val free : 'a -> unit
     type Def =
       {funVar: Quotations.Var;
        funParams: Quotations.Var list;
@@ -1665,6 +1665,5 @@ namespace LLVM
         Map<string,Generated.Core.ValueRef> ->
           Generated.Core.ValueRef -> Def -> unit
     val compileQuote : Generated.Core.ModuleRef -> Quotations.Expr -> unit
-    val testQuote : Quotations.Expr<unit>
   end
 
