@@ -191,19 +191,19 @@ namespace LLVM.Generated
       |  AvailableExternallyLinkage  =  1
       |  LinkOnceAnyLinkage  =  2
       |  LinkOnceODRLinkage  =  3
-      |  WeakAnyLinkage  =  4
-      |  WeakODRLinkage  =  5
-      |  AppendingLinkage  =  6
-      |  InternalLinkage  =  7
-      |  PrivateLinkage  =  8
-      |  DLLImportLinkage  =  9
-      |  DLLExportLinkage  =  10
-      |  ExternalWeakLinkage  =  11
-      |  GhostLinkage  =  12
-      |  CommonLinkage  =  13
-      |  LinkerPrivateLinkage  =  14
-      |  LinkerPrivateWeakLinkage  =  15
-      |  LinkerPrivateWeakDefAutoLinkage  =  16
+      |  LinkOnceODRAutoHideLinkage  =  4
+      |  WeakAnyLinkage  =  5
+      |  WeakODRLinkage  =  6
+      |  AppendingLinkage  =  7
+      |  InternalLinkage  =  8
+      |  PrivateLinkage  =  9
+      |  DLLImportLinkage  =  10
+      |  DLLExportLinkage  =  11
+      |  ExternalWeakLinkage  =  12
+      |  GhostLinkage  =  13
+      |  CommonLinkage  =  14
+      |  LinkerPrivateLinkage  =  15
+      |  LinkerPrivateWeakLinkage  =  16
     type Visibility =
       |  DefaultVisibility  =  0
       |  HiddenVisibility  =  1
@@ -273,6 +273,7 @@ namespace LLVM.Generated
     val setTarget : ModuleRef -> string -> unit
     val dumpModuleNative : nativeint -> unit
     val dumpModule : ModuleRef -> unit
+    val printModuleToFileNative : nativeint * string * nativeint -> bool
     val setModuleInlineAsmNative : nativeint * string -> unit
     val setModuleInlineAsm : ModuleRef -> string -> unit
     val getModuleContextNative : nativeint -> nativeint
@@ -699,6 +700,9 @@ namespace LLVM.Generated
     val mDNodeInContextNative : nativeint * nativeint * uint32 -> nativeint
     val mDNodeNative : nativeint * uint32 -> nativeint
     val getMDStringNative : nativeint * nativeptr<uint32> -> nativeint
+    val getMDNodeNumOperandsNative : nativeint -> uint32
+    val getMDNodeNumOperands : ValueRef -> uint32
+    val getMDNodeOperandsNative : nativeint * nativeint -> unit
     val basicBlockAsValueNative : nativeint -> nativeint
     val basicBlockAsValue : BasicBlockRef -> ValueRef
     val valueIsBasicBlockNative : nativeint -> bool
@@ -1159,8 +1163,12 @@ namespace LLVM.Generated
     val byteOrder : TargetDataRef -> ByteOrdering
     val pointerSizeNative : nativeint -> uint32
     val pointerSize : TargetDataRef -> uint32
+    val pointerSizeForASNative : nativeint * uint32 -> uint32
+    val pointerSizeForAS : TargetDataRef -> uint32 -> uint32
     val intPtrTypeNative : nativeint -> nativeint
     val intPtrType : TargetDataRef -> Core.TypeRef
+    val intPtrTypeForASNative : nativeint * uint32 -> nativeint
+    val intPtrTypeForAS : TargetDataRef -> uint32 -> Core.TypeRef
     val sizeOfTypeInBitsNative : nativeint * nativeint -> uint64
     val sizeOfTypeInBits : TargetDataRef -> Core.TypeRef -> uint64
     val storeSizeOfTypeNative : nativeint * nativeint -> uint64
@@ -1389,6 +1397,11 @@ namespace LLVM
     val addIncoming :
       Generated.Core.ValueRef ->
         (Generated.Core.ValueRef * Generated.Core.BasicBlockRef) array -> unit
+    val buildPhiWithIncoming :
+      Generated.Core.BuilderRef ->
+        Generated.Core.TypeRef ->
+          (Generated.Core.ValueRef * Generated.Core.BasicBlockRef) array ->
+            string -> Generated.Core.ValueRef
     val getNamedFunction :
       Generated.Core.ModuleRef -> string -> Generated.Core.ValueRef
     val optValueRef : Generated.Core.ValueRef -> Generated.Core.ValueRef option
@@ -1416,6 +1429,32 @@ namespace LLVM
       Generated.Core.TypeRef -> Generated.Core.TypeRef []
     val createMemoryBufferWithContentsOfFile :
       string -> Generated.Core.MemoryBufferRef
+    val mdNode : Generated.Core.ValueRef array -> Generated.Core.ValueRef
+    val mdNodeInContext :
+      Generated.Core.ContextRef ->
+        Generated.Core.ValueRef array -> Generated.Core.ValueRef
+    val constInt1 : bool -> Generated.Core.ValueRef
+    val constUInt8 : uint8 -> Generated.Core.ValueRef
+    val constInt8 : int8 -> Generated.Core.ValueRef
+    val constUInt16 : uint16 -> Generated.Core.ValueRef
+    val constInt16 : int16 -> Generated.Core.ValueRef
+    val constUInt32 : uint32 -> Generated.Core.ValueRef
+    val constInt32 : int32 -> Generated.Core.ValueRef
+    val constUInt64 : uint64 -> Generated.Core.ValueRef
+    val constInt64 : int64 -> Generated.Core.ValueRef
+    val constFloat : float32 -> Generated.Core.ValueRef
+    val constDouble : double -> Generated.Core.ValueRef
+    val constArray :
+      Generated.Core.TypeRef ->
+        Generated.Core.ValueRef array -> Generated.Core.ValueRef
+    val constStruct :
+      Generated.Core.ValueRef array -> bool -> Generated.Core.ValueRef
+    val constStructInContext :
+      Generated.Core.ContextRef ->
+        Generated.Core.ValueRef array -> bool -> Generated.Core.ValueRef
+    val constNamedStruct :
+      Generated.Core.TypeRef ->
+        Generated.Core.ValueRef array -> Generated.Core.ValueRef
   end
 
 namespace LLVM
@@ -1462,5 +1501,68 @@ namespace LLVM
     val initializeX86TargetNative : unit -> unit
     val initializeX86TargetMCNative : unit -> unit
     val initializeX86Target : unit -> unit
+  end
+
+namespace LLVM
+  module Quote = begin
+    val private onlyForQuotations : unit -> 'a
+    val private typesGenEq : System.Type -> System.Type -> bool
+    [<AbstractClassAttribute ()>]
+    type RawArray<'a> =
+      class
+        abstract member Item : int -> 'a with get
+        abstract member Item : int -> 'a with set
+      end
+    val heapAllocRawArray : int -> RawArray<'a>
+    val stackAllocRawArray : int -> RawArray<'a>
+    val free : 'a -> unit
+    type Def =
+      {funVar: Quotations.Var;
+       funParams: Quotations.Var list;
+       body: Quotations.Expr;}
+    type LetDef =
+      | LetDef of Def
+      | LetRecDefs of Def list
+    val lambdas : Quotations.Expr -> Quotations.Var list * Quotations.Expr
+    val allLetFuncDefs : Quotations.Expr -> LetDef list * Quotations.Expr
+    val uInt32Ty : System.Type
+    val int32Ty : System.Type
+    val uInt16Ty : System.Type
+    val int16Ty : System.Type
+    val uInt8Ty : System.Type
+    val int8Ty : System.Type
+    val ( |UnitTy|_| ) : System.Type -> unit option
+    val ( |BoolTy|_| ) : System.Type -> unit option
+    val ( |SingleTy|_| ) : System.Type -> unit option
+    val ( |DoubleTy|_| ) : System.Type -> unit option
+    val ( |Int8Ty|_| ) : System.Type -> unit option
+    val ( |UInt8Ty|_| ) : System.Type -> unit option
+    val ( |Int16Ty|_| ) : System.Type -> unit option
+    val ( |UInt16Ty|_| ) : System.Type -> unit option
+    val ( |Int32Ty|_| ) : System.Type -> unit option
+    val ( |UInt32Ty|_| ) : System.Type -> unit option
+    val ( |Int64Ty|_| ) : System.Type -> unit option
+    val ( |UInt64Ty|_| ) : System.Type -> unit option
+    val ( |AnySIntTy|_| ) : System.Type -> unit option
+    val ( |AnyUIntTy|_| ) : System.Type -> unit option
+    val ( |AnyIntTy|_| ) : System.Type -> unit option
+    val ( |AnyFloatTy|_| ) : System.Type -> unit option
+    val ( |ArrayTy|_| ) : System.Type -> System.Type option
+    val ( |TupleTy|_| ) : System.Type -> System.Type [] option
+    val allocableLLVMTyOf : System.Type -> Generated.Core.TypeRef
+    val llvmTyOf : System.Type -> Generated.Core.TypeRef
+    val llvmTyOfVar : Quotations.Var -> Generated.Core.TypeRef
+    val llvmTyOfExpr : Quotations.Expr -> Generated.Core.TypeRef
+    val isUnitExpr : Quotations.Expr -> bool
+    val llvmFunTyOf : Def -> Generated.Core.TypeRef
+    val declareFunction :
+      Generated.Core.ModuleRef -> Def -> Generated.Core.ValueRef
+    val ( |FullAppl|_| ) :
+      Quotations.Expr -> (Quotations.Expr * Quotations.Expr list) option
+    val implementFunction :
+      Generated.Core.ModuleRef ->
+        Map<string,Generated.Core.ValueRef> ->
+          Generated.Core.ValueRef -> Def -> unit
+    val compileQuote : Generated.Core.ModuleRef -> Quotations.Expr -> unit
   end
 

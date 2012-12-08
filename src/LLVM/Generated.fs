@@ -161,19 +161,19 @@ namespace LLVM.Generated
             | AvailableExternallyLinkage = 1
             | LinkOnceAnyLinkage = 2
             | LinkOnceODRLinkage = 3
-            | WeakAnyLinkage = 4
-            | WeakODRLinkage = 5
-            | AppendingLinkage = 6
-            | InternalLinkage = 7
-            | PrivateLinkage = 8
-            | DLLImportLinkage = 9
-            | DLLExportLinkage = 10
-            | ExternalWeakLinkage = 11
-            | GhostLinkage = 12
-            | CommonLinkage = 13
-            | LinkerPrivateLinkage = 14
-            | LinkerPrivateWeakLinkage = 15
-            | LinkerPrivateWeakDefAutoLinkage = 16
+            | LinkOnceODRAutoHideLinkage = 4
+            | WeakAnyLinkage = 5
+            | WeakODRLinkage = 6
+            | AppendingLinkage = 7
+            | InternalLinkage = 8
+            | PrivateLinkage = 9
+            | DLLImportLinkage = 10
+            | DLLExportLinkage = 11
+            | ExternalWeakLinkage = 12
+            | GhostLinkage = 13
+            | CommonLinkage = 14
+            | LinkerPrivateLinkage = 15
+            | LinkerPrivateWeakLinkage = 16
 
         type Visibility =
             | DefaultVisibility = 0
@@ -366,6 +366,17 @@ namespace LLVM.Generated
             void* (* LLVMModuleRef *) M)
         let dumpModule _M =
             dumpModuleNative ((_M : ModuleRef).Ptr)
+
+        [<DllImport(
+            llvmAssemblyName,
+            EntryPoint="LLVMPrintModuleToFile",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern bool printModuleToFileNative(
+            void* (* LLVMModuleRef *) M,
+            string Filename,
+            void* ErrorMessage)
+        // I don't know how to generate an "F# friendly" version of LLVMPrintModuleToFile
 
         [<DllImport(
             llvmAssemblyName,
@@ -2656,6 +2667,26 @@ namespace LLVM.Generated
 
         [<DllImport(
             llvmAssemblyName,
+            EntryPoint="LLVMGetMDNodeNumOperands",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 getMDNodeNumOperandsNative(
+            void* (* LLVMValueRef *) V)
+        let getMDNodeNumOperands _V =
+            getMDNodeNumOperandsNative ((_V : ValueRef).Ptr)
+
+        [<DllImport(
+            llvmAssemblyName,
+            EntryPoint="LLVMGetMDNodeOperands",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void getMDNodeOperandsNative(
+            void* (* LLVMValueRef *) V,
+            void* (* LLVMValueRef* *) Dest)
+        // I don't know how to generate an "F# friendly" version of LLVMGetMDNodeOperands
+
+        [<DllImport(
+            llvmAssemblyName,
             EntryPoint="LLVMBasicBlockAsValue",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4774,6 +4805,17 @@ namespace LLVM.Generated
 
         [<DllImport(
             llvmAssemblyName,
+            EntryPoint="LLVMPointerSizeForAS",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 pointerSizeForASNative(
+            void* (* LLVMTargetDataRef *) arg0,
+            uint32 AS)
+        let pointerSizeForAS _arg0 _AS =
+            pointerSizeForASNative ((_arg0 : TargetDataRef).Ptr, _AS)
+
+        [<DllImport(
+            llvmAssemblyName,
             EntryPoint="LLVMIntPtrType",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -4781,6 +4823,17 @@ namespace LLVM.Generated
             void* (* LLVMTargetDataRef *) arg0)
         let intPtrType _arg0 =
             new TypeRef (intPtrTypeNative ((_arg0 : TargetDataRef).Ptr))
+
+        [<DllImport(
+            llvmAssemblyName,
+            EntryPoint="LLVMIntPtrTypeForAS",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMTypeRef *) intPtrTypeForASNative(
+            void* (* LLVMTargetDataRef *) arg0,
+            uint32 AS)
+        let intPtrTypeForAS _arg0 _AS =
+            new TypeRef (intPtrTypeForASNative ((_arg0 : TargetDataRef).Ptr, _AS))
 
         [<DllImport(
             llvmAssemblyName,
