@@ -56,9 +56,6 @@
     <Compile Include="src\LLVM\ExecutionEngine.fs">
       <Link>ExecutionEngine.fs</Link>
     </Compile>
-    <Compile Include="src\LLVM\Intrinsic.fs">
-      <Link>Intrinsic.fs</Link>
-    </Compile>
     <Compile Include="src\LLVM\Extra.fs">
       <Link>Extra.fs</Link>
     </Compile>

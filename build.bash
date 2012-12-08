@@ -12,7 +12,6 @@ fsc --nologo --debug --sig:LLVMFSharp.fsi --target:library --out:LLVMFSharp.dll 
     src/LLVM/Core.fs \
     src/LLVM/BitReader.fs \
     src/LLVM/ExecutionEngine.fs \
-    src/LLVM/Intrinsic.fs \
     src/LLVM/Extra.fs \
     src/LLVM/Target.fs \
     src/LLVM/Quote.fs

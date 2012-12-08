@@ -8,7 +8,6 @@ open Microsoft.FSharp.Quotations.DerivedPatterns
 
 module LGC = LLVM.Generated.Core
 module LC = LLVM.Core
-module StdC = LLVM.Intrinsic.StdCLib
 
 let private onlyForQuotations() =
     failwith "this function is only meant to be used within a quotation"
@@ -416,6 +415,106 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
                     | :? double as v -> LC.constDouble v
                     | _ -> failwithf "error in function %s: type %A not supported" fnDef.funVar.Name ty
                 Some valVal, bb
+        | SpecificCall <@@ ignore @@> (_, _, [exprToIgnore]) ->
+            let _, bb = implementExpr bb valMap exprToIgnore
+            None, bb
+
+        // boolean ops
+        | SpecificCall <@@ not @@> (_, _, [exprToNot])
+        | SpecificCall <@@ (~~~) @@> (_, _, [exprToNot]) ->
+            let valToNot, bb = implementSomeExpr bb valMap exprToNot
+            let bldr = new LC.Builder(bb)
+            let notVal = LGC.buildNot bldr valToNot "notVal"
+            Some notVal, bb
+        | SpecificCall <@@ (=) @@> (_, _, [lhsExpr; rhsExpr]) ->
+            use bldr = new LC.Builder(bb)
+            let binOp lhs rhs =
+                match lhsExpr.Type, rhsExpr.Type with
+                | AnyIntTy, AnyIntTy ->
+                    LGC.buildICmp bldr LGC.IntPredicate.IntEQ lhs rhs "tempEq"
+                | AnyFloatTy, AnyFloatTy ->
+                    LGC.buildFCmp bldr LGC.RealPredicate.RealOEQ lhs rhs "tempFEq"
+                | _ ->
+                    failwith "internal error: bad args for (=)"
+            implBinOp binOp lhsExpr rhsExpr
+        | SpecificCall <@@ (<>) @@> (_, _, [lhsExpr; rhsExpr]) ->
+            use bldr = new LC.Builder(bb)
+            let binOp lhs rhs =
+                match lhsExpr.Type, rhsExpr.Type with
+                | AnyIntTy, AnyIntTy ->
+                    LGC.buildICmp bldr LGC.IntPredicate.IntNE lhs rhs "tempNEq"
+                | AnyFloatTy, AnyFloatTy ->
+                    LGC.buildFCmp bldr LGC.RealPredicate.RealONE lhs rhs "tempFNEq"
+                | _ ->
+                    failwith "internal error: bad args for (=)"
+            implBinOp binOp lhsExpr rhsExpr
+        | SpecificCall <@@ (>) @@> (_, _, [lhsExpr; rhsExpr]) ->
+            use bldr = new LC.Builder(bb)
+            let binOp lhs rhs =
+                match lhsExpr.Type, rhsExpr.Type with
+                | AnySIntTy, AnySIntTy ->
+                    LGC.buildICmp bldr LGC.IntPredicate.IntSGT lhs rhs "tempSGT"
+                | AnyUIntTy, AnyUIntTy ->
+                    LGC.buildICmp bldr LGC.IntPredicate.IntUGT lhs rhs "tempUGT"
+                | AnyFloatTy, AnyFloatTy ->
+                    LGC.buildFCmp bldr LGC.RealPredicate.RealOGT lhs rhs "tempFGT"
+                | _ ->
+                    failwith "internal error: bad args for (>)"
+            implBinOp binOp lhsExpr rhsExpr
+        | SpecificCall <@@ (>=) @@> (_, _, [lhsExpr; rhsExpr]) ->
+            use bldr = new LC.Builder(bb)
+            let binOp lhs rhs =
+                match lhsExpr.Type, rhsExpr.Type with
+                | AnySIntTy, AnySIntTy ->
+                    LGC.buildICmp bldr LGC.IntPredicate.IntSGE lhs rhs "tempSGE"
+                | AnyUIntTy, AnyUIntTy ->
+                    LGC.buildICmp bldr LGC.IntPredicate.IntUGE lhs rhs "tempUGE"
+                | AnyFloatTy, AnyFloatTy ->
+                    LGC.buildFCmp bldr LGC.RealPredicate.RealOGE lhs rhs "tempFGE"
+                | _ ->
+                    failwith "internal error: bad args for (>=)"
+            implBinOp binOp lhsExpr rhsExpr
+        | SpecificCall <@@ (<) @@> (_, _, [lhsExpr; rhsExpr]) ->
+            use bldr = new LC.Builder(bb)
+            let binOp lhs rhs =
+                match lhsExpr.Type, rhsExpr.Type with
+                | AnySIntTy, AnySIntTy ->
+                    LGC.buildICmp bldr LGC.IntPredicate.IntSLT lhs rhs "tempSLT"
+                | AnyUIntTy, AnyUIntTy ->
+                    LGC.buildICmp bldr LGC.IntPredicate.IntULT lhs rhs "tempULT"
+                | AnyFloatTy, AnyFloatTy ->
+                    LGC.buildFCmp bldr LGC.RealPredicate.RealOLT lhs rhs "tempFLT"
+                | _ ->
+                    failwith "internal error: bad args for (<)"
+            implBinOp binOp lhsExpr rhsExpr
+        | SpecificCall <@@ (<=) @@> (_, _, [lhsExpr; rhsExpr]) ->
+            use bldr = new LC.Builder(bb)
+            let binOp lhs rhs =
+                match lhsExpr.Type, rhsExpr.Type with
+                | AnySIntTy, AnySIntTy ->
+                    LGC.buildICmp bldr LGC.IntPredicate.IntSLE lhs rhs "tempSLE"
+                | AnyUIntTy, AnyUIntTy ->
+                    LGC.buildICmp bldr LGC.IntPredicate.IntULE lhs rhs "tempULE"
+                | AnyFloatTy, AnyFloatTy ->
+                    LGC.buildFCmp bldr LGC.RealPredicate.RealOLE lhs rhs "tempFLE"
+                | _ ->
+                    failwith "internal error: bad args for (<=)"
+            implBinOp binOp lhsExpr rhsExpr
+        | SpecificCall <@@ (&&) @@> (_, _, [lhsExpr; rhsExpr])
+        | SpecificCall <@@ (&&&) @@> (_, _, [lhsExpr; rhsExpr]) ->
+            use bldr = new LC.Builder(bb)
+            implBinOp (fun lhs rhs -> LGC.buildAnd bldr lhs rhs "tempAnd") lhsExpr rhsExpr
+        | SpecificCall <@@ (||) @@> (_, _, [lhsExpr; rhsExpr])
+        | SpecificCall <@@ (|||) @@> (_, _, [lhsExpr; rhsExpr]) ->
+            use bldr = new LC.Builder(bb)
+            implBinOp (fun lhs rhs -> LGC.buildOr bldr lhs rhs "tempOr") lhsExpr rhsExpr
+
+        // bitwise ops other than &&&, ||| and ~~~
+        // TODO:
+        //  add ^^^, <<<, >>> here. Note that LLVM expects both shift operands to be
+        //  the same type which is different than F#
+
+        // arithmetic operations
         | SpecificCall <@@ op_UnaryNegation @@> (_, _, [exprToNegate]) ->
             let valToNeg, bb = implementSomeExpr bb valMap exprToNegate
             let bldr = new LC.Builder(bb)
@@ -427,145 +526,48 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
             Some negVal, bb
         | SpecificCall <@@ (-) @@> (_, _, [lhsExpr; rhsExpr]) ->
             use bldr = new LC.Builder(bb)
-            let binOp =
+            let binOp lhs rhs =
                 match lhsExpr.Type, rhsExpr.Type with
-                | AnyIntTy, AnyIntTy ->
-                    fun lhs rhs -> LGC.buildSub bldr lhs rhs "tempSub"
-                | AnyFloatTy, AnyFloatTy ->
-                    fun lhs rhs -> LGC.buildFSub bldr lhs rhs "tempFSub"
-                | _ ->
-                    failwith "internal error: bad args for (-)"
-            implBinOp binOp lhsExpr rhsExpr
-        | SpecificCall <@@ not @@> (_, _, [exprToNot]) ->
-            let valToNot, bb = implementSomeExpr bb valMap exprToNot
-            let bldr = new LC.Builder(bb)
-            let notVal = LGC.buildNot bldr valToNot "notVal"
-            Some notVal, bb
-        | SpecificCall <@@ (=) @@> (_, _, [lhsExpr; rhsExpr]) ->
-            use bldr = new LC.Builder(bb)
-            let binOp =
-                match lhsExpr.Type, rhsExpr.Type with
-                | AnyIntTy, AnyIntTy ->
-                    fun lhs rhs -> LGC.buildICmp bldr LGC.IntPredicate.IntEQ lhs rhs "tempEq"
-                | AnyFloatTy, AnyFloatTy ->
-                    fun lhs rhs -> LGC.buildFCmp bldr LGC.RealPredicate.RealOEQ lhs rhs "tempFEq"
-                | _ ->
-                    failwith "internal error: bad args for (=)"
-            implBinOp binOp lhsExpr rhsExpr
-        | SpecificCall <@@ (<>) @@> (_, _, [lhsExpr; rhsExpr]) ->
-            use bldr = new LC.Builder(bb)
-            let binOp =
-                match lhsExpr.Type, rhsExpr.Type with
-                | AnyIntTy, AnyIntTy ->
-                    fun lhs rhs -> LGC.buildICmp bldr LGC.IntPredicate.IntNE lhs rhs "tempNEq"
-                | AnyFloatTy, AnyFloatTy ->
-                    fun lhs rhs -> LGC.buildFCmp bldr LGC.RealPredicate.RealONE lhs rhs "tempFNEq"
-                | _ ->
-                    failwith "internal error: bad args for (=)"
-            implBinOp binOp lhsExpr rhsExpr
-        | SpecificCall <@@ (>) @@> (_, _, [lhsExpr; rhsExpr]) ->
-            use bldr = new LC.Builder(bb)
-            let binOp =
-                match lhsExpr.Type, rhsExpr.Type with
-                | AnySIntTy, AnySIntTy ->
-                    fun lhs rhs -> LGC.buildICmp bldr LGC.IntPredicate.IntSGT lhs rhs "tempSGT"
-                | AnyUIntTy, AnyUIntTy ->
-                    fun lhs rhs -> LGC.buildICmp bldr LGC.IntPredicate.IntUGT lhs rhs "tempUGT"
-                | AnyFloatTy, AnyFloatTy ->
-                    fun lhs rhs -> LGC.buildFCmp bldr LGC.RealPredicate.RealOGT lhs rhs "tempFGT"
-                | _ ->
-                    failwith "internal error: bad args for (>)"
-            implBinOp binOp lhsExpr rhsExpr
-        | SpecificCall <@@ (>=) @@> (_, _, [lhsExpr; rhsExpr]) ->
-            use bldr = new LC.Builder(bb)
-            let binOp =
-                match lhsExpr.Type, rhsExpr.Type with
-                | AnySIntTy, AnySIntTy ->
-                    fun lhs rhs -> LGC.buildICmp bldr LGC.IntPredicate.IntSGE lhs rhs "tempSGE"
-                | AnyUIntTy, AnyUIntTy ->
-                    fun lhs rhs -> LGC.buildICmp bldr LGC.IntPredicate.IntUGE lhs rhs "tempUGE"
-                | AnyFloatTy, AnyFloatTy ->
-                    fun lhs rhs -> LGC.buildFCmp bldr LGC.RealPredicate.RealOGE lhs rhs "tempFGE"
-                | _ ->
-                    failwith "internal error: bad args for (>=)"
-            implBinOp binOp lhsExpr rhsExpr
-        | SpecificCall <@@ (<) @@> (_, _, [lhsExpr; rhsExpr]) ->
-            use bldr = new LC.Builder(bb)
-            let binOp =
-                match lhsExpr.Type, rhsExpr.Type with
-                | AnySIntTy, AnySIntTy ->
-                    fun lhs rhs -> LGC.buildICmp bldr LGC.IntPredicate.IntSLT lhs rhs "tempSLT"
-                | AnyUIntTy, AnyUIntTy ->
-                    fun lhs rhs -> LGC.buildICmp bldr LGC.IntPredicate.IntULT lhs rhs "tempULT"
-                | AnyFloatTy, AnyFloatTy ->
-                    fun lhs rhs -> LGC.buildFCmp bldr LGC.RealPredicate.RealOLT lhs rhs "tempFLT"
-                | _ ->
-                    failwith "internal error: bad args for (<)"
-            implBinOp binOp lhsExpr rhsExpr
-        | SpecificCall <@@ (<=) @@> (_, _, [lhsExpr; rhsExpr]) ->
-            use bldr = new LC.Builder(bb)
-            let binOp =
-                match lhsExpr.Type, rhsExpr.Type with
-                | AnySIntTy, AnySIntTy ->
-                    fun lhs rhs -> LGC.buildICmp bldr LGC.IntPredicate.IntSLE lhs rhs "tempSLE"
-                | AnyUIntTy, AnyUIntTy ->
-                    fun lhs rhs -> LGC.buildICmp bldr LGC.IntPredicate.IntULE lhs rhs "tempULE"
-                | AnyFloatTy, AnyFloatTy ->
-                    fun lhs rhs -> LGC.buildFCmp bldr LGC.RealPredicate.RealOLE lhs rhs "tempFLE"
-                | _ ->
-                    failwith "internal error: bad args for (<=)"
+                | AnyIntTy, AnyIntTy -> LGC.buildSub bldr lhs rhs "tempSub"
+                | AnyFloatTy, AnyFloatTy -> LGC.buildFSub bldr lhs rhs "tempFSub"
+                | _ -> failwith "internal error: bad args for (-)"
             implBinOp binOp lhsExpr rhsExpr
         | SpecificCall <@@ (+) @@> (_, _, [lhsExpr; rhsExpr]) ->
             use bldr = new LC.Builder(bb)
-            let binOp =
+            let binOp lhs rhs =
                 match lhsExpr.Type, rhsExpr.Type with
-                | AnyIntTy, AnyIntTy ->
-                    fun lhs rhs -> LGC.buildAdd bldr lhs rhs "tempAdd"
-                | AnyFloatTy, AnyFloatTy ->
-                    fun lhs rhs -> LGC.buildFAdd bldr lhs rhs "tempFAdd"
-                | _ ->
-                    failwith "internal error: bad args for (+)"
+                | AnyIntTy, AnyIntTy -> LGC.buildAdd bldr lhs rhs "tempAdd"
+                | AnyFloatTy, AnyFloatTy -> LGC.buildFAdd bldr lhs rhs "tempFAdd"
+                | _ -> failwith "internal error: bad args for (+)"
             implBinOp binOp lhsExpr rhsExpr
         | SpecificCall <@@ (*) @@> (_, _, [lhsExpr; rhsExpr]) ->
             use bldr = new LC.Builder(bb)
-            let binOp =
+            let binOp lhs rhs =
                 match lhsExpr.Type, rhsExpr.Type with
-                | AnyIntTy, AnyIntTy ->
-                    fun lhs rhs -> LGC.buildMul bldr lhs rhs "tempSMul"
-                | AnyFloatTy, AnyFloatTy ->
-                    fun lhs rhs -> LGC.buildFMul bldr lhs rhs "tempFMul"
-                | _ ->
-                    failwith "internal error: bad args for (*)"
+                | AnyIntTy, AnyIntTy -> LGC.buildMul bldr lhs rhs "tempSMul"
+                | AnyFloatTy, AnyFloatTy -> LGC.buildFMul bldr lhs rhs "tempFMul"
+                | _ -> failwith "internal error: bad args for (*)"
             implBinOp binOp lhsExpr rhsExpr
         | SpecificCall <@@ (/) @@> (_, _, [lhsExpr; rhsExpr]) ->
             use bldr = new LC.Builder(bb)
-            let binOp =
+            let binOp lhs rhs =
                 match lhsExpr.Type, rhsExpr.Type with
-                | AnySIntTy, AnySIntTy ->
-                    fun lhs rhs -> LGC.buildSDiv bldr lhs rhs "tempSDiv"
-                | AnyUIntTy, AnyUIntTy ->
-                    fun lhs rhs -> LGC.buildUDiv bldr lhs rhs "tempUDiv"
-                | AnyFloatTy, AnyFloatTy ->
-                    fun lhs rhs -> LGC.buildFDiv bldr lhs rhs "tempFDiv"
-                | _ ->
-                    failwith "internal error: bad args for (/)"
+                | AnySIntTy, AnySIntTy -> LGC.buildSDiv bldr lhs rhs "tempSDiv"
+                | AnyUIntTy, AnyUIntTy -> LGC.buildUDiv bldr lhs rhs "tempUDiv"
+                | AnyFloatTy, AnyFloatTy -> LGC.buildFDiv bldr lhs rhs "tempFDiv"
+                | _ -> failwith "internal error: bad args for (/)"
             implBinOp binOp lhsExpr rhsExpr
         | SpecificCall <@@ (%) @@> (_, _, [lhsExpr; rhsExpr]) ->
             use bldr = new LC.Builder(bb)
-            let binOp =
+            let binOp lhs rhs =
                 match lhsExpr.Type, rhsExpr.Type with
-                | AnySIntTy, AnySIntTy ->
-                    fun lhs rhs -> LGC.buildSRem bldr lhs rhs "tempSRem"
-                | AnyUIntTy, AnyUIntTy ->
-                    fun lhs rhs -> LGC.buildURem bldr lhs rhs "tempURem"
-                | AnyFloatTy, AnyFloatTy ->
-                    fun lhs rhs -> LGC.buildFRem bldr lhs rhs "tempFRem"
-                | _ ->
-                    failwith "internal error: bad args for (>)"
+                | AnySIntTy, AnySIntTy -> LGC.buildSRem bldr lhs rhs "tempSRem"
+                | AnyUIntTy, AnyUIntTy -> LGC.buildURem bldr lhs rhs "tempURem"
+                | AnyFloatTy, AnyFloatTy -> LGC.buildFRem bldr lhs rhs "tempFRem"
+                | _ -> failwith "internal error: bad args for (>)"
             implBinOp binOp lhsExpr rhsExpr
-        | SpecificCall <@@ ignore @@> (_, _, [exprToIgnore]) ->
-            let _, bb = implementExpr bb valMap exprToIgnore
-            None, bb
+
+        // memory management
         | SpecificCall <@@ free @@> (_, _, [exprToFree]) ->
             match implementExpr bb valMap exprToFree with
             | None, _ -> failwith "internal error: dealloc target evaluated as unit"
@@ -589,6 +591,8 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
                 let llvmElemTy = llvmTyOf (expr.Type.GetGenericArguments().[0])
                 let arr = LGC.buildArrayAlloca bldr llvmElemTy sizeVal "arr"
                 Some arr, bb
+
+        // array item getter and setter
         | PropertyGet (Some instExpr, prop, indexArgExprs) ->
             match instExpr.Type, prop.Name, indexArgExprs with
             | ArrayTy _, "Item", [iExpr] ->
@@ -624,6 +628,8 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
                             None, bb
             | _ ->
                 noImpl()
+
+        // a function call
         | FullAppl (Var f, xs) ->
             let argVals, bb = implementExprs bb valMap xs
             use bldr = new LC.Builder(bb)
@@ -634,6 +640,8 @@ let implementFunction (modRef:LGC.ModuleRef) (valMap:Map<string, LGC.ValueRef>) 
             else
                 let callVal = LC.buildCall bldr valMap.[f.Name] (Array.ofList argVals) (f.Name + "Result")
                 Some callVal, bb
+
+        // tuple construction and get (tuples are allocated on the heap)
         | NewTuple exprs ->
             let llvmTupleTy = allocableLLVMTyOf expr.Type
             let tupVals, bb = implementExprs bb valMap exprs
