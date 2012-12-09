@@ -47,6 +47,35 @@ In order to use llvm-fs you will want to consult the following:
 3. The LLVMFSharp.fsi file for all of the types and function signatures and
    of course the source code.
 
+### Compiling F# Quotations
+
+You can use F# Quotations to build LLVM functions. This is a lot more efficient
+than using the API but there are caveats:
+
+* The F# quotations are treated a way to represent LLVM IR more than F# code, so
+  F# semantics are not 100% respected.
+* Many common F# language constructs are not supported for simplicity and so
+  that the code in quotations will map fairly directly to LLVM IR code. Examples
+  of this are that:
+    * the only supported types are: `bool`, `int[8,16,32,64]`,
+      `uint[8,16,32,64]`, `single`, `double`, tuples and arrays (using
+      `LLVM.Quote.RawArray` type which does not have a length property)
+    * functions cannot be treated as first class values and partial application
+      is not supported
+    * there are no exceptions and there is no garbage collection. Any items
+      allocated on the heap should be freed using the `LLVM.Quote.free` function.
+      Tuple construction is always done on the heap and arrays can be allocated
+      on the heap using `LLVM.Quote.heapAllocRawArray` or on the stack using
+      `LLVM.Quote.stackAllocRawArray`.
+    * functions can only be top level definitions (closures are not
+      supported)
+    * the list of top level function definitions in your quotation must end with
+      a single unit value `()`
+
+To get a better idea of how you can build functions with quotations take a look
+at the examples in `test/quotetest.fs` which generates all of the functions
+called in `test/quotetest.c`.
+
 ## Regenerating bindings
 
 Regenerating bindings should not be necessary unless you're building bindings to
