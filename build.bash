@@ -40,12 +40,12 @@ fsc --nologo --debug --sig:LLVMFSharp.fsi --target:library --out:LLVMFSharp.dll 
 #echo "metadata test"
 #fsc --nologo -r LLVMFSharp.dll test/metadatatest.fs
 #mono metadatatest.exe
-
-echo "quote test"
-fsc --nologo -r LLVMFSharp.dll test/quotetest.fs
-mono quotetest.exe
-llc -march=x86-64 -filetype=obj quotemodule.bc
-llvm-dis quotemodule.bc
-gcc -o quotetest quotemodule.o test/quotetest.c
-./quotetest
+#
+#echo "quote test"
+#fsc --nologo -r LLVMFSharp.dll test/quotetest.fs
+#mono quotetest.exe
+#llc -march=x86-64 -filetype=obj quotemodule.bc
+#llvm-dis quotemodule.bc
+#gcc -o quotetest quotemodule.o test/quotetest.c
+#./quotetest
 
