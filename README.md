@@ -71,6 +71,10 @@ than using the API but there are caveats:
       supported)
     * the list of top level function definitions in your quotation must end with
       a single unit value `()`
+      
+  These limitations are not set in stone and new F# language features may be
+  added in the future as long as doing so maintains the goal of having an
+  almost direct mapping from F# code to LLVM code.
 
 To get a better idea of how you can build functions with quotations take a look
 at the examples in `test/quotetest.fs` which generates all of the functions
